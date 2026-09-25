@@ -1,0 +1,10 @@
+{
+  "name": "@cumavi-pos/mock-catalog",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Demo stores and products (same as the POS seed) used until the backend exists.",
+  "exports": {
+    "./catalog.json": "./catalog.json",
+    "./images/*": "./images/*"
+  }
+}

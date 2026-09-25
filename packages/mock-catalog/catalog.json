@@ -1,0 +1,939 @@
+{
+  "$comment": "Mock catalog shared by the web and, later, the backend seed. It mirrors apps/mobile/lib/features/catalog/data/datasources/catalog_seed_data.dart: keep both in sync until the API exists. Customer-facing: no cost prices.",
+  "stores": [
+    {
+      "id": "store-illimani",
+      "slug": "illimani-store",
+      "name": "Illimani Store",
+      "tagline": "Ropa, calzado y accesorios",
+      "department": "La Paz",
+      "city": "La Paz",
+      "zone": "Sopocachi",
+      "address": "Av. 20 de Octubre #2145, Sopocachi",
+      "location": {
+        "lat": -16.5086,
+        "lng": -68.1262
+      },
+      "whatsapp": "59176543210",
+      "timezone": "America/La_Paz",
+      "openingHours": [
+        {
+          "day": 1,
+          "opens": "09:00",
+          "closes": "20:00"
+        },
+        {
+          "day": 2,
+          "opens": "09:00",
+          "closes": "20:00"
+        },
+        {
+          "day": 3,
+          "opens": "09:00",
+          "closes": "20:00"
+        },
+        {
+          "day": 4,
+          "opens": "09:00",
+          "closes": "20:00"
+        },
+        {
+          "day": 5,
+          "opens": "09:00",
+          "closes": "20:00"
+        },
+        {
+          "day": 6,
+          "opens": "09:00",
+          "closes": "20:00"
+        }
+      ],
+      "paymentMethods": [
+        "cash",
+        "qr",
+        "bankTransfer"
+      ],
+      "fulfillment": [
+        "pickup",
+        "delivery"
+      ],
+      "categories": [
+        {
+          "id": "clothing",
+          "name": "Ropa"
+        },
+        {
+          "id": "footwear",
+          "name": "Calzado"
+        },
+        {
+          "id": "accessories",
+          "name": "Accesorios"
+        }
+      ],
+      "products": [
+        {
+          "id": "p-001",
+          "slug": "zapatillas-urbanas",
+          "name": "Zapatillas urbanas",
+          "categoryId": "footwear",
+          "price": 450,
+          "description": "Zapatillas de tejido liviano con suela de goma. Cómodas para todo el día.",
+          "images": [
+            {
+              "id": "p-001-img-1",
+              "file": "sneakers_red.jpg"
+            },
+            {
+              "id": "p-001-img-2",
+              "file": "sneakers_blue.jpg"
+            },
+            {
+              "id": "p-001-img-3",
+              "file": "sneakers_black.jpg"
+            }
+          ],
+          "createdDaysAgo": 18,
+          "options": [
+            {
+              "name": "Color",
+              "values": [
+                "Rojo",
+                "Azul",
+                "Negro"
+              ]
+            },
+            {
+              "name": "Talla",
+              "values": [
+                "38",
+                "39",
+                "40",
+                "41",
+                "42"
+              ]
+            }
+          ],
+          "variants": [
+            {
+              "id": "rojo/38",
+              "optionValues": {
+                "Color": "Rojo",
+                "Talla": "38"
+              },
+              "stock": 1,
+              "imageId": "p-001-img-1"
+            },
+            {
+              "id": "rojo/39",
+              "optionValues": {
+                "Color": "Rojo",
+                "Talla": "39"
+              },
+              "stock": 2,
+              "imageId": "p-001-img-1"
+            },
+            {
+              "id": "rojo/40",
+              "optionValues": {
+                "Color": "Rojo",
+                "Talla": "40"
+              },
+              "stock": 3,
+              "imageId": "p-001-img-1"
+            },
+            {
+              "id": "rojo/41",
+              "optionValues": {
+                "Color": "Rojo",
+                "Talla": "41"
+              },
+              "stock": 1,
+              "imageId": "p-001-img-1"
+            },
+            {
+              "id": "rojo/42",
+              "optionValues": {
+                "Color": "Rojo",
+                "Talla": "42"
+              },
+              "stock": 0,
+              "imageId": "p-001-img-1"
+            },
+            {
+              "id": "azul/38",
+              "optionValues": {
+                "Color": "Azul",
+                "Talla": "38"
+              },
+              "stock": 0,
+              "imageId": "p-001-img-2"
+            },
+            {
+              "id": "azul/39",
+              "optionValues": {
+                "Color": "Azul",
+                "Talla": "39"
+              },
+              "stock": 1,
+              "imageId": "p-001-img-2"
+            },
+            {
+              "id": "azul/40",
+              "optionValues": {
+                "Color": "Azul",
+                "Talla": "40"
+              },
+              "stock": 2,
+              "imageId": "p-001-img-2"
+            },
+            {
+              "id": "azul/41",
+              "optionValues": {
+                "Color": "Azul",
+                "Talla": "41"
+              },
+              "stock": 1,
+              "imageId": "p-001-img-2"
+            },
+            {
+              "id": "azul/42",
+              "optionValues": {
+                "Color": "Azul",
+                "Talla": "42"
+              },
+              "stock": 0,
+              "imageId": "p-001-img-2"
+            },
+            {
+              "id": "negro/38",
+              "optionValues": {
+                "Color": "Negro",
+                "Talla": "38"
+              },
+              "stock": 0,
+              "imageId": "p-001-img-3"
+            },
+            {
+              "id": "negro/39",
+              "optionValues": {
+                "Color": "Negro",
+                "Talla": "39"
+              },
+              "stock": 0,
+              "imageId": "p-001-img-3"
+            },
+            {
+              "id": "negro/40",
+              "optionValues": {
+                "Color": "Negro",
+                "Talla": "40"
+              },
+              "stock": 1,
+              "imageId": "p-001-img-3"
+            },
+            {
+              "id": "negro/41",
+              "optionValues": {
+                "Color": "Negro",
+                "Talla": "41"
+              },
+              "stock": 0,
+              "imageId": "p-001-img-3"
+            },
+            {
+              "id": "negro/42",
+              "optionValues": {
+                "Color": "Negro",
+                "Talla": "42"
+              },
+              "stock": 0,
+              "imageId": "p-001-img-3"
+            }
+          ]
+        },
+        {
+          "id": "p-002",
+          "slug": "chamarra-de-cuero",
+          "name": "Chamarra de cuero",
+          "categoryId": "clothing",
+          "price": 690,
+          "description": "Cuero sintético con forro interior y cierres metálicos.",
+          "images": [
+            {
+              "id": "p-002-img-1",
+              "file": "leather_jacket.jpg"
+            }
+          ],
+          "createdDaysAgo": 40,
+          "options": [
+            {
+              "name": "Talla",
+              "values": [
+                "S",
+                "M",
+                "L"
+              ]
+            }
+          ],
+          "variants": [
+            {
+              "id": "s",
+              "optionValues": {
+                "Talla": "S"
+              },
+              "stock": 0
+            },
+            {
+              "id": "m",
+              "optionValues": {
+                "Talla": "M"
+              },
+              "stock": 1
+            },
+            {
+              "id": "l",
+              "optionValues": {
+                "Talla": "L"
+              },
+              "stock": 1
+            }
+          ]
+        },
+        {
+          "id": "p-003",
+          "slug": "polera-estampada-original",
+          "name": "Polera estampada Original",
+          "categoryId": "clothing",
+          "price": 89,
+          "description": "Algodón peinado 100 %, estampado frontal en serigrafía.",
+          "images": [
+            {
+              "id": "p-003-img-1",
+              "file": "tshirt_print.jpg"
+            },
+            {
+              "id": "p-003-img-2",
+              "file": "tshirt_print_red.jpg"
+            }
+          ],
+          "createdDaysAgo": 12,
+          "options": [
+            {
+              "name": "Color",
+              "values": [
+                "Azul",
+                "Rojo"
+              ]
+            },
+            {
+              "name": "Talla",
+              "values": [
+                "S",
+                "M",
+                "L",
+                "XL"
+              ]
+            }
+          ],
+          "variants": [
+            {
+              "id": "azul/s",
+              "optionValues": {
+                "Color": "Azul",
+                "Talla": "S"
+              },
+              "stock": 2,
+              "imageId": "p-003-img-1"
+            },
+            {
+              "id": "azul/m",
+              "optionValues": {
+                "Color": "Azul",
+                "Talla": "M"
+              },
+              "stock": 4,
+              "imageId": "p-003-img-1"
+            },
+            {
+              "id": "azul/l",
+              "optionValues": {
+                "Color": "Azul",
+                "Talla": "L"
+              },
+              "stock": 4,
+              "imageId": "p-003-img-1"
+            },
+            {
+              "id": "azul/xl",
+              "optionValues": {
+                "Color": "Azul",
+                "Talla": "XL"
+              },
+              "stock": 2,
+              "imageId": "p-003-img-1"
+            },
+            {
+              "id": "rojo/s",
+              "optionValues": {
+                "Color": "Rojo",
+                "Talla": "S"
+              },
+              "stock": 1,
+              "imageId": "p-003-img-2"
+            },
+            {
+              "id": "rojo/m",
+              "optionValues": {
+                "Color": "Rojo",
+                "Talla": "M"
+              },
+              "stock": 5,
+              "imageId": "p-003-img-2"
+            },
+            {
+              "id": "rojo/l",
+              "optionValues": {
+                "Color": "Rojo",
+                "Talla": "L"
+              },
+              "stock": 4,
+              "imageId": "p-003-img-2"
+            },
+            {
+              "id": "rojo/xl",
+              "optionValues": {
+                "Color": "Rojo",
+                "Talla": "XL"
+              },
+              "stock": 2,
+              "imageId": "p-003-img-2"
+            }
+          ]
+        },
+        {
+          "id": "p-004",
+          "slug": "chompa-de-lana",
+          "name": "Chompa de lana",
+          "categoryId": "clothing",
+          "price": 180,
+          "description": "Tejido de lana de oveja, cuello redondo.",
+          "images": [
+            {
+              "id": "p-004-img-1",
+              "file": "wool_sweater.jpg"
+            }
+          ],
+          "createdDaysAgo": 60,
+          "options": [
+            {
+              "name": "Talla",
+              "values": [
+                "S",
+                "M",
+                "L"
+              ]
+            }
+          ],
+          "variants": [
+            {
+              "id": "s",
+              "optionValues": {
+                "Talla": "S"
+              },
+              "stock": 0
+            },
+            {
+              "id": "m",
+              "optionValues": {
+                "Talla": "M"
+              },
+              "stock": 0
+            },
+            {
+              "id": "l",
+              "optionValues": {
+                "Talla": "L"
+              },
+              "stock": 0
+            }
+          ]
+        },
+        {
+          "id": "p-005",
+          "slug": "cartera-de-cuero",
+          "name": "Cartera de cuero",
+          "categoryId": "accessories",
+          "price": 380,
+          "description": "Cartera de mano con correa desmontable y broche metálico.",
+          "images": [
+            {
+              "id": "p-005-img-1",
+              "file": "leather_bag.jpg"
+            },
+            {
+              "id": "p-005-img-2",
+              "file": "leather_bag_brown.jpg"
+            },
+            {
+              "id": "p-005-img-3",
+              "file": "leather_bag_black.jpg"
+            }
+          ],
+          "createdDaysAgo": 25,
+          "options": [
+            {
+              "name": "Color",
+              "values": [
+                "Roja",
+                "Café",
+                "Negra"
+              ]
+            }
+          ],
+          "variants": [
+            {
+              "id": "roja",
+              "optionValues": {
+                "Color": "Roja"
+              },
+              "stock": 1,
+              "imageId": "p-005-img-1"
+            },
+            {
+              "id": "café",
+              "optionValues": {
+                "Color": "Café"
+              },
+              "stock": 2,
+              "imageId": "p-005-img-2"
+            },
+            {
+              "id": "negra",
+              "optionValues": {
+                "Color": "Negra"
+              },
+              "stock": 1,
+              "imageId": "p-005-img-3"
+            }
+          ]
+        },
+        {
+          "id": "p-006",
+          "slug": "lentes-de-sol-clasicos",
+          "name": "Lentes de sol clásicos",
+          "categoryId": "accessories",
+          "price": 120,
+          "description": "Protección UV400, marco de acetato.",
+          "images": [
+            {
+              "id": "p-006-img-1",
+              "file": "sunglasses.jpg"
+            }
+          ],
+          "createdDaysAgo": 8,
+          "options": [],
+          "variants": [],
+          "stock": 14
+        },
+        {
+          "id": "p-007",
+          "slug": "mochila-urbana",
+          "name": "Mochila urbana",
+          "categoryId": "accessories",
+          "price": 260,
+          "description": "Compartimento acolchado para laptop de hasta 15\".",
+          "images": [
+            {
+              "id": "p-007-img-1",
+              "file": "backpack.jpg"
+            }
+          ],
+          "createdDaysAgo": 30,
+          "options": [],
+          "variants": [],
+          "stock": 7
+        },
+        {
+          "id": "p-008",
+          "slug": "gorra-trucker-blanca",
+          "name": "Gorra trucker blanca",
+          "categoryId": "accessories",
+          "price": 65,
+          "description": "Malla trasera y cierre regulable.",
+          "images": [
+            {
+              "id": "p-008-img-1",
+              "file": "cap_white.jpg"
+            }
+          ],
+          "createdDaysAgo": 5,
+          "options": [],
+          "variants": [],
+          "stock": 18
+        },
+        {
+          "id": "p-009",
+          "slug": "chamarra-de-jean",
+          "name": "Chamarra de jean",
+          "categoryId": "clothing",
+          "price": 320,
+          "description": "Jean rígido de lavado clásico con botones metálicos.",
+          "images": [
+            {
+              "id": "p-009-img-1",
+              "file": "denim_jacket.jpg"
+            }
+          ],
+          "createdDaysAgo": 22,
+          "options": [
+            {
+              "name": "Talla",
+              "values": [
+                "S",
+                "M",
+                "L",
+                "XL"
+              ]
+            }
+          ],
+          "variants": [
+            {
+              "id": "s",
+              "optionValues": {
+                "Talla": "S"
+              },
+              "stock": 1
+            },
+            {
+              "id": "m",
+              "optionValues": {
+                "Talla": "M"
+              },
+              "stock": 2
+            },
+            {
+              "id": "l",
+              "optionValues": {
+                "Talla": "L"
+              },
+              "stock": 2
+            },
+            {
+              "id": "xl",
+              "optionValues": {
+                "Talla": "XL"
+              },
+              "stock": 1
+            }
+          ]
+        },
+        {
+          "id": "p-010",
+          "slug": "zapatillas-blancas-clasicas",
+          "name": "Zapatillas blancas clásicas",
+          "categoryId": "footwear",
+          "price": 390,
+          "description": "Cuero sintético blanco, fáciles de limpiar.",
+          "images": [
+            {
+              "id": "p-010-img-1",
+              "file": "sneakers_white.jpg"
+            }
+          ],
+          "createdDaysAgo": 15,
+          "options": [
+            {
+              "name": "Talla",
+              "values": [
+                "37",
+                "38",
+                "39",
+                "40",
+                "41"
+              ]
+            }
+          ],
+          "variants": [
+            {
+              "id": "37",
+              "optionValues": {
+                "Talla": "37"
+              },
+              "stock": 0
+            },
+            {
+              "id": "38",
+              "optionValues": {
+                "Talla": "38"
+              },
+              "stock": 1
+            },
+            {
+              "id": "39",
+              "optionValues": {
+                "Talla": "39"
+              },
+              "stock": 1
+            },
+            {
+              "id": "40",
+              "optionValues": {
+                "Talla": "40"
+              },
+              "stock": 1
+            },
+            {
+              "id": "41",
+              "optionValues": {
+                "Talla": "41"
+              },
+              "stock": 0
+            }
+          ]
+        },
+        {
+          "id": "p-011",
+          "slug": "polera-basica",
+          "name": "Polera básica",
+          "categoryId": "clothing",
+          "price": 75,
+          "description": "Algodón 100 %, corte regular. La que más se vende.",
+          "images": [
+            {
+              "id": "p-011-img-1",
+              "file": "tshirt_black.jpg"
+            },
+            {
+              "id": "p-011-img-2",
+              "file": "tshirt_gray.jpg"
+            }
+          ],
+          "createdDaysAgo": 10,
+          "options": [
+            {
+              "name": "Color",
+              "values": [
+                "Negra",
+                "Gris"
+              ]
+            },
+            {
+              "name": "Talla",
+              "values": [
+                "S",
+                "M",
+                "L",
+                "XL"
+              ]
+            }
+          ],
+          "variants": [
+            {
+              "id": "negra/s",
+              "optionValues": {
+                "Color": "Negra",
+                "Talla": "S"
+              },
+              "stock": 3,
+              "imageId": "p-011-img-1"
+            },
+            {
+              "id": "negra/m",
+              "optionValues": {
+                "Color": "Negra",
+                "Talla": "M"
+              },
+              "stock": 6,
+              "imageId": "p-011-img-1"
+            },
+            {
+              "id": "negra/l",
+              "optionValues": {
+                "Color": "Negra",
+                "Talla": "L"
+              },
+              "stock": 6,
+              "imageId": "p-011-img-1"
+            },
+            {
+              "id": "negra/xl",
+              "optionValues": {
+                "Color": "Negra",
+                "Talla": "XL"
+              },
+              "stock": 4,
+              "imageId": "p-011-img-1"
+            },
+            {
+              "id": "gris/s",
+              "optionValues": {
+                "Color": "Gris",
+                "Talla": "S"
+              },
+              "stock": 2,
+              "imageId": "p-011-img-2"
+            },
+            {
+              "id": "gris/m",
+              "optionValues": {
+                "Color": "Gris",
+                "Talla": "M"
+              },
+              "stock": 4,
+              "imageId": "p-011-img-2"
+            },
+            {
+              "id": "gris/l",
+              "optionValues": {
+                "Color": "Gris",
+                "Talla": "L"
+              },
+              "stock": 4,
+              "imageId": "p-011-img-2"
+            },
+            {
+              "id": "gris/xl",
+              "optionValues": {
+                "Color": "Gris",
+                "Talla": "XL"
+              },
+              "stock": 2,
+              "imageId": "p-011-img-2"
+            }
+          ]
+        },
+        {
+          "id": "p-012",
+          "slug": "zapatillas-running",
+          "name": "Zapatillas running",
+          "categoryId": "footwear",
+          "price": 420,
+          "description": "Amortiguación en espuma y malla transpirable.",
+          "images": [
+            {
+              "id": "p-012-img-1",
+              "file": "running_shoes.jpg"
+            }
+          ],
+          "createdDaysAgo": 20,
+          "options": [
+            {
+              "name": "Talla",
+              "values": [
+                "39",
+                "40",
+                "41",
+                "42",
+                "43"
+              ]
+            }
+          ],
+          "variants": [
+            {
+              "id": "39",
+              "optionValues": {
+                "Talla": "39"
+              },
+              "stock": 1
+            },
+            {
+              "id": "40",
+              "optionValues": {
+                "Talla": "40"
+              },
+              "stock": 2
+            },
+            {
+              "id": "41",
+              "optionValues": {
+                "Talla": "41"
+              },
+              "stock": 2
+            },
+            {
+              "id": "42",
+              "optionValues": {
+                "Talla": "42"
+              },
+              "stock": 2
+            },
+            {
+              "id": "43",
+              "optionValues": {
+                "Talla": "43"
+              },
+              "stock": 1
+            }
+          ]
+        },
+        {
+          "id": "p-013",
+          "slug": "bomber-terracota",
+          "name": "Bomber terracota",
+          "categoryId": "clothing",
+          "price": 280,
+          "description": "Nylon repelente al agua, puños y cintura en tejido rib.",
+          "images": [
+            {
+              "id": "p-013-img-1",
+              "file": "bomber_jacket.jpg"
+            }
+          ],
+          "createdDaysAgo": 35,
+          "options": [
+            {
+              "name": "Talla",
+              "values": [
+                "M",
+                "L",
+                "XL"
+              ]
+            }
+          ],
+          "variants": [
+            {
+              "id": "m",
+              "optionValues": {
+                "Talla": "M"
+              },
+              "stock": 3
+            },
+            {
+              "id": "l",
+              "optionValues": {
+                "Talla": "L"
+              },
+              "stock": 4
+            },
+            {
+              "id": "xl",
+              "optionValues": {
+                "Talla": "XL"
+              },
+              "stock": 2
+            }
+          ]
+        },
+        {
+          "id": "p-014",
+          "slug": "billetera-de-cuero",
+          "name": "Billetera de cuero",
+          "categoryId": "accessories",
+          "price": 95,
+          "description": "Cuero genuino, seis ranuras para tarjetas.",
+          "images": [
+            {
+              "id": "p-014-img-1",
+              "file": "wallet.jpg"
+            }
+          ],
+          "createdDaysAgo": 28,
+          "options": [],
+          "variants": [],
+          "stock": 1
+        }
+      ]
+    }
+  ]
+}

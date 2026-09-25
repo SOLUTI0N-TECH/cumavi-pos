@@ -1,0 +1,9 @@
+{
+  "name": "@cumavi-pos/design-tokens",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CUMAVI POS colors, radii and spacing for the web. Mirrors apps/mobile/lib/core/theme.",
+  "exports": {
+    "./tokens.css": "./tokens.css"
+  }
+}

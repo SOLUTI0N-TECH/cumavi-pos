@@ -1,0 +1,4 @@
+# Static export of the catalog (`pnpm build` → out/). Deployed prebuilt:
+# netlify deploy --prod --no-build --dir out
+[build]
+  publish = "out"

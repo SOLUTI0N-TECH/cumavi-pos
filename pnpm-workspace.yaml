@@ -1,0 +1,10 @@
+# JavaScript workspaces. The Flutter app (apps/mobile) is managed by fvm, not pnpm.
+packages:
+  - apps/web
+  - packages/*
+
+# Native build scripts allowed to run on install (next/image uses sharp).
+onlyBuiltDependencies:
+  - sharp
+ignoredBuiltDependencies:
+  - unrs-resolver

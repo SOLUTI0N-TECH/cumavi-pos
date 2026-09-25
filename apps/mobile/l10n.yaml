@@ -1,0 +1,8 @@
+# Translations: `lib/l10n/app_<locale>.arb`. Spanish is the template, so
+# every key exists there first. Code is generated on `flutter pub get`.
+arb-dir: lib/l10n
+template-arb-file: app_es.arb
+output-dir: lib/l10n/generated
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+nullable-getter: false

@@ -1,0 +1,1285 @@
+{
+  "@@locale": "es",
+  "appTitle": "Cumavi POS",
+  "commonDefaultBusinessName": "Mi negocio",
+  "commonDefaultPrinterName": "Impresora",
+  "commonRetry": "Reintentar",
+  "commonCancel": "Cancelar",
+  "commonContinue": "Continuar",
+  "commonSave": "Guardar",
+  "commonBack": "Volver",
+  "paymentMethodCash": "Efectivo",
+  "paymentMethodQr": "QR",
+  "paymentMethodCard": "Tarjeta",
+  "paymentMethodBankTransfer": "Transferencia",
+  "itemCount": "{count, plural, =1{1 artículo} other{{count} artículos}}",
+  "@itemCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "failureUnexpected": "Ocurrió un error inesperado. Intenta nuevamente.",
+  "failureFullNameRequired": "Ingresa tu nombre y apellido.",
+  "failureInvalidMobileNumber": "Ingresa un celular boliviano de 8 dígitos.",
+  "failureInvalidEmail": "Ingresa un correo válido.",
+  "failurePasswordTooShort": "La contraseña debe tener al menos 8 caracteres.",
+  "failureVerificationCodeIncomplete": "Ingresa los 6 dígitos del código.",
+  "failureVerificationCodeInvalid": "El código no es correcto. Revisa el SMS.",
+  "failureBusinessNameTooShort": "El nombre del negocio debe tener 3 caracteres.",
+  "failureSalesCategoryRequired": "Elige al menos una categoría.",
+  "failurePaymentMethodRequired": "Elige al menos un método de pago.",
+  "failureBusinessProfileRequired": "Primero registra los datos de tu negocio.",
+  "failureNegativeOpeningAmount": "El monto inicial no puede ser negativo.",
+  "failureNegativeCountedCash": "El efectivo contado no puede ser negativo.",
+  "failureCashSessionAlreadyOpen": "La caja ya está abierta.",
+  "failureCashSessionNotOpen": "No hay una caja abierta.",
+  "failureProductNotFound": "No encontramos el producto.",
+  "failureProductNameTooShort": "El nombre del producto debe tener al menos 3 caracteres.",
+  "failureCategoryRequired": "Elige una categoría.",
+  "failureCategoryNotFound": "La categoría seleccionada no existe.",
+  "failureInvalidSalePrice": "El precio de venta debe ser mayor a 0.",
+  "failureNegativeCostPrice": "El costo no puede ser negativo.",
+  "failureCostAbovePrice": "El costo no puede ser mayor al precio de venta.",
+  "failureNegativeStock": "La cantidad no puede ser negativa.",
+  "failureIncompleteVariantOptions": "Revisa las variantes: cada tipo necesita un nombre y al menos un valor, sin repetir.",
+  "failureInsufficientStock": "No hay stock suficiente de {productName}.",
+  "@failureInsufficientStock": {
+    "placeholders": {
+      "productName": {
+        "type": "String"
+      }
+    }
+  },
+  "failureInsufficientStockGeneric": "No hay stock suficiente para esta venta.",
+  "failureCameraPermissionDenied": "Permite el acceso a la cámara y a las fotos en los ajustes.",
+  "failureCameraUnavailable": "No pudimos abrir la cámara. Intenta nuevamente.",
+  "failureBackgroundRemovalFailed": "No pudimos quitar el fondo. Prueba con otra foto o más luz.",
+  "failureSaleNotFound": "No encontramos la venta.",
+  "failureEmptyCart": "Agrega al menos un producto para cobrar.",
+  "failureInsufficientPayment": "El monto recibido es menor al total.",
+  "failureCashSessionRequired": "Abre la caja antes de registrar una venta.",
+  "failureInvalidCopies": "Puedes imprimir entre 1 y {maxCopies} copias.",
+  "@failureInvalidCopies": {
+    "placeholders": {
+      "maxCopies": {
+        "type": "String"
+      }
+    }
+  },
+  "failurePrintersUnavailable": "No pudimos leer las impresoras vinculadas.",
+  "failureBluetoothPermissionDenied": "Permite el acceso a dispositivos cercanos para usar la impresora.",
+  "failureBluetoothDisabled": "Activa el Bluetooth para imprimir.",
+  "failurePrinterUnreachable": "No pudimos conectar con {printerName}. Revisa que esté encendida y cerca.",
+  "@failurePrinterUnreachable": {
+    "placeholders": {
+      "printerName": {
+        "type": "String"
+      }
+    }
+  },
+  "failurePrinterNotResponding": "La impresora no respondió. Intenta nuevamente.",
+  "failurePrinterTimeout": "La impresora tardó demasiado en responder.",
+  "failurePrintFailed": "No pudimos imprimir el comprobante.",
+  "failureShareFailed": "No pudimos compartir el comprobante.",
+  "failureWhatsAppUnavailable": "No encontramos WhatsApp en este celular.",
+  "failureEmailAppUnavailable": "No hay una app de correo configurada.",
+  "failurePhotoLibraryPermissionDenied": "Permite el acceso a tus fotos para guardar.",
+  "shellHome": "Inicio",
+  "@shellHome": {
+    "description": "Bottom navigation: dashboard tab."
+  },
+  "shellSales": "Ventas",
+  "@shellSales": {
+    "description": "Bottom navigation: sales tab."
+  },
+  "shellInventory": "Inventario",
+  "@shellInventory": {
+    "description": "Bottom navigation: inventory tab."
+  },
+  "commonCloseTooltip": "Cerrar",
+  "@commonCloseTooltip": {
+    "description": "Tooltip of the close (x) button of bottom sheets and full-screen forms."
+  },
+  "commonScanBarcodeTooltip": "Escanear código",
+  "@commonScanBarcodeTooltip": {
+    "description": "Tooltip of the barcode scanner button inside the search bar."
+  },
+  "commonQuantityRemoveTooltip": "Quitar",
+  "@commonQuantityRemoveTooltip": {
+    "description": "Quantity stepper: tooltip of the minus button when it deletes the line (quantity 1)."
+  },
+  "commonQuantityDecrementTooltip": "Restar uno",
+  "@commonQuantityDecrementTooltip": {
+    "description": "Quantity stepper: tooltip of the minus button."
+  },
+  "commonQuantityIncrementTooltip": "Sumar uno",
+  "@commonQuantityIncrementTooltip": {
+    "description": "Quantity stepper: tooltip of the plus button."
+  },
+  "commonStepProgress": "Paso {current} de {total}",
+  "@commonStepProgress": {
+    "description": "Step header of multi-step flows (registration). Rendered bold, followed by commonStepProgressLabel in a lighter style: \"Paso 1 de 4 · Tu cuenta\".",
+    "placeholders": {
+      "current": {
+        "type": "int",
+        "example": "1"
+      },
+      "total": {
+        "type": "int",
+        "example": "4"
+      }
+    }
+  },
+  "commonStepProgressLabel": " · {label}",
+  "@commonStepProgressLabel": {
+    "description": "Name of the current step, rendered right after commonStepProgress in a lighter style (hence the leading separator).",
+    "placeholders": {
+      "label": {
+        "type": "String",
+        "example": "Tu cuenta"
+      }
+    }
+  },
+  "authMethodEmail": "Correo",
+  "@authMethodEmail": {
+    "description": "Segment of the credential selector (sign in and registration)."
+  },
+  "authMethodPhone": "Teléfono",
+  "@authMethodPhone": {
+    "description": "Segment of the credential selector (sign in and registration)."
+  },
+  "authPhoneNumberLabel": "Celular",
+  "authEmailLabel": "Correo electrónico",
+  "authEmailHint": "tucorreo@gmail.com",
+  "@authEmailHint": {
+    "description": "Example address shown as the email field placeholder."
+  },
+  "authPasswordLabel": "Contraseña",
+  "authSendCode": "Enviar código",
+  "authCreateAccount": "Crear cuenta",
+  "authSignIn": "Iniciar sesión",
+  "authSignInTitle": "Hola de nuevo",
+  "authSignInSubtitle": "Ingresa para abrir tu caja y empezar a vender.",
+  "authSignInWithGoogle": "Continuar con Google",
+  "authSignInDivider": "o ingresa con",
+  "@authSignInDivider": {
+    "description": "Text between the two lines that separate Google from the other sign-in methods."
+  },
+  "authSignInPhoneHelper": "Te enviaremos un código por SMS.",
+  "authSignInPasswordHint": "Mínimo 8 caracteres",
+  "authSignInShowPassword": "Mostrar contraseña",
+  "authSignInHidePassword": "Ocultar contraseña",
+  "authSignInForgotPassword": "¿Olvidaste tu contraseña?",
+  "authSignInPasswordResetSent": "Te enviamos un enlace a {email} para cambiar tu contraseña.",
+  "@authSignInPasswordResetSent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "authSignInPasswordResetNeedsEmail": "Escribe tu correo y te enviamos un enlace para cambiar tu contraseña.",
+  "authSignInNoAccountPrompt": "¿Aún no tienes cuenta?",
+  "@authSignInNoAccountPrompt": {
+    "description": "Followed on the same line by the underlined authCreateAccount link."
+  },
+  "authRegisterStepLabel": "Tu cuenta",
+  "@authRegisterStepLabel": {
+    "description": "Name of registration step 1, shown next to \"Paso 1 de 4\"."
+  },
+  "authRegisterTitle": "Crea tu cuenta",
+  "authRegisterSubtitle": "Registra tu negocio y vende desde tu celular.",
+  "authRegisterWithGoogle": "Registrarme con Google",
+  "authRegisterDivider": "o regístrate con",
+  "@authRegisterDivider": {
+    "description": "Text between the two lines that separate Google from the other registration methods."
+  },
+  "authRegisterFullNameLabel": "Nombre y apellido",
+  "authRegisterFullNameHint": "Ej. Carla Mamani",
+  "authRegisterPhoneHelper": "Te enviaremos un código por SMS para verificarlo.",
+  "authRegisterPasswordHelper": "Mínimo 8 caracteres.",
+  "authRegisterTermsPrefix": "Acepto los ",
+  "@authRegisterTermsPrefix": {
+    "description": "Terms checkbox, span 1 of 4: authRegisterTermsPrefix + authRegisterTermsLink (underlined) + authRegisterTermsConnector + authRegisterPrivacyPolicyLink (underlined) = \"Acepto los Términos y la Política de privacidad\". Keep the surrounding spaces."
+  },
+  "authRegisterTermsLink": "Términos",
+  "@authRegisterTermsLink": {
+    "description": "Terms checkbox, span 2 of 4 (underlined). See authRegisterTermsPrefix."
+  },
+  "authRegisterTermsConnector": " y la ",
+  "@authRegisterTermsConnector": {
+    "description": "Terms checkbox, span 3 of 4. See authRegisterTermsPrefix. Keep the surrounding spaces."
+  },
+  "authRegisterPrivacyPolicyLink": "Política de privacidad",
+  "@authRegisterPrivacyPolicyLink": {
+    "description": "Terms checkbox, span 4 of 4 (underlined). See authRegisterTermsPrefix."
+  },
+  "authRegisterHaveAccountPrompt": "¿Ya tienes cuenta?",
+  "@authRegisterHaveAccountPrompt": {
+    "description": "Followed on the same line by the underlined authSignIn link."
+  },
+  "authPhoneVerificationStepLabel": "Verificación",
+  "@authPhoneVerificationStepLabel": {
+    "description": "Name of registration step 2, shown next to \"Paso 2 de 4\"."
+  },
+  "authPhoneVerificationTitle": "Ingresa el código",
+  "authPhoneVerificationSentTo": "Te enviamos 6 dígitos por SMS al ",
+  "@authPhoneVerificationSentTo": {
+    "description": "Followed by the phone number in bold (\"+591 7654 3210\"). Keep the trailing space."
+  },
+  "authPhoneVerificationChangeNumber": "Cambiar número",
+  "authPhoneVerificationResendHint": "Si no te llega, pide otro código.",
+  "authPhoneVerificationResend": "Reenviar",
+  "authPhoneVerificationSubmit": "Verificar",
+  "authPhoneVerificationViaWhatsApp": "Recibir el código por WhatsApp",
+  "authPhoneVerificationCodeResent": "Te enviamos un nuevo código.",
+  "authPhoneVerificationCodeSentViaWhatsApp": "Te enviamos el código por WhatsApp.",
+  "authDemoCodeTitle": "Usa el código {code}",
+  "@authDemoCodeTitle": {
+    "description": "Demo banner shown while no SMS is sent.",
+    "placeholders": {
+      "code": {
+        "type": "String",
+        "example": "123456"
+      }
+    }
+  },
+  "authDemoCodeMessage": "Modo demo: no se envían SMS.",
+  "authDemoCodeUse": "Usar",
+  "@authDemoCodeUse": {
+    "description": "Fills the demo code in the code boxes."
+  },
+  "authBusinessProfileStepLabel": "Tu negocio",
+  "@authBusinessProfileStepLabel": {
+    "description": "Name of registration step 3, shown next to \"Paso 3 de 4\"."
+  },
+  "authBusinessProfileTitle": "Sobre tu negocio",
+  "authBusinessProfileSubtitle": "Lo usamos en tu POS y en tus comprobantes.",
+  "authBusinessProfileLogoTitle": "Logo del negocio",
+  "authBusinessProfileLogoReady": "Listo. Aparecerá en tus comprobantes.",
+  "authBusinessProfileLogoOptional": "Opcional. Aparece en tus comprobantes.",
+  "authBusinessProfileNameLabel": "Nombre del negocio",
+  "authBusinessProfileNameHint": "Ej. Illimani Store",
+  "authBusinessProfileTypeLabel": "Tipo de negocio",
+  "authBusinessProfileDepartmentLabel": "Departamento",
+  "authBusinessTypeClothingAndFootwear": "Ropa y calzado",
+  "authBusinessTypeNeighborhoodStore": "Tienda de barrio",
+  "authBusinessTypeFoodAndDrinks": "Comida y bebidas",
+  "authBusinessTypeBeautyAndCare": "Belleza y cuidado",
+  "authBusinessTypeTechnology": "Tecnología",
+  "authBusinessTypeOther": "Otro",
+  "authSalesSetupStepLabel": "Cómo vendes",
+  "@authSalesSetupStepLabel": {
+    "description": "Name of registration step 4, shown next to \"Paso 4 de 4\"."
+  },
+  "authSalesSetupTitle": "Últimos detalles",
+  "authSalesSetupSubtitle": "Puedes cambiarlos cuando quieras.",
+  "authSalesSetupCategoriesTitle": "Categorías de tu inventario",
+  "authSalesSetupSuggestedFor": "Sugeridas para ",
+  "@authSalesSetupSuggestedFor": {
+    "description": "Followed by the business type name in a stronger style (\"Sugeridas para Ropa y calzado\"). Keep the trailing space."
+  },
+  "authSalesSetupPaymentMethodsTitle": "¿Cómo te pagan tus clientes?",
+  "authSalesSetupPaymentMethodsSubtitle": "Aparecerán al momento de cobrar.",
+  "authSalesSetupTaxIdLabel": "NIT",
+  "@authSalesSetupTaxIdLabel": {
+    "description": "Bolivian tax identification number."
+  },
+  "authSalesSetupTaxIdOptional": "(opcional)",
+  "authSalesSetupTaxIdHelper": "Si lo agregas, se muestra en tus comprobantes.",
+  "authSalesSetupTaxIdHint": "Número de NIT",
+  "authSalesSetupSubmit": "Terminar registro",
+  "authBusinessReadyDefaultName": "Tu negocio",
+  "@authBusinessReadyDefaultName": {
+    "description": "Used in the title when the business has no name yet."
+  },
+  "authBusinessReadyTitle": "¡{businessName} está lista!",
+  "@authBusinessReadyTitle": {
+    "placeholders": {
+      "businessName": {
+        "type": "String",
+        "example": "Illimani Store"
+      }
+    }
+  },
+  "authBusinessReadySubtitle": "Tu cuenta y tu punto de venta ya están configurados.",
+  "authBusinessReadyFirstStepsTitle": "Primeros pasos",
+  "authBusinessReadyStepAccountTitle": "Crear tu cuenta",
+  "authBusinessReadyStepAccountDone": "Listo",
+  "authBusinessReadyStepProductsTitle": "Agrega tus productos",
+  "authBusinessReadyStepProductsSubtitle": "Con foto, precio y cantidad",
+  "authBusinessReadyStepSellTitle": "Abre tu caja y vende",
+  "authBusinessReadyStepSellSubtitle": "Registra tu primera venta",
+  "authBusinessReadyAddFirstProduct": "Agregar mi primer producto",
+  "authBusinessReadyGoHome": "Ir al inicio",
+  "dashboardLoadError": "No pudimos cargar el resumen del día.",
+  "dashboardNotificationsTooltip": "Notificaciones",
+  "dashboardNoNotifications": "No tienes notificaciones nuevas.",
+  "dashboardGreeting": "Hola",
+  "@dashboardGreeting": {
+    "description": "Home greeting when the user's first name is unknown."
+  },
+  "dashboardGreetingWithName": "Hola, {firstName}",
+  "@dashboardGreetingWithName": {
+    "placeholders": {
+      "firstName": {
+        "type": "String",
+        "example": "Carla"
+      }
+    }
+  },
+  "dashboardLowStockTitle": "{count, plural, =1{1 producto con stock bajo} other{{count} productos con stock bajo}}",
+  "@dashboardLowStockTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dashboardLowStockSubtitle": "Revisa tu inventario",
+  "dashboardCashCardNoShifts": "Sin turnos",
+  "dashboardCashCardTodaySales": "Ventas de hoy",
+  "dashboardCashCardSalesMetric": "Ventas",
+  "@dashboardCashCardSalesMetric": {
+    "description": "Caption under the number of sales made today."
+  },
+  "dashboardCashCardAverageTicketMetric": "Ticket prom.",
+  "@dashboardCashCardAverageTicketMetric": {
+    "description": "Caption under the average amount per sale ('prom.' = promedio)."
+  },
+  "dashboardCashCardCashInDrawerMetric": "En caja",
+  "@dashboardCashCardCashInDrawerMetric": {
+    "description": "Caption under the cash currently in the drawer."
+  },
+  "dashboardCashCardNewSale": "Nueva venta",
+  "dashboardCashCardOpenCashRegister": "Abrir caja",
+  "dashboardCashCardOpenSince": "Caja abierta · desde {time}",
+  "@dashboardCashCardOpenSince": {
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "08:30"
+      }
+    }
+  },
+  "dashboardCashCardClosed": "Caja cerrada",
+  "dashboardPaymentBreakdownTitle": "Métodos de pago",
+  "dashboardPaymentBreakdownPeriod": "Hoy",
+  "@dashboardPaymentBreakdownPeriod": {
+    "description": "Period the payment method breakdown covers."
+  },
+  "dashboardPaymentBreakdownEmpty": "Aún no registraste ventas hoy.",
+  "salesSaleTitle": "Venta",
+  "@salesSaleTitle": {
+    "description": "Header of the sales tab while the cash drawer is open."
+  },
+  "salesSaleNumber": "Venta {number}",
+  "@salesSaleNumber": {
+    "description": "Sale identifier shown under screen titles.",
+    "placeholders": {
+      "number": {
+        "type": "String",
+        "example": "#0019"
+      }
+    }
+  },
+  "salesCashRegisterOpenStatus": "Caja abierta",
+  "@salesCashRegisterOpenStatus": {
+    "description": "Status pill on the sales header; tapping it manages the cash drawer."
+  },
+  "salesSearchProductHint": "Buscar producto",
+  "salesCartTitle": "Carrito",
+  "@salesCartTitle": {
+    "description": "Bold first part of the cart header, followed by salesCartItemCountSuffix in a lighter style."
+  },
+  "salesCartItemCountSuffix": " · {items}",
+  "@salesCartItemCountSuffix": {
+    "description": "Lighter second part of the cart header, right after salesCartTitle: \"Carrito · 3 artículos\". Keep the leading space.",
+    "placeholders": {
+      "items": {
+        "type": "String",
+        "example": "3 artículos"
+      }
+    }
+  },
+  "salesCartClearButton": "Vaciar",
+  "salesCartEmptyTitle": "El carrito está vacío",
+  "salesCartEmptyMessage": "Busca o escanea un producto para empezar la venta.",
+  "salesCartBrowseByCategory": "Explorar por categoría",
+  "salesStockLimitMessage": "{count, plural, =1{Solo queda 1 unidad de {productName}.} other{Solo quedan {count} unidades de {productName}.}}",
+  "@salesStockLimitMessage": {
+    "description": "Snackbar when the cart already holds all the stock of a product.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "productName": {
+        "type": "String"
+      }
+    }
+  },
+  "salesProductSoldOutMessage": "{productName} está agotado.",
+  "@salesProductSoldOutMessage": {
+    "description": "Snackbar when the seller tries to add a product with no stock.",
+    "placeholders": {
+      "productName": {
+        "type": "String"
+      }
+    }
+  },
+  "salesSummaryTotalItems": "Total · {items}",
+  "@salesSummaryTotalItems": {
+    "description": "Summary panel while the cart is empty.",
+    "placeholders": {
+      "items": {
+        "type": "String",
+        "example": "0 artículos"
+      }
+    }
+  },
+  "salesSummarySubtotalLabel": "Subtotal ",
+  "@salesSummarySubtotalLabel": {
+    "description": "Summary panel; followed by the subtotal amount in bold. Keep the trailing space."
+  },
+  "salesSummaryDiscountButton": "Descuento",
+  "@salesSummaryDiscountButton": {
+    "description": "Opens the discount sheet while no discount is applied."
+  },
+  "salesSummaryChargeButton": "Cobrar",
+  "@salesSummaryChargeButton": {
+    "description": "Main button of the summary panel; the total is shown next to it."
+  },
+  "salesDiscountSheetTitle": "Aplicar descuento",
+  "salesDiscountSheetSubtitle": "Se resta del total de la venta.",
+  "salesDiscountSheetAmountLabel": "Monto del descuento",
+  "salesDiscountSheetApplyButton": "Aplicar",
+  "salesCategoryProductCount": "{count, plural, =1{1 producto} other{{count} productos}}",
+  "@salesCategoryProductCount": {
+    "description": "Product count on a category shortcut of the empty cart.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "salesProductSoldOutBadge": "Agotado",
+  "salesProductInStock": "{count} en stock",
+  "@salesProductInStock": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "salesProductOutOfStock": "Sin stock",
+  "salesProductAddTooltip": "Agregar {productName}",
+  "@salesProductAddTooltip": {
+    "placeholders": {
+      "productName": {
+        "type": "String"
+      }
+    }
+  },
+  "salesCartLineUnitPrice": "{price} c/u",
+  "@salesCartLineUnitPrice": {
+    "description": "Unit price under a cart line (\"c/u\" = cada uno).",
+    "placeholders": {
+      "price": {
+        "type": "String",
+        "example": "Bs 120,00"
+      }
+    }
+  },
+  "salesSearchBackTooltip": "Volver a la venta",
+  "salesSearchHint": "Nombre o código",
+  "salesSearchAllCategories": "Todos",
+  "@salesSearchAllCategories": {
+    "description": "Category filter chip that shows every product."
+  },
+  "salesSearchNoResultsTitle": "Sin resultados",
+  "salesSearchNoResultsMessage": "Prueba con otro nombre o cambia de categoría.",
+  "salesSearchViewSaleButton": "Ver venta",
+  "salesCheckoutTitle": "Cobrar venta",
+  "salesCheckoutSubtitle": "Venta {number} · {items}",
+  "@salesCheckoutSubtitle": {
+    "placeholders": {
+      "number": {
+        "type": "String",
+        "example": "#0019"
+      },
+      "items": {
+        "type": "String",
+        "example": "3 artículos"
+      }
+    }
+  },
+  "salesCheckoutTotalLabel": "Total a cobrar",
+  "salesCheckoutSeeDetailButton": "Ver detalle",
+  "salesCheckoutPaymentMethodLabel": "Método de pago",
+  "salesCheckoutAmountReceivedLabel": "Monto recibido",
+  "salesCheckoutExactAmount": "Exacto",
+  "@salesCheckoutExactAmount": {
+    "description": "Quick amount chip that fills in the exact total."
+  },
+  "salesCheckoutChangeTitle": "Cambio a devolver",
+  "salesCheckoutConfirmButton": "Confirmar cobro",
+  "salesCompletedTitle": "Venta registrada",
+  "salesCompletedSubtitle": "Venta {number} · {date}, {time}",
+  "@salesCompletedSubtitle": {
+    "placeholders": {
+      "number": {
+        "type": "String",
+        "example": "#0019"
+      },
+      "date": {
+        "type": "String",
+        "example": "17 sep"
+      },
+      "time": {
+        "type": "String",
+        "example": "14:30"
+      }
+    }
+  },
+  "salesCompletedDetailTitle": "Detalle",
+  "salesCompletedTotalLabel": "Total",
+  "salesCompletedReceivedLabel": "Recibido",
+  "salesCompletedChangeLabel": "Cambio",
+  "salesCompletedNewSaleButton": "Nueva venta",
+  "salesCompletedGoHomeButton": "Volver al inicio",
+  "salesReceiptActionView": "Comprobante",
+  "@salesReceiptActionView": {
+    "description": "Action that opens the receipt of the sale."
+  },
+  "salesReceiptActionPrint": "Imprimir",
+  "@salesReceiptActionPrint": {
+    "description": "Action that opens the print sheet of the receipt."
+  },
+  "salesReceiptActionShare": "Compartir",
+  "@salesReceiptActionShare": {
+    "description": "Action that opens the share sheet of the receipt."
+  },
+  "salesReceiptScreenTitle": "Comprobante",
+  "salesReceiptStoreLocation": "{department}, {country}",
+  "@salesReceiptStoreLocation": {
+    "description": "Store location on the on-screen receipt header. {country} is receiptCountry.",
+    "placeholders": {
+      "department": {
+        "type": "String",
+        "example": "La Paz"
+      },
+      "country": {
+        "type": "String",
+        "example": "Bolivia"
+      }
+    }
+  },
+  "salesReceiptStoreDetails": "{location} · {taxId}",
+  "@salesReceiptStoreDetails": {
+    "description": "On-screen receipt header line when the store has a tax id. {location} is the store location and {taxId} is receiptTaxId.",
+    "placeholders": {
+      "location": {
+        "type": "String",
+        "example": "La Paz, Bolivia"
+      },
+      "taxId": {
+        "type": "String",
+        "example": "NIT 1234567"
+      }
+    }
+  },
+  "salesPrintSheetTitle": "Imprimir comprobante",
+  "salesPrintSheetSubtitle": "N° {number} · {total}",
+  "@salesPrintSheetSubtitle": {
+    "placeholders": {
+      "number": {
+        "type": "String",
+        "example": "0019"
+      },
+      "total": {
+        "type": "String",
+        "example": "Bs 120,00"
+      }
+    }
+  },
+  "salesPrintSheetPrinterLabel": "Impresora",
+  "salesPrintSheetNoPrinters": "No hay impresoras vinculadas. Vincula tu impresora térmica desde los ajustes de Bluetooth del celular.",
+  "salesPrintSheetSearchPrinters": "Buscar impresoras vinculadas",
+  "salesPrintSheetPaperLabel": "Papel",
+  "salesPrintSheetCopiesLabel": "Copias",
+  "salesPrintSheetPrintButton": "Imprimir",
+  "salesPrintSheetPrintedMessage": "Comprobante enviado a la impresora.",
+  "salesShareSheetTitle": "Compartir comprobante",
+  "salesShareSheetReceiptSummary": "{total} · {paymentMethod} · {items}",
+  "@salesShareSheetReceiptSummary": {
+    "placeholders": {
+      "total": {
+        "type": "String",
+        "example": "Bs 120,00"
+      },
+      "paymentMethod": {
+        "type": "String",
+        "example": "Efectivo"
+      },
+      "items": {
+        "type": "String",
+        "example": "3 artículos"
+      }
+    }
+  },
+  "salesShareSheetFormatLabel": "Formato",
+  "salesShareSheetImageFormat": "Imagen",
+  "salesShareSheetWhatsAppLabel": "Enviar al WhatsApp del cliente",
+  "salesShareSheetPhoneHint": "Número de celular",
+  "salesShareSheetWhatsAppTooltip": "Enviar por WhatsApp",
+  "salesShareSheetWhatsAppHint": "Se envía el detalle de la venta como mensaje.",
+  "salesShareSheetSaveTarget": "Guardar",
+  "@salesShareSheetSaveTarget": {
+    "description": "Share destination that saves the receipt on the device."
+  },
+  "salesShareSheetEmailTarget": "Correo",
+  "salesShareSheetOtherAppsTarget": "Otras apps",
+  "salesShareSheetWhatsAppOpening": "Abriendo WhatsApp con el comprobante…",
+  "salesShareSheetEmailOpening": "Abriendo tu app de correo…",
+  "salesShareSheetSaved": "Comprobante guardado.",
+  "salesShareSheetReady": "Comprobante listo para compartir.",
+  "receiptNumberLabel": "Comprobante N°",
+  "receiptNumberTitle": "Comprobante N° {number}",
+  "@receiptNumberTitle": {
+    "placeholders": {
+      "number": {
+        "type": "String",
+        "example": "0019"
+      }
+    }
+  },
+  "receiptDocumentTitle": "Comprobante {number}",
+  "@receiptDocumentTitle": {
+    "placeholders": {
+      "number": {
+        "type": "String",
+        "example": "0019"
+      }
+    }
+  },
+  "receiptEmailSubject": "Comprobante N° {number} · {businessName}",
+  "@receiptEmailSubject": {
+    "placeholders": {
+      "number": {
+        "type": "String",
+        "example": "0019"
+      },
+      "businessName": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptFileName": "comprobante-{number}",
+  "@receiptFileName": {
+    "description": "Name of exported receipt files, without extension.",
+    "placeholders": {
+      "number": {
+        "type": "String",
+        "example": "0019"
+      }
+    }
+  },
+  "receiptDateLabel": "Fecha",
+  "receiptCashierLabel": "Atendió",
+  "receiptSubtotalLabel": "Subtotal",
+  "receiptDiscountLabel": "Descuento",
+  "receiptTotalLabel": "TOTAL",
+  "receiptChangeLabel": "Cambio",
+  "receiptTaxId": "NIT {taxId}",
+  "@receiptTaxId": {
+    "placeholders": {
+      "taxId": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptCountry": "Bolivia",
+  "receiptThanks": "¡Gracias por tu compra!",
+  "receiptMadeWith": "Hecho con Cumavi POS",
+  "receiptMadeWithPrefix": "Hecho con",
+  "@receiptMadeWithPrefix": {
+    "description": "Followed by the Cumavi logo and the product name on the on-screen receipt."
+  },
+  "cashRegisterTitle": "Ventas",
+  "@cashRegisterTitle": {
+    "description": "Header of the Ventas tab while the cash drawer is closed (same name as the shellSales tab)."
+  },
+  "cashRegisterClosedStatus": "Caja cerrada",
+  "@cashRegisterClosedStatus": {
+    "description": "Status pill next to the header while the cash drawer is closed."
+  },
+  "cashRegisterOpenHeadline": "Abre la caja para empezar a vender",
+  "cashRegisterOpenDescription": "Ingresa el efectivo con el que inicias el día. La caja queda abierta hasta que la cierres.",
+  "cashRegisterOpeningAmountLabel": "Monto inicial en efectivo",
+  "@cashRegisterOpeningAmountLabel": {
+    "description": "Label of the opening float input when opening the cash drawer."
+  },
+  "cashRegisterCashierLabel": "Cajero",
+  "cashRegisterNoCashier": "Sin cajero",
+  "@cashRegisterNoCashier": {
+    "description": "Shown as the cashier name while nobody is signed in."
+  },
+  "cashRegisterOpenedAtLabel": "Apertura",
+  "@cashRegisterOpenedAtLabel": {
+    "description": "Label of the opening date and time of the cash drawer."
+  },
+  "cashRegisterOpenAction": "Abrir caja",
+  "cashRegisterOpenFailed": "No pudimos abrir la caja.",
+  "@cashRegisterOpenFailed": {
+    "description": "Fallback error when opening the cash drawer fails without a specific reason."
+  },
+  "cashRegisterCloseTitle": "Cerrar caja",
+  "cashRegisterCloseSubtitle": "Abierta hoy desde las {time}",
+  "@cashRegisterCloseSubtitle": {
+    "description": "Subtitle of the close-drawer screen. {time} is the opening time, already formatted.",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "08:30"
+      }
+    }
+  },
+  "cashRegisterCloseLoadFailed": "No pudimos cargar el cierre de caja.",
+  "@cashRegisterCloseLoadFailed": {
+    "description": "Fallback error when the close-drawer report cannot be loaded."
+  },
+  "cashRegisterOpeningAmount": "Monto inicial",
+  "@cashRegisterOpeningAmount": {
+    "description": "Close-drawer report row: opening float."
+  },
+  "cashRegisterSalesByMethod": "Ventas con {method}",
+  "@cashRegisterSalesByMethod": {
+    "description": "Close-drawer report row: total sold with one payment method. {method} is the payment method name (paymentMethod* keys), lower-cased in code.",
+    "placeholders": {
+      "method": {
+        "type": "String",
+        "example": "efectivo"
+      }
+    }
+  },
+  "cashRegisterTotalSold": "Total vendido",
+  "@cashRegisterTotalSold": {
+    "description": "Close-drawer report: total of the day. Rendered bold, followed by cashRegisterSaleCount in a lighter style: \"Total vendido · 12 ventas\"."
+  },
+  "cashRegisterSaleCount": " · {count, plural, =1{1 venta} other{{count} ventas}}",
+  "@cashRegisterSaleCount": {
+    "description": "Number of sales, rendered right after cashRegisterTotalSold in a lighter style (hence the leading separator).",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cashRegisterExpectedCash": "Efectivo esperado",
+  "cashRegisterExpectedCashFormula": "Monto inicial + ventas en efectivo",
+  "@cashRegisterExpectedCashFormula": {
+    "description": "Explains how the expected cash in the drawer is computed."
+  },
+  "cashRegisterCountedCashLabel": "Efectivo contado",
+  "@cashRegisterCountedCashLabel": {
+    "description": "Label of the input where the cashier types the cash counted in the drawer."
+  },
+  "cashRegisterShortage": "Faltante",
+  "@cashRegisterShortage": {
+    "description": "Banner title when the counted cash is below the expected cash."
+  },
+  "cashRegisterSurplus": "Sobrante",
+  "@cashRegisterSurplus": {
+    "description": "Banner title when the counted cash is above the expected cash."
+  },
+  "cashRegisterNoteLabel": "Observación",
+  "cashRegisterNoteHint": "Explica la diferencia (opcional)",
+  "cashRegisterConfirmClose": "Confirmar cierre",
+  "catalogInventoryTitle": "Inventario",
+  "catalogInventorySearchHint": "Buscar producto",
+  "catalogInventoryFilterAll": "Todos",
+  "@catalogInventoryFilterAll": {
+    "description": "Category filter chip that shows every product."
+  },
+  "catalogInventoryProductCount": "{count, plural, =1{1 producto} other{{count} productos}}",
+  "@catalogInventoryProductCount": {
+    "description": "Inventory subtitle: how many products the list shows. May be followed by catalogInventoryLowStockSuffix.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogInventoryLowStockSuffix": " · {count} con stock bajo",
+  "@catalogInventoryLowStockSuffix": {
+    "description": "Appended right after catalogInventoryProductCount, in warning color, when some products are low on stock. Keep the leading separator.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogInventoryCreateProduct": "Crear producto",
+  "catalogInventoryEmptyTitle": "Sin productos",
+  "catalogInventoryEmptyMessage": "Crea tu primer producto para empezar a vender.",
+  "catalogProductTileSubtitle": "{categoryName} · Costo {cost}",
+  "@catalogProductTileSubtitle": {
+    "description": "Second line of an inventory row: category and cost price.",
+    "placeholders": {
+      "categoryName": {
+        "type": "String",
+        "example": "Calzado"
+      },
+      "cost": {
+        "type": "String",
+        "example": "Bs 280"
+      }
+    }
+  },
+  "catalogStockBadgeUnits": "{count} u.",
+  "@catalogStockBadgeUnits": {
+    "description": "Stock badge of a product with healthy stock; 'u.' abbreviates units.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogStockBadgeLow": "{count, plural, =1{Queda 1} other{Quedan {count}}}",
+  "@catalogStockBadgeLow": {
+    "description": "Stock badge of a product that is running low.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogStockBadgeOutOfStock": "Agotado",
+  "catalogProductFormTitle": "Nuevo producto",
+  "catalogProductFormNameLabel": "Nombre",
+  "catalogProductFormNameHint": "Ej. Zapatillas urbanas café",
+  "catalogProductFormCategoryLabel": "Categoría",
+  "catalogProductFormQuantityLabel": "Cantidad",
+  "catalogProductFormQuantityCaption": "Unidades en stock",
+  "catalogProductFormSalePriceLabel": "Precio de venta",
+  "catalogProductFormCostLabel": "Costo",
+  "catalogProductFormProfitTitle": "Ganancia c/u",
+  "@catalogProductFormProfitTitle": {
+    "description": "Profit per unit ('c/u' = cada uno)."
+  },
+  "catalogProductFormProfitValue": "{amount} · {margin}",
+  "@catalogProductFormProfitValue": {
+    "description": "Profit per unit and margin shown next to catalogProductFormProfitTitle.",
+    "placeholders": {
+      "amount": {
+        "type": "String",
+        "example": "Bs 170,00"
+      },
+      "margin": {
+        "type": "String",
+        "example": "37,8 %"
+      }
+    }
+  },
+  "catalogProductFormSave": "Guardar producto",
+  "catalogPhotoFieldRemoveBackgroundLabel": "Quitar fondo",
+  "@catalogPhotoFieldRemoveBackgroundLabel": {
+    "description": "Label of the switch that removes the photo background in the product form."
+  },
+  "catalogPhotoFieldRemoveBackgroundDescription": "El producto queda sobre fondo blanco",
+  "catalogPhotoFieldProcessing": "Procesando la foto…",
+  "catalogPhotoFieldEmptyTitle": "Tomar foto del producto",
+  "catalogPhotoFieldEmptySubtitle": "Le quitamos el fondo por ti",
+  "catalogPhotoFieldBackgroundRemovedBadge": "Fondo quitado",
+  "catalogPhotoFieldAdjust": "Ajustar",
+  "@catalogPhotoFieldAdjust": {
+    "description": "Opens the background removal editor."
+  },
+  "catalogPhotoFieldChangePhotoTooltip": "Cambiar foto",
+  "catalogPhotoSourceTitle": "Foto del producto",
+  "catalogPhotoSourceSubtitle": "Le quitamos el fondo automáticamente.",
+  "catalogPhotoSourceCamera": "Tomar foto",
+  "catalogPhotoSourceCameraDescription": "Usa la cámara del celular",
+  "catalogPhotoSourceGallery": "Elegir de la galería",
+  "catalogPhotoSourceGalleryDescription": "Una foto que ya tengas guardada",
+  "catalogBackgroundRemovalNoPhoto": "Toma una foto del producto para editarla.",
+  "catalogBackgroundRemovalTitle": "Quitar fondo",
+  "catalogBackgroundRemovalDefaultSubtitle": "Foto del producto",
+  "@catalogBackgroundRemovalDefaultSubtitle": {
+    "description": "Shown under the editor title while the product has no name yet."
+  },
+  "catalogBackgroundRemovalDone": "Fondo quitado",
+  "catalogBackgroundRemovalCompareHint": "Desliza para comparar",
+  "catalogBackgroundRemovalRetake": "Repetir foto",
+  "catalogBackgroundRemovalUsePhoto": "Usar foto",
+  "catalogBackgroundOptionWhite": "Blanco",
+  "catalogBackgroundOptionTransparent": "Transparente",
+  "catalogBackgroundOptionOriginal": "Original",
+  "@catalogBackgroundOptionOriginal": {
+    "description": "Background option that keeps the photo as taken."
+  },
+  "catalogBeforeAfterBeforeLabel": "Original",
+  "@catalogBeforeAfterBeforeLabel": {
+    "description": "Tag on the unprocessed side of the before/after photo comparison."
+  },
+  "catalogBeforeAfterAfterLabel": "Sin fondo",
+  "@catalogBeforeAfterAfterLabel": {
+    "description": "Tag on the processed side of the before/after photo comparison."
+  },
+  "catalogProductTileVariantSummary": "{count, plural, =1{1 variante · {options}} other{{count} variantes · {options}}}",
+  "@catalogProductTileVariantSummary": {
+    "description": "Inventory row, third line of a product with variants: how many variants and the ways it varies.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "options": {
+        "type": "String",
+        "example": "Color, Talla"
+      }
+    }
+  },
+  "catalogDetailTitle": "Producto",
+  "@catalogDetailTitle": {
+    "description": "Header of the product detail screen, opened from the inventory."
+  },
+  "catalogDetailEdit": "Editar producto",
+  "@catalogDetailEdit": {
+    "description": "Bottom button and pencil tooltip of the product detail; opens the edit form."
+  },
+  "catalogDetailLoadErrorTitle": "No pudimos cargar el producto",
+  "@catalogDetailLoadErrorTitle": {
+    "description": "Title of the product detail when the product could not be loaded; the failure message goes below."
+  },
+  "catalogDetailPhotoLabel": "Foto {current} de {total}",
+  "@catalogDetailPhotoLabel": {
+    "description": "Accessibility label of a gallery thumbnail.",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogDetailPricesTitle": "Precios",
+  "@catalogDetailPricesTitle": {
+    "description": "Section with the sale price, cost, profit per unit and margin."
+  },
+  "catalogDetailStockTitle": "Stock",
+  "@catalogDetailStockTitle": {
+    "description": "Section with the units in stock and, for products with variants, how many are sold out."
+  },
+  "catalogDetailStockUnits": "{count, plural, =1{unidad en stock} other{unidades en stock}}",
+  "@catalogDetailStockUnits": {
+    "description": "Label next to the big units number of the stock section.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogDetailStockSoldOutLabel": "Variantes agotadas",
+  "@catalogDetailStockSoldOutLabel": {
+    "description": "Stock section of a product with variants: how many variants have no units left."
+  },
+  "catalogDetailDescriptionTitle": "Descripción",
+  "@catalogDetailDescriptionTitle": {
+    "description": "Section with the product description."
+  },
+  "catalogDetailVariantsTitle": "Variantes",
+  "@catalogDetailVariantsTitle": {
+    "description": "Section listing the variants (color, size...) with their stock."
+  },
+  "catalogDetailVariantCount": "{count, plural, =1{1 variante} other{{count} variantes}}",
+  "@catalogDetailVariantCount": {
+    "description": "Next to catalogDetailVariantsTitle: how many variants the product has.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogDetailGroupSoldOut": "{count, plural, =0{Todas con stock} =1{1 agotada} other{{count} agotadas}}",
+  "@catalogDetailGroupSoldOut": {
+    "description": "Under a variant group (e.g. color Rojo): how many of its variants are sold out.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogDetailCreatedAt": "Agregado el {date}",
+  "@catalogDetailCreatedAt": {
+    "description": "Bottom of the product detail: when the product was added to the inventory.",
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "yMMMMd"
+      }
+    }
+  },
+  "catalogDetailViewPhotoTooltip": "Ver foto",
+  "@catalogDetailViewPhotoTooltip": {
+    "description": "Tooltip of a variant photo; tapping it shows the photo larger."
+  },
+  "catalogProductFormEditTitle": "Editar producto",
+  "@catalogProductFormEditTitle": {
+    "description": "Header of the product form when editing an existing product (catalogProductFormTitle is the create one)."
+  },
+  "catalogProductFormSaveChanges": "Guardar cambios",
+  "@catalogProductFormSaveChanges": {
+    "description": "Save button of the product form in edit mode (catalogProductFormSave is the create one)."
+  },
+  "catalogProductFormLoadErrorTitle": "No pudimos abrir el producto",
+  "@catalogProductFormLoadErrorTitle": {
+    "description": "Title shown when the product to edit could not be read; the failure message follows."
+  },
+  "catalogProductFormDataSection": "Datos del producto",
+  "catalogProductFormPriceSection": "Precio",
+  "catalogProductFormStockSection": "Stock y variantes",
+  "@catalogProductFormStockSection": {
+    "description": "Title of the card with the product stock and its variants (sizes, colors...)."
+  },
+  "catalogProductFormOptional": "(opcional)",
+  "@catalogProductFormOptional": {
+    "description": "Shown right after a field label that can be left empty."
+  },
+  "catalogProductFormDescriptionLabel": "Descripción",
+  "catalogProductFormDescriptionHint": "Material, cuidados o detalles que ayuden a vender",
+  "catalogProductFormGalleryTitle": "Más fotos",
+  "@catalogProductFormGalleryTitle": {
+    "description": "Title of the strip of extra product photos below the main one."
+  },
+  "catalogProductFormGalleryCaption": "Otros colores o ángulos. Cada variante puede usar una de estas fotos.",
+  "catalogProductFormGalleryAdd": "Agregar",
+  "@catalogProductFormGalleryAdd": {
+    "description": "Label of the tile that adds one more photo to the product gallery."
+  },
+  "catalogProductFormGalleryRemoveTooltip": "Quitar foto",
+  "catalogProductFormGallerySourceTitle": "Agregar foto",
+  "@catalogProductFormGallerySourceTitle": {
+    "description": "Title of the camera/gallery sheet when adding an extra photo."
+  },
+  "catalogProductFormGallerySourceSubtitle": "Se guarda tal cual, sin quitar el fondo.",
+  "@catalogProductFormGallerySourceSubtitle": {
+    "description": "Extra photos keep their background; only the main photo gets it removed."
+  },
+  "catalogProductFormAddVariants": "Agregar variantes (talla, color…)",
+  "@catalogProductFormAddVariants": {
+    "description": "Action that turns a simple product into one with variants."
+  },
+  "catalogProductFormAddVariantsCaption": "Vende por talla o color, con stock para cada una.",
+  "catalogProductFormTotalStock": "{count, plural, =1{1 unidad} other{{count} unidades}}",
+  "@catalogProductFormTotalStock": {
+    "description": "Total stock of a product with variants, next to the stock card title.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogVariantTypeSheetTitle": "Tipo de variante",
+  "@catalogVariantTypeSheetTitle": {
+    "description": "Sheet to add a way the product varies (color, size...)."
+  },
+  "catalogVariantTypeSheetSubtitle": "Elige uno o escribe otro, como Material.",
+  "catalogVariantTypeColor": "Color",
+  "@catalogVariantTypeColor": {
+    "description": "Name of the color variant type. Also used to offer common colors as suggestions."
+  },
+  "catalogVariantTypeColorDescription": "Negro, blanco, rojo…",
+  "catalogVariantTypeSize": "Talla",
+  "@catalogVariantTypeSize": {
+    "description": "Name of the size variant type. Also used to offer common sizes as suggestions."
+  },
+  "catalogVariantTypeSizeDescription": "S, M, L o números como 38 y 40",
+  "catalogVariantTypeCustomLabel": "Otro tipo",
+  "catalogVariantTypeCustomHint": "Ej. Material",
+  "catalogVariantTypeAdd": "Agregar",
+  "@catalogVariantTypeAdd": {
+    "description": "Button that adds the variant type typed by the seller."
+  },
+  "catalogVariantTypeRenameTitle": "Cambiar nombre",
+  "@catalogVariantTypeRenameTitle": {
+    "description": "Sheet to rename a variant type."
+  },
+  "catalogVariantTypeNameLabel": "Nombre del tipo",
+  "catalogVariantSizeSuggestions": "S,M,L,XL",
+  "@catalogVariantSizeSuggestions": {
+    "description": "Comma-separated quick values offered for the size type. No spaces around commas."
+  },
+  "catalogVariantColorSuggestions": "Negro,Blanco,Rojo,Azul,Gris",
+  "@catalogVariantColorSuggestions": {
+    "description": "Comma-separated quick values offered for the color type. No spaces around commas."
+  },
+  "catalogVariantValueHint": "Nuevo valor de {option}",
+  "@catalogVariantValueHint": {
+    "description": "Hint of the input that adds a value to a variant type.",
+    "placeholders": {
+      "option": {
+        "type": "String",
+        "example": "Talla"
+      }
+    }
+  },
+  "catalogVariantValueAddTooltip": "Agregar valor",
+  "catalogVariantValueRemoveTooltip": "Quitar {value}",
+  "@catalogVariantValueRemoveTooltip": {
+    "placeholders": {
+      "value": {
+        "type": "String",
+        "example": "Rojo"
+      }
+    }
+  },
+  "catalogVariantOptionEmptyHint": "Agrega al menos un valor para crear las variantes.",
+  "catalogVariantOptionRenameTooltip": "Cambiar nombre",
+  "catalogVariantOptionRemoveTooltip": "Quitar tipo",
+  "catalogVariantAddAnotherType": "Agregar otro tipo",
+  "catalogVariantRemoveTypeTitle": "¿Quitar {option}?",
+  "@catalogVariantRemoveTypeTitle": {
+    "placeholders": {
+      "option": {
+        "type": "String",
+        "example": "Talla"
+      }
+    }
+  },
+  "catalogVariantRemoveTypeMessage": "Se borran sus valores y el stock cargado en esas variantes.",
+  "catalogVariantRemoveTypeConfirm": "Quitar",
+  "catalogVariantListTitle": "{count, plural, =1{1 variante} other{{count} variantes}}",
+  "@catalogVariantListTitle": {
+    "description": "Heading of the list of variants, one per combination of values.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogVariantListCaption": "Toca la foto de una variante para cambiarla.",
+  "catalogVariantPhotoTooltip": "Foto de {variant}",
+  "@catalogVariantPhotoTooltip": {
+    "placeholders": {
+      "variant": {
+        "type": "String",
+        "example": "Rojo · 40"
+      }
+    }
+  },
+  "catalogVariantImageSheetTitle": "Foto de la variante",
+  "catalogVariantImageMain": "Principal",
+  "@catalogVariantImageMain": {
+    "description": "Caption of the main product photo among the photos a variant can use."
+  },
+  "catalogVariantImageAdd": "Nueva foto",
+  "catalogVariantImageApplyToGroup": "Usar en todas las variantes {value}",
+  "@catalogVariantImageApplyToGroup": {
+    "description": "Switch: the chosen photo also goes to every variant sharing this value (e.g. all the red ones).",
+    "placeholders": {
+      "value": {
+        "type": "String",
+        "example": "Rojo"
+      }
+    }
+  },
+  "catalogVariantImageGalleryHint": "Sube más fotos para que cada color muestre la suya.",
+  "salesVariantSheetTitle": "Elige la variante",
+  "@salesVariantSheetTitle": {
+    "description": "Title of the sheet that asks which variant (color, size...) of a product to add to the sale."
+  },
+  "salesVariantMissingOption": "Falta elegir {option}",
+  "@salesVariantMissingOption": {
+    "description": "Variant picker, while the selection is incomplete. option is the name of the first option left, e.g. Talla.",
+    "placeholders": {
+      "option": {
+        "type": "String"
+      }
+    }
+  },
+  "salesVariantAllInCart": "{count, plural, =1{La única unidad ya está en la venta} other{Las {count} unidades ya están en la venta}}",
+  "@salesVariantAllInCart": {
+    "description": "Variant picker: the chosen variant has stock, but all of it is already in the cart.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "salesVariantInCart": "{count} en la venta",
+  "@salesVariantInCart": {
+    "description": "Variant picker badge: units of the chosen variant already in the cart.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "salesVariantQuantityLabel": "Cantidad",
+  "@salesVariantQuantityLabel": {
+    "description": "Variant picker, label of the quantity stepper."
+  },
+  "salesVariantAddButton": "Agregar · {total}",
+  "@salesVariantAddButton": {
+    "description": "Variant picker main button. total is the price of the chosen units, e.g. Bs 900,00.",
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "salesVariantProductName": "{productName} ({variantLabel})",
+  "@salesVariantProductName": {
+    "description": "A product together with its variant, used in messages and in the text receipt: Zapatillas urbanas (Azul · 40).",
+    "placeholders": {
+      "productName": {
+        "type": "String"
+      },
+      "variantLabel": {
+        "type": "String"
+      }
+    }
+  },
+  "salesVariantAddedMessage": "{count, plural, =1{Se agregó a la venta: {productName}} other{Se agregaron {count} a la venta: {productName}}}",
+  "@salesVariantAddedMessage": {
+    "description": "Snackbar after adding units of a variant from the variant picker.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "productName": {
+        "type": "String"
+      }
+    }
+  },
+  "salesVariantCount": "{count, plural, =1{1 variante} other{{count} variantes}}",
+  "@salesVariantCount": {
+    "description": "Badge on the sale catalog card of a product that is sold in variants.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "salesVariantChooseTooltip": "Elegir variante de {productName}",
+  "@salesVariantChooseTooltip": {
+    "description": "Tooltip of the add button of a product with variants: it opens the variant picker.",
+    "placeholders": {
+      "productName": {
+        "type": "String"
+      }
+    }
+  },
+  "salesVariantValueUnavailable": "{value}, sin stock",
+  "@salesVariantValueUnavailable": {
+    "description": "Screen reader label of a variant value that cannot be added with the current choices.",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  }
+}

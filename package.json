@@ -1,0 +1,19 @@
+{
+  "name": "cumavi-pos",
+  "private": true,
+  "description": "CUMAVI POS: Flutter point of sale (apps/mobile) and Next.js catalog for customer orders (apps/web).",
+  "packageManager": "pnpm@10.18.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "turbo run dev --filter=@cumavi-pos/web",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test"
+  },
+  "devDependencies": {
+    "turbo": "^2.11.4"
+  }
+}

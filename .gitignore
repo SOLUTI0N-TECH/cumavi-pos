@@ -1,0 +1,21 @@
+# Dependencies and JS build output
+node_modules/
+.pnpm-store/
+.turbo/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Env files (commit only the examples)
+.env
+.env.*
+!.env.example
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+*.log
+
+# The Flutter app keeps its own .gitignore in apps/mobile.

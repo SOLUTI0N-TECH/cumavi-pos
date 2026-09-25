@@ -1,0 +1,97 @@
+@import "tailwindcss";
+@import "@cumavi-pos/design-tokens/tokens.css";
+
+/*
+ * Tailwind utilities backed by the CUMAVI POS tokens, so the catalog and the
+ * POS app share colors and radii: bg-ink, text-secondary, rounded-xl...
+ */
+@theme inline {
+  --font-sans: var(--font-outfit), system-ui, sans-serif;
+
+  --color-ink: var(--pos-ink);
+  --color-ink-strong: var(--pos-ink-strong);
+  --color-ink-soft: var(--pos-ink-soft);
+  --color-primary: var(--pos-text-primary);
+  --color-secondary: var(--pos-text-secondary);
+  --color-placeholder: var(--pos-text-placeholder);
+  --color-on-dark-muted: var(--pos-text-on-dark-muted);
+  --color-background: var(--pos-background);
+  --color-surface: var(--pos-surface);
+  --color-surface-muted: var(--pos-surface-muted);
+  --color-border: var(--pos-border);
+  --color-border-soft: var(--pos-border-soft);
+  --color-divider: var(--pos-divider);
+  --color-divider-soft: var(--pos-divider-soft);
+  --color-success: var(--pos-success);
+  --color-success-text: var(--pos-success-text);
+  --color-success-strong: var(--pos-success-text-strong);
+  --color-success-surface: var(--pos-success-surface);
+  --color-warning: var(--pos-warning);
+  --color-warning-text: var(--pos-warning-text);
+  --color-warning-surface: var(--pos-warning-surface);
+  --color-error: var(--pos-error);
+  --color-error-text: var(--pos-error-text);
+  --color-error-surface: var(--pos-error-surface);
+  --color-info: var(--pos-info);
+  --color-info-text: var(--pos-info-text);
+  --color-info-surface: var(--pos-info-surface);
+  --color-gold: var(--pos-gold);
+
+  --radius-sm: var(--pos-radius-sm);
+  --radius-md: var(--pos-radius-md);
+  --radius-lg: var(--pos-radius-lg);
+  --radius-xl: var(--pos-radius-xl);
+  --radius-2xl: var(--pos-radius-2xl);
+  --radius-3xl: var(--pos-radius-3xl);
+
+  --animate-pop-in: pop-in 0.25s ease both;
+  --animate-fade-in: fade-in 0.2s ease both;
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--pos-background);
+    color: var(--pos-text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--pos-ink);
+    outline-offset: 2px;
+  }
+
+  ::placeholder {
+    color: var(--pos-text-placeholder);
+  }
+}
+
+/* Thin horizontal scrollbar for chip rows. */
+.scroll-row {
+  scrollbar-width: thin;
+  scrollbar-color: var(--pos-border-soft) transparent;
+}

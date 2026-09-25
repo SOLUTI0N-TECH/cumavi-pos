@@ -1,0 +1,51 @@
+/*
+ * CUMAVI POS design tokens for the web.
+ * Source of truth today: apps/mobile/lib/core/theme (AppColors, AppRadius,
+ * AppSpacing). Change a value there and here together.
+ */
+:root {
+  /* Ink: warm charcoal, the brand's main color. */
+  --pos-ink: #292526;
+  --pos-ink-strong: #141213;
+  --pos-ink-soft: #4a4546;
+
+  /* Text */
+  --pos-text-primary: #292526;
+  --pos-text-secondary: #6b6e72;
+  --pos-text-placeholder: #75787c;
+  --pos-text-on-dark-muted: #c9c6c7;
+
+  /* Surfaces */
+  --pos-background: #f2f2f2;
+  --pos-surface: #ffffff;
+  --pos-surface-muted: #f7f7f7;
+  --pos-border: #c5cfdb;
+  --pos-border-soft: #d5dae1;
+  --pos-divider: #e6e7e7;
+  --pos-divider-soft: #eeefef;
+
+  /* Status */
+  --pos-success: #16a34a;
+  --pos-success-text: #15803d;
+  --pos-success-text-strong: #166534;
+  --pos-success-surface: #e8f6ed;
+  --pos-warning: #f5761b;
+  --pos-warning-text: #9a3412;
+  --pos-warning-surface: #fef0e6;
+  --pos-error: #f8493b;
+  --pos-error-text: #b42318;
+  --pos-error-surface: #fff2f1;
+  --pos-info: #2563eb;
+  --pos-info-text: #1d4ed8;
+  --pos-info-surface: #eaf1fe;
+  --pos-gold: #ffd160;
+
+  /* Radii */
+  --pos-radius-sm: 8px;
+  --pos-radius-md: 12px;
+  --pos-radius-lg: 16px;
+  --pos-radius-xl: 20px;
+  --pos-radius-2xl: 24px;
+  --pos-radius-3xl: 28px;
+  --pos-radius-pill: 999px;
+}
