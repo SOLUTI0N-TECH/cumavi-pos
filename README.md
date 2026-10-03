@@ -12,6 +12,8 @@ Un solo repositorio para el punto de venta y el catálogo de pedidos:
 Todavía no hay backend: las dos apps usan datos simulados detrás de
 interfaces (repositorios), así conectar la API solo cambia la capa de datos.
 
+Novedades y plan de funciones nuevas: [`docs/roadmap.md`](docs/roadmap.md).
+
 ## Requisitos
 
 - Node 22 (`.nvmrc`) y pnpm 10. Una sola vez, en una terminal como
