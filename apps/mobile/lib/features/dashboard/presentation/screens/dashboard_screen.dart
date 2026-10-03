@@ -21,11 +21,19 @@ class DashboardScreen extends StatefulWidget {
   const DashboardScreen({
     required this.onStartSale,
     required this.onOpenInventory,
+    required this.onOpenMore,
+    required this.onOpenSalesHistory,
     super.key,
   });
 
   final VoidCallback onStartSale;
   final VoidCallback onOpenInventory;
+
+  /// Opens the "Más" hub (account, business, settings).
+  final VoidCallback onOpenMore;
+
+  /// "Ver historial" on the today's sales card.
+  final VoidCallback onOpenSalesHistory;
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -73,7 +81,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     padding: const EdgeInsets.symmetric(
                       horizontal: AppSpacing.xl,
                     ),
-                    child: _DashboardTopBar(snapshot: snapshot),
+                    child: _DashboardTopBar(
+                      onOpenMore: widget.onOpenMore,
+                      snapshot: snapshot,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.xl),
                   Padding(
@@ -90,6 +101,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     child: CashSessionCard(
                       snapshot: snapshot,
                       onStartSale: widget.onStartSale,
+                      onOpenHistory: widget.onOpenSalesHistory,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
@@ -129,9 +141,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 }
 
 class _DashboardTopBar extends StatelessWidget {
-  const _DashboardTopBar({required this.snapshot});
+  const _DashboardTopBar({required this.snapshot, required this.onOpenMore});
 
   final DashboardSnapshot snapshot;
+  final VoidCallback onOpenMore;
 
   @override
   Widget build(BuildContext context) {
@@ -168,18 +181,25 @@ class _DashboardTopBar extends StatelessWidget {
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
-        Container(
-          height: 44,
-          width: 44,
-          alignment: Alignment.center,
-          decoration: const BoxDecoration(
+        Tooltip(
+          message: l10n.accountOpenMenuTooltip,
+          child: Material(
             color: AppColors.ink,
-            shape: BoxShape.circle,
-          ),
-          child: Text(
-            snapshot.user?.initials ?? '?',
-            style: AppTextStyles.bodySmallStrong.copyWith(
-              color: AppColors.white,
+            shape: const CircleBorder(),
+            child: InkWell(
+              onTap: onOpenMore,
+              customBorder: const CircleBorder(),
+              child: SizedBox.square(
+                dimension: 44,
+                child: Center(
+                  child: Text(
+                    snapshot.user?.initials ?? '?',
+                    style: AppTextStyles.bodySmallStrong.copyWith(
+                      color: AppColors.white,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ),

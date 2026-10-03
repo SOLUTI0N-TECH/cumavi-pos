@@ -41,12 +41,17 @@ final class BusinessProfileDraft {
     required this.type,
     required this.department,
     this.logoPath,
+    this.taxId,
   });
 
   final String name;
   final BusinessType type;
   final BoliviaDepartment department;
   final String? logoPath;
+
+  /// NIT. `null` keeps the current one (registration doesn't ask for it
+  /// here), an empty text removes it.
+  final String? taxId;
 }
 
 /// Authentication and onboarding. Mocked until the backend exists.
@@ -75,4 +80,7 @@ abstract interface class AuthRepository {
   );
 
   Future<Result<BusinessProfile>> saveSalesSetup(SalesSetup setup);
+
+  /// Ends the session of the current user on this device.
+  Future<Result<void>> signOut();
 }

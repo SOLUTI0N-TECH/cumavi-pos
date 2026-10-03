@@ -2,7 +2,8 @@ import '../../../../core/error/failure.dart';
 import '../../../../core/usecases/use_case.dart';
 import '../../../../core/utils/result.dart';
 import '../../../cash_register/domain/repositories/cash_register_repository.dart';
-import '../../../catalog/domain/repositories/product_repository.dart';
+import '../../../inventory/domain/entities/stock_movement.dart';
+import '../../../inventory/domain/repositories/inventory_repository.dart';
 import '../entities/cart.dart';
 import '../entities/cart_line.dart';
 import '../entities/sale.dart';
@@ -10,21 +11,21 @@ import '../entities/sale_draft.dart';
 import '../repositories/sales_repository.dart';
 
 /// Registers a sale: checks the cash drawer is open, stores the sale and
-/// discounts the sold units from the stock.
+/// takes the sold units out of the stock as "Venta" movements tied to it.
 ///
 /// Orchestrating the three repositories here keeps the rule in the domain
 /// instead of spreading it over the UI.
 final class RegisterSale implements UseCase<Sale, SaleDraft> {
   const RegisterSale({
     required SalesRepository salesRepository,
-    required ProductRepository productRepository,
+    required InventoryRepository inventoryRepository,
     required CashRegisterRepository cashRegisterRepository,
   }) : _salesRepository = salesRepository,
-       _productRepository = productRepository,
+       _inventoryRepository = inventoryRepository,
        _cashRegisterRepository = cashRegisterRepository;
 
   final SalesRepository _salesRepository;
-  final ProductRepository _productRepository;
+  final InventoryRepository _inventoryRepository;
   final CashRegisterRepository _cashRegisterRepository;
 
   @override
@@ -57,18 +58,19 @@ final class RegisterSale implements UseCase<Sale, SaleDraft> {
       return Failed<Sale>(failure);
     }
 
-    final Result<void> stockResult = await _productRepository.reduceStock(
-      cart.lines
-          .map(
-            (CartLine line) => StockMovement(
+    final Sale sale = saleResult.valueOrNull!;
+    final Result<List<StockMovement>> stockResult = await _inventoryRepository
+        .recordMovements(<StockMovementDraft>[
+          for (final CartLine line in cart.lines)
+            StockMovementDraft(
               productId: line.product.id,
               variantId: line.variant?.id,
-              quantity: line.quantity,
+              delta: -line.quantity,
+              type: StockMovementType.sale,
+              saleId: sale.id,
             ),
-          )
-          .toList(),
-    );
-    if (stockResult case Failed<void>(:final Failure failure)) {
+        ]);
+    if (stockResult case Failed<List<StockMovement>>(:final Failure failure)) {
       return Failed<Sale>(failure);
     }
 

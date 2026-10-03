@@ -11,6 +11,7 @@ import '../../../../core/widgets/brand_mark.dart';
 import '../../../../core/widgets/dashed_divider.dart';
 import '../../../../core/widgets/key_value_row.dart';
 import '../../../auth/domain/entities/business_profile.dart';
+import '../../domain/entities/receipt.dart';
 import '../../domain/entities/sale.dart';
 import '../../domain/entities/sale_line.dart';
 
@@ -19,14 +20,17 @@ import '../../domain/entities/sale_line.dart';
 /// The same widget renders the on-screen receipt and the thermal print
 /// preview, so what the customer gets always matches what the seller sees.
 class ReceiptPaper extends StatelessWidget {
-  const ReceiptPaper({required this.sale, required this.business, super.key});
+  const ReceiptPaper({required this.receipt, super.key});
 
-  final Sale sale;
-  final BusinessProfile? business;
+  final Receipt receipt;
 
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = context.l10n;
+    final Sale sale = receipt.sale;
+    final BusinessProfile? business = receipt.business;
+    final String? mark = receipt.markLabel(l10n);
+    final String? reference = receipt.referenceLabel(l10n);
 
     return Stack(
       clipBehavior: Clip.none,
@@ -54,7 +58,26 @@ class ReceiptPaper extends StatelessWidget {
               const SizedBox(height: AppSpacing.md + 2),
               const DashedDivider(),
               const SizedBox(height: AppSpacing.md + 2),
-              _ReceiptMeta(sale: sale),
+              if (mark != null) ...<Widget>[
+                Text(
+                  mark,
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.bodyLargeStrong.copyWith(
+                    color: receipt.mark == ReceiptMark.cancelled
+                        ? AppColors.errorText
+                        : AppColors.textPrimary,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+                if (reference != null)
+                  Text(
+                    reference,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.caption,
+                  ),
+                const SizedBox(height: AppSpacing.md),
+              ],
+              _ReceiptMeta(sale: sale, number: receipt.number),
               const SizedBox(height: AppSpacing.md + 2),
               const DashedDivider(),
               const SizedBox(height: AppSpacing.md + 2),
@@ -66,7 +89,7 @@ class ReceiptPaper extends StatelessWidget {
               const SizedBox(height: AppSpacing.xs),
               const DashedDivider(),
               const SizedBox(height: AppSpacing.md + 2),
-              _ReceiptTotals(sale: sale),
+              _ReceiptTotals(sale: sale, totalLabel: receipt.totalLabel(l10n)),
               const SizedBox(height: AppSpacing.md + 2),
               const DashedDivider(),
               const SizedBox(height: AppSpacing.md + 2),
@@ -74,7 +97,7 @@ class ReceiptPaper extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     Text(
-                      l10n.receiptThanks,
+                      receipt.closingLine(l10n),
                       style: AppTextStyles.bodySmallStrong,
                     ),
                     const SizedBox(height: AppSpacing.xs),
@@ -159,9 +182,12 @@ class _StoreHeader extends StatelessWidget {
 }
 
 class _ReceiptMeta extends StatelessWidget {
-  const _ReceiptMeta({required this.sale});
+  const _ReceiptMeta({required this.sale, required this.number});
 
   final Sale sale;
+
+  /// `0019`, or `D-0001` for a return.
+  final String number;
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +197,7 @@ class _ReceiptMeta extends StatelessWidget {
       children: <Widget>[
         KeyValueRow(
           label: l10n.receiptNumberLabel,
-          value: sale.formattedNumber.replaceAll('#', ''),
+          value: number,
           valueStyle: AppTextStyles.captionSmallStrong.copyWith(
             color: AppColors.textPrimary,
           ),
@@ -241,9 +267,12 @@ class _ReceiptLine extends StatelessWidget {
 }
 
 class _ReceiptTotals extends StatelessWidget {
-  const _ReceiptTotals({required this.sale});
+  const _ReceiptTotals({required this.sale, required this.totalLabel});
 
   final Sale sale;
+
+  /// `TOTAL`, or `TOTAL DEVUELTO` on a return.
+  final String totalLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -270,7 +299,7 @@ class _ReceiptTotals extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: Text(
-                l10n.receiptTotalLabel,
+                totalLabel,
                 style: AppTextStyles.bodyStrong.copyWith(
                   fontWeight: FontWeight.w700,
                   letterSpacing: 0.4,

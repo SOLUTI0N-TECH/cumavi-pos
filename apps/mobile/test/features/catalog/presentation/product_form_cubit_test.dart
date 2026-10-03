@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:cumavi_pos_mobile/core/utils/result.dart';
+import 'package:cumavi_pos_mobile/features/auth/data/datasources/in_memory_session_store.dart';
 import 'package:cumavi_pos_mobile/features/catalog/data/datasources/catalog_seed_data.dart';
 import 'package:cumavi_pos_mobile/features/catalog/data/datasources/in_memory_product_data_source.dart';
 import 'package:cumavi_pos_mobile/features/catalog/data/repositories/product_repository_impl.dart';
@@ -13,32 +14,51 @@ import 'package:cumavi_pos_mobile/features/catalog/domain/usecases/capture_produ
 import 'package:cumavi_pos_mobile/features/catalog/domain/usecases/create_product.dart';
 import 'package:cumavi_pos_mobile/features/catalog/domain/usecases/get_categories.dart';
 import 'package:cumavi_pos_mobile/features/catalog/domain/usecases/get_product.dart';
+import 'package:cumavi_pos_mobile/features/catalog/domain/usecases/manage_categories.dart';
 import 'package:cumavi_pos_mobile/features/catalog/domain/usecases/remove_photo_background.dart';
+import 'package:cumavi_pos_mobile/features/catalog/domain/usecases/suggest_sku.dart';
 import 'package:cumavi_pos_mobile/features/catalog/domain/usecases/update_product.dart';
 import 'package:cumavi_pos_mobile/features/catalog/presentation/cubit/product_form_cubit.dart';
 import 'package:cumavi_pos_mobile/features/catalog/presentation/cubit/product_form_state.dart';
+import 'package:cumavi_pos_mobile/features/inventory/data/datasources/in_memory_inventory_data_source.dart';
+import 'package:cumavi_pos_mobile/features/inventory/data/repositories/inventory_repository_impl.dart';
+import 'package:cumavi_pos_mobile/features/inventory/domain/repositories/inventory_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Variant logic of the product form, over the real use cases and the
 /// in-memory catalog without latency.
 void main() {
   late ProductRepository repository;
+  late InventoryRepository inventory;
 
   setUp(() {
-    repository = ProductRepositoryImpl(
-      InMemoryProductDataSource(latency: Duration.zero),
+    final InMemoryProductDataSource products = InMemoryProductDataSource(
+      latency: Duration.zero,
+    );
+    repository = ProductRepositoryImpl(products);
+    inventory = InventoryRepositoryImpl(
+      dataSource: InMemoryInventoryDataSource(
+        products: products,
+        latency: Duration.zero,
+      ),
+      sessionRepository: InMemorySessionStore(),
     );
   });
 
   ProductFormCubit buildCubit() => ProductFormCubit(
     getCategories: GetCategories(repository),
+    createCategory: CreateCategory(repository),
     getProduct: GetProduct(repository),
-    createProduct: CreateProduct(repository),
+    createProduct: CreateProduct(
+      productRepository: repository,
+      inventoryRepository: inventory,
+    ),
     updateProduct: UpdateProduct(repository),
     captureProductPhoto: const CaptureProductPhoto(DemoPhotoCapturer()),
     removePhotoBackground: const RemovePhotoBackground(
       MockImageBackgroundRemover(latency: Duration.zero),
     ),
+    suggestSku: SuggestSku(repository),
   );
 
   ProductVariant variant(ProductFormCubit cubit, String id) =>
@@ -215,7 +235,7 @@ void main() {
   );
 
   blocTest<ProductFormCubit, ProductFormState>(
-    'edit mode prefills the product and saves it with UpdateProduct',
+    'edit mode prefills the product and saves it without touching stock',
     build: buildCubit,
     act: (ProductFormCubit cubit) async {
       await cubit.load(productId: 'p-001');
@@ -238,7 +258,14 @@ void main() {
       );
       expect(stored.name, 'Zapatillas urbanas 2026');
       expect(stored.variants, hasLength(15));
-      expect(stored.variantById('negro/42')!.stockQuantity, 1);
+      // Stock is read-only while editing; it changes through movements.
+      expect(
+        cubit.state.variants
+            .firstWhere((ProductVariant v) => v.id == 'negro/42')
+            .stockQuantity,
+        0,
+      );
+      expect(stored.variantById('negro/42')!.stockQuantity, 0);
       // The color photos are kept.
       expect(stored.variantById('azul/40')!.imageId, 'p-001-img-2');
     },

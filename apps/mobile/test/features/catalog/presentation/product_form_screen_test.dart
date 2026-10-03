@@ -89,8 +89,11 @@ void main() {
     expect(find.text('Más fotos'), findsOneWidget);
     expect(saveAction(tester, 'Guardar producto'), isNull);
 
-    await scrollTo(tester, find.text('Agregar variantes (talla, color…)'));
+    await scrollTo(tester, find.text('Descripción (opcional)'));
     expect(find.text('Descripción (opcional)'), findsOneWidget);
+    await scrollTo(tester, find.text('Código de barras (opcional)'));
+    expect(find.text('SKU (opcional)'), findsOneWidget);
+    await scrollTo(tester, find.text('Agregar variantes (talla, color…)'));
     // A simple product: one stock and no variants yet.
     expect(find.byType(QuantityStepper), findsOneWidget);
     expect(find.byType(VariantListEditor), findsNothing);
@@ -159,7 +162,9 @@ void main() {
     await scrollTo(tester, find.byType(VariantListEditor));
     expect(find.text('15 variantes'), findsOneWidget);
     expect(find.text('12 unidades'), findsOneWidget);
-    expect(inVariantList(find.byType(QuantityStepper)), findsNWidgets(15));
+    // Editing shows the stock but doesn't change it.
+    expect(inVariantList(find.byType(QuantityStepper)), findsNothing);
+    expect(find.text('El stock no se edita aquí'), findsOneWidget);
     for (final String color in <String>['Rojo', 'Azul', 'Negro']) {
       expect(inVariantList(find.text(color)), findsOneWidget);
     }

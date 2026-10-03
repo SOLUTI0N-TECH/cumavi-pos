@@ -15,6 +15,8 @@ final class ProductDraft extends Equatable {
     this.images = const <ProductImage>[],
     this.options = const <VariantOption>[],
     this.variants = const <ProductVariant>[],
+    this.sku,
+    this.barcode,
   });
 
   final String name;
@@ -31,7 +33,29 @@ final class ProductDraft extends Equatable {
   final List<VariantOption> options;
   final List<ProductVariant> variants;
 
+  /// Optional codes of the product; each variant carries its own.
+  final String? sku;
+  final String? barcode;
+
   bool get hasVariants => variants.isNotEmpty;
+
+  /// Same draft with no units: a new product gets its stock as
+  /// "Inventario inicial" movements.
+  ProductDraft withoutStock() => ProductDraft(
+    name: name,
+    categoryId: categoryId,
+    salePrice: salePrice,
+    costPrice: costPrice,
+    description: description,
+    images: images,
+    options: options,
+    variants: <ProductVariant>[
+      for (final ProductVariant variant in variants)
+        variant.copyWith(stockQuantity: 0),
+    ],
+    sku: sku,
+    barcode: barcode,
+  );
 
   @override
   List<Object?> get props => <Object?>[
@@ -44,5 +68,7 @@ final class ProductDraft extends Equatable {
     images,
     options,
     variants,
+    sku,
+    barcode,
   ];
 }

@@ -18,18 +18,50 @@ abstract final class AppRoutes {
   static const String salesCheckout = '/sales/checkout';
   static const String salesCompleted = '/sales/completed';
   static const String salesReceipt = '/sales/receipt';
+  static const String salesHistory = '/sales/history';
+  static const String saleDetail = '/sales/history/:id';
+  static const String saleReturn = '/sales/history/:id/return';
   static const String cashRegisterClose = '/cash-register/close';
+  static const String more = '/more';
+  static const String moreBusiness = '/more/business';
+  static const String categories = '/categories';
+  static const String scan = '/scan';
   static const String productForm = '/inventory/new';
   static const String productPhoto = '/inventory/new/photo';
   static const String productDetail = '/inventory/product/:id';
   static const String productEdit = '/inventory/product/:id/edit';
   static const String productEditPhoto = '/inventory/product/:id/edit/photo';
+  static const String productAdjustStock = '/inventory/product/:id/adjust';
+  static const String receiveStock = '/inventory/receive';
+  static const String stockMovements = '/inventory/movements';
+
+  static String saleDetailPath(String saleId) => '/sales/history/$saleId';
+
+  static String saleReturnPath(String saleId) =>
+      '${saleDetailPath(saleId)}/return';
 
   static String productDetailPath(String productId) =>
       '/inventory/product/$productId';
 
   static String productEditPath(String productId) =>
       '${productDetailPath(productId)}/edit';
+
+  static String productAdjustStockPath(String productId) =>
+      '${productDetailPath(productId)}/adjust';
+
+  static String receiveStockPath({String? productId}) => Uri(
+    path: receiveStock,
+    queryParameters: productId == null
+        ? null
+        : <String, String>{'product': productId},
+  ).toString();
+
+  static String stockMovementsPath({String? productId}) => Uri(
+    path: stockMovements,
+    queryParameters: productId == null
+        ? null
+        : <String, String>{'product': productId},
+  ).toString();
 
   static String productEditPhotoPath(String productId) =>
       '${productEditPath(productId)}/photo';

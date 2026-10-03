@@ -13,6 +13,10 @@ abstract final class DateFormatter {
       _capitalize(DateFormat('E d MMM', _locale).format(date))
           .replaceAll('.', '');
 
+  /// `16 sep`
+  static String dayMonth(DateTime date) =>
+      DateFormat('d MMM', _locale).format(date).replaceAll('.', '');
+
   /// `08:30`
   static String time(DateTime date) => DateFormat.Hm(_locale).format(date);
 

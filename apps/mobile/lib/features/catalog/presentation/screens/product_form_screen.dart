@@ -19,7 +19,10 @@ import '../../domain/entities/product_category.dart';
 import '../../domain/services/photo_capturer.dart';
 import '../cubit/product_form_cubit.dart';
 import '../cubit/product_form_state.dart';
+import '../scanner/barcode_camera.dart';
+import '../widgets/category_name_sheet.dart';
 import '../widgets/photo_source_sheet.dart';
+import '../widgets/product_code_fields.dart';
 import '../widgets/product_gallery_field.dart';
 import '../widgets/product_photo_field.dart';
 import '../widgets/product_stock_section.dart';
@@ -33,6 +36,8 @@ class ProductFormScreen extends StatefulWidget {
     required this.onClose,
     required this.onSaved,
     required this.onAdjustPhoto,
+    this.initialBarcode,
+    this.onScanBarcode,
     super.key,
   });
 
@@ -44,6 +49,13 @@ class ProductFormScreen extends StatefulWidget {
   final void Function(Product product) onSaved;
   final VoidCallback onAdjustPhoto;
 
+  /// Barcode of a new product, when a scan found nothing and the seller
+  /// chose to create it.
+  final String? initialBarcode;
+
+  /// Opens the scanner for the barcode fields; without it they are typed.
+  final ScanCode? onScanBarcode;
+
   @override
   State<ProductFormScreen> createState() => _ProductFormScreenState();
 }
@@ -53,6 +65,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _costController = TextEditingController();
+  final TextEditingController _skuController = TextEditingController();
+  final TextEditingController _barcodeController = TextEditingController();
+  bool _generatingSku = false;
 
   /// Whether the fields already show the product being edited. They are
   /// filled once: afterwards the seller's typing is the source of truth.
@@ -61,7 +76,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<ProductFormCubit>().load(productId: widget.productId);
+    _barcodeController.text = widget.initialBarcode ?? '';
+    context.read<ProductFormCubit>().load(
+      productId: widget.productId,
+      barcode: widget.initialBarcode,
+    );
   }
 
   @override
@@ -70,6 +89,8 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     _descriptionController.dispose();
     _priceController.dispose();
     _costController.dispose();
+    _skuController.dispose();
+    _barcodeController.dispose();
     super.dispose();
   }
 
@@ -81,6 +102,8 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     _descriptionController.text = state.description;
     _priceController.text = amount(state.salePrice);
     _costController.text = amount(state.costPrice);
+    _skuController.text = state.sku;
+    _barcodeController.text = state.barcode;
     _prefilled = true;
   }
 
@@ -93,6 +116,14 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   Future<void> _pickPhoto(ProductFormCubit cubit) async {
     final PhotoSource? source = await PhotoSourceSheet.show(context);
     if (source != null) await cubit.capturePhoto(source);
+  }
+
+  Future<void> _generateSku(ProductFormCubit cubit) async {
+    setState(() => _generatingSku = true);
+    final String? sku = await cubit.generateSku();
+    if (!mounted) return;
+    setState(() => _generatingSku = false);
+    if (sku != null) _skuController.text = sku;
   }
 
   Future<void> _addGalleryPhoto(ProductFormCubit cubit) async {
@@ -226,6 +257,12 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 categories: state.categories,
                 selectedId: state.categoryId,
                 onChanged: cubit.categorySelected,
+                onCreate: () => CategoryNameSheet.show(
+                  context,
+                  title: l10n.catalogCategoriesNew,
+                  submitLabel: l10n.catalogCategoriesCreate,
+                  onSubmit: cubit.createCategory,
+                ),
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
@@ -300,7 +337,47 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           ],
         ),
         const SizedBox(height: AppSpacing.lg),
-        ProductStockSection(state: state),
+        _SectionCard(
+          title: l10n.catalogProductFormCodesSection,
+          children: <Widget>[
+            LabeledField(
+              label: l10n.catalogProductFormSkuLabel,
+              optionalText: l10n.catalogProductFormOptional,
+              child: SkuField(
+                controller: _skuController,
+                onChanged: cubit.skuChanged,
+                suffix: Padding(
+                  padding: const EdgeInsets.only(right: AppSpacing.xs),
+                  child: TextButton(
+                    onPressed: _generatingSku || state.categoryId == null
+                        ? null
+                        : () => _generateSku(cubit),
+                    child: Text(l10n.catalogProductFormGenerateSku),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            LabeledField(
+              label: l10n.catalogProductFormBarcodeLabel,
+              optionalText: l10n.catalogProductFormOptional,
+              child: BarcodeField(
+                controller: _barcodeController,
+                onChanged: cubit.barcodeChanged,
+                onScan: widget.onScanBarcode,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              state.hasVariants
+                  ? l10n.catalogProductFormCodesVariantsCaption
+                  : l10n.catalogProductFormCodesCaption,
+              style: AppTextStyles.captionSmall,
+            ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.lg),
+        ProductStockSection(state: state, onScanBarcode: widget.onScanBarcode),
       ],
     );
   }
@@ -362,29 +439,64 @@ class _CategoryDropdown extends StatelessWidget {
     required this.categories,
     required this.selectedId,
     required this.onChanged,
+    required this.onCreate,
   });
+
+  /// Value of the "Nueva categoría" entry; never a real category id.
+  static const String _newCategoryValue = '__new_category__';
 
   final List<ProductCategory> categories;
   final String? selectedId;
   final ValueChanged<String> onChanged;
+  final VoidCallback onCreate;
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations l10n = context.l10n;
+
     return DropdownButtonFormField<String>(
+      // Rebuilt when a new category gets selected from the sheet.
+      key: ValueKey<String>('${selectedId}_${categories.length}'),
       initialValue: selectedId,
       isExpanded: true,
       icon: const Icon(Icons.expand_more_rounded),
       style: AppTextStyles.bodyLarge,
-      items: categories
-          .map(
-            (ProductCategory category) => DropdownMenuItem<String>(
-              value: category.id,
-              child: Text(category.name),
+      items: <DropdownMenuItem<String>>[
+        for (final ProductCategory category in categories)
+          DropdownMenuItem<String>(
+            value: category.id,
+            child: Text(
+              category.isArchived
+                  ? l10n.catalogProductFormArchivedCategory(category.name)
+                  : category.name,
             ),
-          )
-          .toList(),
+          ),
+        DropdownMenuItem<String>(
+          value: _newCategoryValue,
+          child: Row(
+            children: <Widget>[
+              const Icon(
+                Icons.add_rounded,
+                size: 20,
+                color: AppColors.infoText,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Text(
+                l10n.catalogCategoriesNew,
+                style: AppTextStyles.bodyLarge.copyWith(
+                  color: AppColors.infoText,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
       onChanged: (String? value) {
-        if (value != null) onChanged(value);
+        if (value == _newCategoryValue) {
+          onCreate();
+        } else if (value != null) {
+          onChanged(value);
+        }
       },
     );
   }

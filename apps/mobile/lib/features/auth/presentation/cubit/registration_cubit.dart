@@ -4,6 +4,8 @@ import '../../../../core/domain/payment_method.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/usecases/use_case.dart';
 import '../../../../core/utils/result.dart';
+import '../../../account/domain/usecases/pick_business_logo.dart';
+import '../../../catalog/domain/services/photo_capturer.dart';
 import '../../domain/entities/business_profile.dart';
 import '../../domain/entities/sales_setup.dart';
 import '../../domain/entities/sent_verification_code.dart';
@@ -25,11 +27,13 @@ class RegistrationCubit extends Cubit<RegistrationState> {
     required SignInWithGoogle signInWithGoogle,
     required SaveBusinessProfile saveBusinessProfile,
     required SaveSalesSetup saveSalesSetup,
+    required PickBusinessLogo pickBusinessLogo,
   }) : _requestPhoneCode = requestPhoneCode,
        _verifyPhoneCode = verifyPhoneCode,
        _signInWithGoogle = signInWithGoogle,
        _saveBusinessProfile = saveBusinessProfile,
        _saveSalesSetup = saveSalesSetup,
+       _pickBusinessLogo = pickBusinessLogo,
        super(const RegistrationState()) {
     _selectSuggestedCategories(state.businessType);
   }
@@ -39,6 +43,7 @@ class RegistrationCubit extends Cubit<RegistrationState> {
   final SignInWithGoogle _signInWithGoogle;
   final SaveBusinessProfile _saveBusinessProfile;
   final SaveSalesSetup _saveSalesSetup;
+  final PickBusinessLogo _pickBusinessLogo;
 
   // ---------------------------------------------------------------- step 1
   void methodChanged(RegistrationMethod method) =>
@@ -143,8 +148,18 @@ class RegistrationCubit extends Cubit<RegistrationState> {
   void departmentSelected(BoliviaDepartment department) =>
       emit(state.copyWith(department: department));
 
-  /// The camera/gallery picker is mocked: it only flags that a logo exists.
-  void logoSelected(String path) => emit(state.copyWith(logoPath: path));
+  /// Takes or picks the logo with the camera or the gallery. Returns the
+  /// failure (e.g. camera permission denied) so the screen can explain it;
+  /// cancelling the picker keeps the current logo.
+  Future<Failure?> pickLogo(PhotoSource source) async {
+    switch (await _pickBusinessLogo(source)) {
+      case Success<String?>(:final String? value):
+        if (value != null) emit(state.copyWith(logoPath: value));
+        return null;
+      case Failed<String?>(:final failure):
+        return failure;
+    }
+  }
 
   Future<void> submitBusiness() async {
     if (!state.canSubmitBusiness) return;

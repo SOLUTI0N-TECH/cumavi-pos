@@ -6,6 +6,7 @@ import '../../domain/entities/product_category.dart';
 import '../../domain/entities/product_image.dart';
 import '../../domain/entities/product_photo.dart';
 import '../../domain/entities/product_variant.dart';
+import '../../domain/usecases/product_code_rules.dart';
 import '../../domain/usecases/product_draft_rules.dart';
 
 enum ProductFormStatus {
@@ -38,6 +39,8 @@ final class ProductFormState extends Equatable {
     this.extraImages = const <ProductImage>[],
     this.options = const <VariantOption>[],
     this.variants = const <ProductVariant>[],
+    this.sku = '',
+    this.barcode = '',
     this.savedProduct,
     this.failure,
   });
@@ -76,6 +79,10 @@ final class ProductFormState extends Equatable {
 
   /// One per combination of [options]' values, with its stock and photo.
   final List<ProductVariant> variants;
+
+  /// Codes of the product as typed; each variant keeps its own.
+  final String sku;
+  final String barcode;
 
   /// Set once the product is stored.
   final Product? savedProduct;
@@ -141,7 +148,12 @@ final class ProductFormState extends Equatable {
       status == ProductFormStatus.submitting ||
       status == ProductFormStatus.removingBackground;
 
+  bool get hasValidCodes =>
+      ProductCodeRules.isValidSku(sku) &&
+      ProductCodeRules.isValidBarcode(barcode);
+
   bool get canSubmit =>
+      hasValidCodes &&
       name.trim().length >= ProductDraftRules.minNameLength &&
       categoryId != null &&
       (salePrice ?? 0) > 0 &&
@@ -166,6 +178,8 @@ final class ProductFormState extends Equatable {
     List<ProductImage>? extraImages,
     List<VariantOption>? options,
     List<ProductVariant>? variants,
+    String? sku,
+    String? barcode,
     Product? savedProduct,
     Failure? failure,
   }) {
@@ -186,6 +200,8 @@ final class ProductFormState extends Equatable {
       extraImages: extraImages ?? this.extraImages,
       options: options ?? this.options,
       variants: variants ?? this.variants,
+      sku: sku ?? this.sku,
+      barcode: barcode ?? this.barcode,
       savedProduct: savedProduct ?? this.savedProduct,
       failure: failure,
     );
@@ -213,6 +229,8 @@ final class ProductFormState extends Equatable {
       extraImages: extraImages,
       options: options,
       variants: variants,
+      sku: sku,
+      barcode: barcode,
       savedProduct: savedProduct,
       failure: failure,
     );
@@ -236,6 +254,8 @@ final class ProductFormState extends Equatable {
     extraImages,
     options,
     variants,
+    sku,
+    barcode,
     savedProduct,
     failure,
   ];

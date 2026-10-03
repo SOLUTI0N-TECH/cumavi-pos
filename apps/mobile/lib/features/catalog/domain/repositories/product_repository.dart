@@ -1,22 +1,8 @@
 import '../../../../core/utils/result.dart';
 import '../entities/product.dart';
 import '../entities/product_category.dart';
+import '../entities/product_code_match.dart';
 import '../entities/product_draft.dart';
-
-/// How many units of a product (or of one of its variants) leave the stock.
-final class StockMovement {
-  const StockMovement({
-    required this.productId,
-    required this.quantity,
-    this.variantId,
-  });
-
-  final String productId;
-
-  /// Set when the product has variants: the stock is kept per variant.
-  final String? variantId;
-  final int quantity;
-}
 
 /// Read/write access to the catalog. Implemented in memory while there is no
 /// backend.
@@ -31,17 +17,36 @@ abstract interface class ProductRepository {
 
   Future<Result<Product>> getProductById(String id);
 
+  /// The product or variant whose SKU or barcode is [code] (already
+  /// normalized); fails with `productCodeNotFound`.
+  Future<Result<ProductCodeMatch>> findByCode(String code);
+
   /// Products at or below the low-stock threshold, most urgent first.
   Future<Result<List<Product>>> getLowStockProducts();
 
-  Future<Result<List<ProductCategory>>> getCategories();
+  /// Categories in the seller's order; archived ones only when asked.
+  Future<Result<List<ProductCategory>>> getCategories({
+    bool includeArchived = false,
+  });
+
+  /// Fails with `categoryNameTaken` when another category (archived ones
+  /// included) has the same name, ignoring case and accents.
+  Future<Result<ProductCategory>> createCategory(String name);
+
+  /// Products of the category show the new name everywhere.
+  Future<Result<ProductCategory>> renameCategory(String id, String name);
+
+  /// [orderedIds] lists the category ids in the new order.
+  Future<Result<void>> reorderCategories(List<String> orderedIds);
+
+  Future<Result<ProductCategory>> setCategoryArchived(
+    String id, {
+    required bool archived,
+  });
 
   Future<Result<Product>> createProduct(ProductDraft draft);
 
   /// Replaces the editable data of product [id]; its id and creation date
   /// stay the same.
   Future<Result<Product>> updateProduct(String id, ProductDraft draft);
-
-  /// Applies the stock reduction of a sale.
-  Future<Result<void>> reduceStock(List<StockMovement> movements);
 }

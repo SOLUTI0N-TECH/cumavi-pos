@@ -3,6 +3,7 @@ import '../../domain/entities/product.dart';
 import '../../domain/entities/product_category.dart';
 import '../../domain/entities/product_image.dart';
 import '../../domain/entities/product_variant.dart';
+import '../../domain/usecases/suggest_sku.dart';
 
 /// Demo catalog of a Bolivian clothing store, used while the app has no
 /// backend. Prices are in bolivianos.
@@ -17,10 +18,12 @@ abstract final class CatalogSeedData {
   static const ProductCategory footwear = ProductCategory(
     id: 'footwear',
     name: 'Calzado',
+    sortOrder: 1,
   );
   static const ProductCategory accessories = ProductCategory(
     id: 'accessories',
     name: 'Accesorios',
+    sortOrder: 2,
   );
 
   static const List<ProductCategory> categories = <ProductCategory>[
@@ -28,6 +31,36 @@ abstract final class CatalogSeedData {
     footwear,
     accessories,
   ];
+
+  static const Map<String, String> _skuPrefixes = <String, String>{
+    'clothing': 'ROP',
+    'footwear': 'CAL',
+    'accessories': 'ACC',
+  };
+
+  /// EAN-13 of a seeded product (`variantIndex` 0) or variant: Bolivia's
+  /// GS1 prefix 777, the product number, the variant and the check digit.
+  static String barcodeFor(String productId, {int variantIndex = 0}) {
+    final String body =
+        '7770000${productId.substring(2)}'
+        '${variantIndex.toString().padLeft(2, '0')}';
+    int sum = 0;
+    for (int index = 0; index < body.length; index++) {
+      sum += int.parse(body[index]) * (index.isEven ? 1 : 3);
+    }
+    return '$body${(10 - sum % 10) % 10}';
+  }
+
+  /// Codes to try the scanner without printed labels: a product, a
+  /// variant, and a code no product has.
+  static List<({String label, String code})> get demoScanCodes =>
+      <({String label, String code})>[
+        (label: 'Gorra trucker', code: barcodeFor('p-008')),
+        // Polera básica Negra · M: second of Negra S, M, L, XL.
+        (label: 'Polera Negra M', code: barcodeFor('p-011', variantIndex: 2)),
+        (label: 'Mochila urbana', code: barcodeFor('p-007')),
+        (label: 'Código nuevo', code: '7770000099001'),
+      ];
 
   static const List<String> _clothingSizes = <String>['S', 'M', 'L', 'XL'];
 
@@ -57,6 +90,10 @@ abstract final class CatalogSeedData {
         combinations.length == variantStock.length,
         '$id needs one stock per combination',
       );
+      // Like a store that labels everything: `CAL-001` and an EAN-13 per
+      // product without variants or per variant.
+      final String number = id.substring(2);
+      final String sku = '${_skuPrefixes[category.id]}-$number';
 
       return Product(
         id: id,
@@ -69,6 +106,8 @@ abstract final class CatalogSeedData {
         createdAt: now.subtract(Duration(days: createdDaysAgo)),
         description: description,
         options: options,
+        sku: sku,
+        barcode: combinations.isEmpty ? barcodeFor(id) : null,
         variants: <ProductVariant>[
           for (int index = 0; index < combinations.length; index++)
             ProductVariant.fromValues(
@@ -77,6 +116,14 @@ abstract final class CatalogSeedData {
               imageId: imageIndexOf == null
                   ? null
                   : images[imageIndexOf(combinations[index])].id,
+              sku: SuggestSku.variantSku(
+                sku,
+                ProductVariant.fromValues(
+                  optionValues: combinations[index],
+                  stockQuantity: 0,
+                ),
+              ),
+              barcode: barcodeFor(id, variantIndex: index + 1),
             ),
         ],
       );

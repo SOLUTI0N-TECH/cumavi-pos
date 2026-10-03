@@ -4,6 +4,8 @@ import '../../../../core/usecases/use_case.dart';
 import '../../../../core/utils/result.dart';
 import '../../domain/entities/product.dart';
 import '../../domain/entities/product_category.dart';
+import '../../domain/entities/product_code_match.dart';
+import '../../domain/usecases/find_product_by_code.dart';
 import '../../domain/usecases/get_categories.dart';
 import '../../domain/usecases/get_products.dart';
 import 'catalog_state.dart';
@@ -14,12 +16,20 @@ class CatalogCubit extends Cubit<CatalogState> {
   CatalogCubit({
     required GetProducts getProducts,
     required GetCategories getCategories,
+    required FindProductByCode findProductByCode,
   }) : _getProducts = getProducts,
        _getCategories = getCategories,
+       _findProductByCode = findProductByCode,
        super(const CatalogState());
 
   final GetProducts _getProducts;
   final GetCategories _getCategories;
+  final FindProductByCode _findProductByCode;
+
+  /// The product or variant with a scanned or typed [code]. The screen
+  /// decides what to do with it (sell it, open it…), so it is not state.
+  Future<Result<ProductCodeMatch>> findByCode(String code) =>
+      _findProductByCode(code);
 
   Future<void> load({String? categoryId}) async {
     emit(

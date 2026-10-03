@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/account/presentation/cubit/business_settings_cubit.dart';
+import '../../features/account/presentation/cubit/sign_out_cubit.dart';
+import '../../features/account/presentation/screens/business_settings_screen.dart';
+import '../../features/account/presentation/screens/more_screen.dart';
 import '../../features/auth/presentation/cubit/registration_cubit.dart';
 import '../../features/auth/presentation/cubit/session_cubit.dart';
 import '../../features/auth/presentation/cubit/sign_in_cubit.dart';
@@ -16,25 +20,43 @@ import '../../features/auth/presentation/screens/sign_in_screen.dart';
 import '../../features/cash_register/presentation/cubit/cash_close_cubit.dart';
 import '../../features/cash_register/presentation/cubit/cash_register_cubit.dart';
 import '../../features/cash_register/presentation/screens/close_cash_session_screen.dart';
+import '../../features/catalog/data/datasources/catalog_seed_data.dart';
 import '../../features/catalog/domain/entities/product.dart';
 import '../../features/catalog/presentation/cubit/catalog_cubit.dart';
+import '../../features/catalog/presentation/cubit/categories_cubit.dart';
 import '../../features/catalog/presentation/cubit/product_detail_cubit.dart';
 import '../../features/catalog/presentation/cubit/product_form_cubit.dart';
+import '../../features/catalog/presentation/scanner/barcode_camera.dart';
+import '../../features/catalog/presentation/scanner/scanner_screen.dart';
 import '../../features/catalog/presentation/screens/background_removal_screen.dart';
+import '../../features/catalog/presentation/screens/categories_screen.dart';
 import '../../features/catalog/presentation/screens/inventory_screen.dart';
 import '../../features/catalog/presentation/screens/product_detail_screen.dart';
 import '../../features/catalog/presentation/screens/product_form_screen.dart';
 import '../../features/dashboard/presentation/cubit/dashboard_cubit.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
+import '../../features/inventory/presentation/cubit/adjust_stock_cubit.dart';
+import '../../features/inventory/presentation/cubit/receive_stock_cubit.dart';
+import '../../features/inventory/presentation/cubit/stock_movements_cubit.dart';
+import '../../features/inventory/presentation/screens/adjust_stock_screen.dart';
+import '../../features/inventory/presentation/screens/receive_stock_screen.dart';
+import '../../features/inventory/presentation/screens/stock_movements_screen.dart';
+import '../../features/sales/domain/entities/receipt.dart';
 import '../../features/sales/domain/entities/sale.dart';
 import '../../features/sales/presentation/cubit/cart_cubit.dart';
 import '../../features/sales/presentation/cubit/checkout_cubit.dart';
 import '../../features/sales/presentation/cubit/print_receipt_cubit.dart';
+import '../../features/sales/presentation/cubit/return_sale_cubit.dart';
+import '../../features/sales/presentation/cubit/sale_detail_cubit.dart';
+import '../../features/sales/presentation/cubit/sales_history_cubit.dart';
 import '../../features/sales/presentation/cubit/share_receipt_cubit.dart';
 import '../../features/sales/presentation/screens/checkout_screen.dart';
 import '../../features/sales/presentation/screens/product_search_screen.dart';
 import '../../features/sales/presentation/screens/receipt_screen.dart';
+import '../../features/sales/presentation/screens/return_sale_screen.dart';
 import '../../features/sales/presentation/screens/sale_completed_screen.dart';
+import '../../features/sales/presentation/screens/sale_detail_screen.dart';
+import '../../features/sales/presentation/screens/sales_history_screen.dart';
 import '../../features/sales/presentation/screens/sales_tab_screen.dart';
 import '../../features/shell/presentation/screens/main_shell_screen.dart';
 import '../di/dependency_injection.dart';
@@ -64,6 +86,7 @@ GoRouter createAppRouter() {
       _registrationFlow(),
       _mainShell(),
       ..._salesRoutes(),
+      ..._accountRoutes(),
       GoRoute(
         path: AppRoutes.productDetail,
         builder: (BuildContext context, GoRouterState state) {
@@ -83,6 +106,23 @@ GoRouter createAppRouter() {
                     unawaited(innerContext.read<DashboardCubit>().load());
                   }
                 },
+                onReceiveStock: () => _moveStock(
+                  innerContext,
+                  AppRoutes.receiveStockPath(productId: productId),
+                ),
+                onAdjustStock: () => _moveStock(
+                  innerContext,
+                  AppRoutes.productAdjustStockPath(productId),
+                ),
+                onOpenMovements: () => innerContext.push(
+                  AppRoutes.stockMovementsPath(productId: productId),
+                  // The history's subtitle.
+                  extra: innerContext
+                      .read<ProductDetailCubit>()
+                      .state
+                      .product
+                      ?.name,
+                ),
               ),
             ),
           );
@@ -95,6 +135,7 @@ GoRouter createAppRouter() {
             create: (_) => injector<CashCloseCubit>(),
             child: CloseCashSessionScreen(
               onBack: () => context.pop(),
+              onOpenSales: () => context.push(AppRoutes.salesHistory),
               onClosed: () {
                 context.read<CashRegisterCubit>().markAsClosed();
                 unawaited(context.read<DashboardCubit>().load());
@@ -105,7 +146,93 @@ GoRouter createAppRouter() {
         },
       ),
       _productFormFlow(),
+      _scannerRoute(),
+      ..._stockRoutes(),
     ],
+  );
+}
+
+/// Opens a stock screen from a product's detail and refreshes the detail
+/// (and Inicio's low stock) when the seller comes back.
+Future<void> _moveStock(BuildContext context, String location) async {
+  await context.push<void>(location);
+  if (context.mounted) {
+    unawaited(context.read<ProductDetailCubit>().load());
+    unawaited(context.read<DashboardCubit>().load());
+  }
+}
+
+/// Goods receipt, stock adjustment and the movements history.
+List<RouteBase> _stockRoutes() {
+  return <RouteBase>[
+    GoRoute(
+      path: AppRoutes.receiveStock,
+      builder: (BuildContext context, GoRouterState state) {
+        return BlocProvider<ReceiveStockCubit>(
+          create: (_) => injector<ReceiveStockCubit>(),
+          child: ReceiveStockScreen(
+            initialProductId: state.uri.queryParameters['product'],
+            onScan: () => _scan(context, ScanPurpose.find),
+            onClose: () => context.pop(),
+            onSaved: () => context.pop(),
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.productAdjustStock,
+      builder: (BuildContext context, GoRouterState state) {
+        return BlocProvider<AdjustStockCubit>(
+          create: (_) =>
+              injector<AdjustStockCubit>(param1: state.pathParameters['id']),
+          child: AdjustStockScreen(
+            onClose: () => context.pop(),
+            onSaved: () => context.pop(),
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.stockMovements,
+      builder: (BuildContext context, GoRouterState state) {
+        final String? productId = state.uri.queryParameters['product'];
+        return BlocProvider<StockMovementsCubit>(
+          create: (_) => injector<StockMovementsCubit>(param1: productId),
+          child: StockMovementsScreen(
+            productName: state.extra as String?,
+            onBack: () => context.pop(),
+          ),
+        );
+      },
+    ),
+  ];
+}
+
+/// Opens the scanner; resolves with the code, or `null` if it was closed.
+Future<String?> _scan(BuildContext context, ScanPurpose purpose) =>
+    context.push<String>(
+      Uri(
+        path: AppRoutes.scan,
+        queryParameters: <String, String>{'purpose': purpose.name},
+      ).toString(),
+    );
+
+GoRoute _scannerRoute() {
+  return GoRoute(
+    path: AppRoutes.scan,
+    builder: (BuildContext context, GoRouterState state) {
+      return ScannerScreen(
+        purpose:
+            ScanPurpose.values
+                .asNameMap()[state.uri.queryParameters['purpose']] ??
+            ScanPurpose.sell,
+        camera: injector<BarcodeCamera>(),
+        // While the catalog is mocked, codes of the demo products.
+        demoCodes: CatalogSeedData.demoScanCodes,
+        onCode: (String code) => context.pop(code),
+        onClose: () => context.pop(),
+      );
+    },
   );
 }
 
@@ -200,6 +327,8 @@ StatefulShellRoute _mainShell() {
               return DashboardScreen(
                 onStartSale: () => context.go(AppRoutes.sales),
                 onOpenInventory: () => context.go(AppRoutes.inventory),
+                onOpenMore: () => context.push(AppRoutes.more),
+                onOpenSalesHistory: () => context.push(AppRoutes.salesHistory),
               );
             },
           ),
@@ -224,6 +353,7 @@ StatefulShellRoute _mainShell() {
                   onCheckout: () => context.push(AppRoutes.salesCheckout),
                   onManageCashRegister: () =>
                       context.push(AppRoutes.cashRegisterClose),
+                  onScan: () => _scan(context, ScanPurpose.sell),
                 ),
               );
             },
@@ -241,6 +371,32 @@ StatefulShellRoute _mainShell() {
                   builder: (BuildContext innerContext) => InventoryScreen(
                     onCreateProduct: () async {
                       await innerContext.push<void>(AppRoutes.productForm);
+                      if (innerContext.mounted) {
+                        unawaited(innerContext.read<CatalogCubit>().load());
+                      }
+                    },
+                    onManageCategories: () async {
+                      await innerContext.push<void>(AppRoutes.categories);
+                      // Names, order or archived categories may have changed.
+                      if (innerContext.mounted) {
+                        unawaited(innerContext.read<CatalogCubit>().load());
+                      }
+                    },
+                    onScan: () => _scan(innerContext, ScanPurpose.find),
+                    onReceiveStock: () async {
+                      await innerContext.push<void>(AppRoutes.receiveStock);
+                      if (innerContext.mounted) {
+                        unawaited(innerContext.read<CatalogCubit>().load());
+                        unawaited(innerContext.read<DashboardCubit>().load());
+                      }
+                    },
+                    onCreateWithBarcode: (String barcode) async {
+                      await innerContext.push<void>(
+                        Uri(
+                          path: AppRoutes.productForm,
+                          queryParameters: <String, String>{'barcode': barcode},
+                        ).toString(),
+                      );
                       if (innerContext.mounted) {
                         unawaited(innerContext.read<CatalogCubit>().load());
                       }
@@ -276,6 +432,7 @@ List<RouteBase> _salesRoutes() {
           child: ProductSearchScreen(
             initialCategoryId: state.uri.queryParameters['category'],
             onBack: () => context.pop(),
+            onScan: () => _scan(context, ScanPurpose.sell),
           ),
         );
       },
@@ -317,11 +474,64 @@ List<RouteBase> _salesRoutes() {
       },
     ),
     GoRoute(
+      path: AppRoutes.salesHistory,
+      builder: (BuildContext context, GoRouterState state) {
+        return BlocProvider<SalesHistoryCubit>(
+          create: (_) => injector<SalesHistoryCubit>(),
+          child: SalesHistoryScreen(
+            onBack: () => context.pop(),
+            onOpenSale: (Sale sale) =>
+                context.push(AppRoutes.saleDetailPath(sale.id)),
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.saleDetail,
+      builder: (BuildContext context, GoRouterState state) {
+        return BlocProvider<SaleDetailCubit>(
+          create: (_) =>
+              injector<SaleDetailCubit>(param1: state.pathParameters['id']),
+          child: SaleDetailScreen(
+            onBack: () => context.pop(),
+            onOpenReceipt: (Receipt receipt) =>
+                context.push(AppRoutes.salesReceipt, extra: receipt),
+            onReturn: () async {
+              await context.push<void>(
+                AppRoutes.saleReturnPath(state.pathParameters['id']!),
+              );
+              // Inicio shows net sales: a refund changes them.
+              if (context.mounted) {
+                unawaited(context.read<DashboardCubit>().load());
+              }
+            },
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.saleReturn,
+      builder: (BuildContext context, GoRouterState state) {
+        return BlocProvider<ReturnSaleCubit>(
+          create: (_) =>
+              injector<ReturnSaleCubit>(param1: state.pathParameters['id']),
+          child: ReturnSaleScreen(
+            onClose: () => context.pop(),
+            onSaved: () => context.pop(),
+          ),
+        );
+      },
+    ),
+    GoRoute(
       path: AppRoutes.salesReceipt,
       builder: (BuildContext context, GoRouterState state) {
         return _withReceiptActions(
           ReceiptScreen(
-            sale: state.extra! as Sale,
+            // A sale's receipt, or a return's (built by the sale detail).
+            receipt: switch (state.extra) {
+              final Receipt receipt => receipt,
+              final Object? sale => Receipt(sale: sale! as Sale),
+            },
             onBack: () => context.pop(),
           ),
         );
@@ -345,6 +555,64 @@ Widget _withReceiptActions(Widget screen) {
   );
 }
 
+/// The "Más" hub, the business settings and the categories.
+List<RouteBase> _accountRoutes() {
+  return <RouteBase>[
+    GoRoute(
+      path: AppRoutes.categories,
+      builder: (BuildContext context, GoRouterState state) {
+        return BlocProvider<CategoriesCubit>(
+          create: (_) => injector<CategoriesCubit>(),
+          child: CategoriesScreen(onBack: () => context.pop()),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.more,
+      builder: (BuildContext context, GoRouterState state) {
+        return BlocProvider<SignOutCubit>(
+          create: (_) => injector<SignOutCubit>(),
+          child: MoreScreen(
+            onBack: () => context.pop(),
+            onEditBusiness: () => context.push(AppRoutes.moreBusiness),
+            onOpenCategories: () => context.push(AppRoutes.categories),
+            onOpenSalesHistory: () => context.push(AppRoutes.salesHistory),
+            onOpenStockMovements: () =>
+                context.push(AppRoutes.stockMovementsPath()),
+            onSignedOut: () async {
+              context.read<CartCubit>().clear();
+              await context.read<SessionCubit>().refresh();
+              if (context.mounted) context.go(AppRoutes.signIn);
+            },
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.moreBusiness,
+      redirect: (BuildContext context, GoRouterState state) =>
+          context.read<SessionCubit>().state.business == null
+          ? AppRoutes.more
+          : null,
+      builder: (BuildContext context, GoRouterState state) {
+        return BlocProvider<BusinessSettingsCubit>(
+          create: (_) => injector<BusinessSettingsCubit>(
+            param1: context.read<SessionCubit>().state.business,
+          ),
+          child: BusinessSettingsScreen(
+            onBack: () => context.pop(),
+            onSaved: () async {
+              unawaited(context.read<DashboardCubit>().load());
+              await context.read<SessionCubit>().refresh();
+              if (context.mounted) context.pop();
+            },
+          ),
+        );
+      },
+    ),
+  ];
+}
+
 /// The product form and its photo editor share a [ProductFormCubit].
 ShellRoute _productFormFlow() {
   return ShellRoute(
@@ -359,6 +627,8 @@ ShellRoute _productFormFlow() {
         path: AppRoutes.productForm,
         builder: (BuildContext context, GoRouterState state) {
           return ProductFormScreen(
+            initialBarcode: state.uri.queryParameters['barcode'],
+            onScanBarcode: () => _scan(context, ScanPurpose.assign),
             onClose: () => context.go(AppRoutes.inventory),
             onAdjustPhoto: () => context.push(AppRoutes.productPhoto),
             onSaved: (_) {
@@ -380,6 +650,7 @@ ShellRoute _productFormFlow() {
           final String productId = state.pathParameters['id']!;
           return ProductFormScreen(
             productId: productId,
+            onScanBarcode: () => _scan(context, ScanPurpose.assign),
             onClose: () => context.pop(),
             onAdjustPhoto: () =>
                 context.push(AppRoutes.productEditPhotoPath(productId)),

@@ -98,6 +98,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Primero registra los datos de tu negocio.';
 
   @override
+  String get failureInvalidTaxId =>
+      'El NIT debe tener solo números (entre 5 y 15).';
+
+  @override
   String get failureNegativeOpeningAmount =>
       'El monto inicial no puede ser negativo.';
 
@@ -123,6 +127,41 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get failureCategoryNotFound => 'La categoría seleccionada no existe.';
+
+  @override
+  String get failureCategoryNameInvalid =>
+      'El nombre de la categoría debe tener entre 2 y 30 caracteres.';
+
+  @override
+  String get failureCategoryNameTaken =>
+      'Ya tienes una categoría con ese nombre.';
+
+  @override
+  String get failureInvalidSku =>
+      'El SKU debe tener de 2 a 32 letras sin tilde, números, guiones o puntos.';
+
+  @override
+  String get failureInvalidBarcode =>
+      'El código de barras debe tener de 4 a 32 letras o números.';
+
+  @override
+  String failureProductCodeRepeated(String code) {
+    return 'El código $code está repetido en este producto.';
+  }
+
+  @override
+  String failureProductCodeTaken(String productName) {
+    return 'Ese código ya lo usa «$productName».';
+  }
+
+  @override
+  String get failureProductCodeTakenGeneric =>
+      'Ese código ya lo usa otro producto.';
+
+  @override
+  String failureProductCodeNotFound(String code) {
+    return 'Ningún producto tiene el código $code.';
+  }
 
   @override
   String get failureInvalidSalePrice =>
@@ -427,12 +466,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get authBusinessProfileLogoTitle => 'Logo del negocio';
 
   @override
-  String get authBusinessProfileLogoReady =>
-      'Listo. Aparecerá en tus comprobantes.';
+  String get authBusinessProfileLogoReady => 'Listo. Toca para cambiarlo.';
 
   @override
   String get authBusinessProfileLogoOptional =>
       'Opcional. Aparece en tus comprobantes.';
+
+  @override
+  String get authBusinessProfileLogoSourceSubtitle =>
+      'Aparece en tus comprobantes y en tu catálogo.';
 
   @override
   String get authBusinessProfileNameLabel => 'Nombre del negocio';
@@ -1469,7 +1511,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get catalogVariantListCaption =>
-      'Toca la foto de una variante para cambiarla.';
+      'Toca la foto para cambiarla o el nombre para sus códigos.';
 
   @override
   String catalogVariantPhotoTooltip(String variant) {
@@ -1562,4 +1604,821 @@ class AppLocalizationsEs extends AppLocalizations {
   String salesVariantValueUnavailable(String value) {
     return '$value, sin stock';
   }
+
+  @override
+  String get accountMoreTitle => 'Más';
+
+  @override
+  String get accountOpenMenuTooltip => 'Tu cuenta y tu negocio';
+
+  @override
+  String get accountSectionBusiness => 'Negocio';
+
+  @override
+  String get accountProviderGoogle => 'Google';
+
+  @override
+  String get accountProviderEmail => 'correo';
+
+  @override
+  String get accountProviderPhone => 'teléfono';
+
+  @override
+  String accountSignedInWith(String method) {
+    return 'Ingresaste con $method';
+  }
+
+  @override
+  String get accountBusinessEdit => 'Editar datos del negocio';
+
+  @override
+  String get accountBusinessNoTaxId => 'Sin NIT';
+
+  @override
+  String get accountSignOut => 'Cerrar sesión';
+
+  @override
+  String get accountSignOutTitle => '¿Cerrar sesión?';
+
+  @override
+  String get accountSignOutMessage =>
+      'Tendrás que ingresar de nuevo para vender.';
+
+  @override
+  String get accountSignOutCashOpen =>
+      'La caja queda abierta. Podrás cerrarla cuando vuelvas a ingresar.';
+
+  @override
+  String accountVersion(String app, String version, String build) {
+    return '$app · versión $version ($build)';
+  }
+
+  @override
+  String get accountBusinessTitle => 'Datos del negocio';
+
+  @override
+  String get accountBusinessSubtitle =>
+      'Así aparece tu tienda en los comprobantes y en tu catálogo.';
+
+  @override
+  String get accountBusinessLogoChange => 'Cambiar logo';
+
+  @override
+  String get accountBusinessTaxIdLabel => 'NIT';
+
+  @override
+  String get accountBusinessOptional => '(opcional)';
+
+  @override
+  String get accountBusinessTaxIdHint => 'Ej.: 1020304050';
+
+  @override
+  String get accountBusinessTaxIdHelper => 'Se imprime en tus comprobantes.';
+
+  @override
+  String get accountBusinessSave => 'Guardar cambios';
+
+  @override
+  String get accountBusinessSaved => 'Datos del negocio guardados';
+
+  @override
+  String get accountSectionOperation => 'Operación';
+
+  @override
+  String get accountOperationCategoriesHint =>
+      'Crea, ordena y archiva tus categorías';
+
+  @override
+  String get catalogCategoriesTitle => 'Categorías';
+
+  @override
+  String get catalogCategoriesSubtitle =>
+      'Arrastra para ordenarlas como las ves al vender.';
+
+  @override
+  String get catalogCategoriesNew => 'Nueva categoría';
+
+  @override
+  String get catalogCategoriesCreate => 'Crear categoría';
+
+  @override
+  String get catalogCategoriesCreated => 'Categoría creada';
+
+  @override
+  String get catalogCategoriesRename => 'Renombrar';
+
+  @override
+  String get catalogCategoriesRenameTitle => 'Renombrar categoría';
+
+  @override
+  String get catalogCategoriesRenamed => 'Categoría renombrada';
+
+  @override
+  String get catalogCategoriesArchive => 'Archivar';
+
+  @override
+  String catalogCategoriesArchiveTitle(String name) {
+    return '¿Archivar $name?';
+  }
+
+  @override
+  String catalogCategoriesArchiveMessage(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Sus $count productos siguen',
+      one: 'Su producto sigue',
+    );
+    return '$_temp0 en tu inventario. La categoría ya no aparecerá al crear productos ni en los filtros.';
+  }
+
+  @override
+  String get catalogCategoriesArchived => 'Categoría archivada';
+
+  @override
+  String get catalogCategoriesUndo => 'Deshacer';
+
+  @override
+  String get catalogCategoriesArchivedSection => 'Archivadas';
+
+  @override
+  String get catalogCategoriesRestore => 'Restaurar';
+
+  @override
+  String get catalogCategoriesRestored => 'Categoría restaurada';
+
+  @override
+  String catalogCategoriesProductCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count productos',
+      one: '1 producto',
+      zero: 'Sin productos',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get catalogCategoriesEmptyTitle => 'Todavía no tienes categorías';
+
+  @override
+  String get catalogCategoriesEmptyMessage =>
+      'Crea la primera para ordenar tu inventario.';
+
+  @override
+  String catalogCategoriesMenu(String name) {
+    return 'Opciones de $name';
+  }
+
+  @override
+  String get catalogCategoriesDragHandle => 'Arrastrar para ordenar';
+
+  @override
+  String get catalogCategoriesManage => 'Gestionar';
+
+  @override
+  String get catalogCategoryNameHint => 'Ej.: Ropa de niños';
+
+  @override
+  String catalogProductFormArchivedCategory(String name) {
+    return '$name (archivada)';
+  }
+
+  @override
+  String get scannerSellTitle => 'Escanear producto';
+
+  @override
+  String get scannerSellSubtitle =>
+      'Apunta al código de barras y se agrega a la venta.';
+
+  @override
+  String get scannerFindTitle => 'Buscar por código';
+
+  @override
+  String get scannerFindSubtitle =>
+      'Apunta al código de barras para abrir el producto.';
+
+  @override
+  String get scannerAssignTitle => 'Escanear código';
+
+  @override
+  String get scannerAssignSubtitle =>
+      'Apunta al código de barras de la etiqueta.';
+
+  @override
+  String get scannerTorchTooltip => 'Linterna';
+
+  @override
+  String get scannerDemoCamera =>
+      'La cámara no está disponible en este dispositivo. Escribe el código o usa uno de prueba.';
+
+  @override
+  String get scannerTypeTitle => '¿No lo lee? Escríbelo';
+
+  @override
+  String get scannerTypeHint => 'Ej.: 7770000008001';
+
+  @override
+  String get scannerTypeSubmit => 'Usar código';
+
+  @override
+  String get scannerDemoCodesTitle => 'Códigos de prueba';
+
+  @override
+  String get scannerDemoCodesCaption =>
+      'Toca uno para probar sin etiquetas impresas.';
+
+  @override
+  String get catalogProductFormCodesSection => 'Códigos';
+
+  @override
+  String get catalogProductFormSkuLabel => 'SKU';
+
+  @override
+  String get catalogProductFormSkuHint => 'Ej.: CAL-001';
+
+  @override
+  String get catalogProductFormGenerateSku => 'Generar';
+
+  @override
+  String get catalogProductFormBarcodeLabel => 'Código de barras';
+
+  @override
+  String get catalogProductFormBarcodeHint => 'Escanéalo o escríbelo';
+
+  @override
+  String get catalogProductFormCodesCaption =>
+      'Con el código de barras, escanear la etiqueta agrega el producto a la venta.';
+
+  @override
+  String get catalogProductFormCodesVariantsCaption =>
+      'Cada variante puede tener su propio SKU y código de barras: tócala en la lista de stock.';
+
+  @override
+  String catalogVariantCodesTitle(String variant) {
+    return 'Códigos · $variant';
+  }
+
+  @override
+  String get catalogVariantAddCodes => 'Agregar SKU o código';
+
+  @override
+  String get catalogScanUnknownTitle => 'Código sin producto';
+
+  @override
+  String catalogScanUnknownMessage(String code) {
+    return 'Ningún producto tiene el código $code. ¿Quieres crear uno con este código?';
+  }
+
+  @override
+  String get catalogScanUnknownCreate => 'Crear producto con este código';
+
+  @override
+  String get salesHistoryTitle => 'Historial de ventas';
+
+  @override
+  String salesHistorySummary(int count, String total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ventas · $total',
+      one: '1 venta · $total',
+      zero: 'Sin ventas',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get salesHistorySearchHint => 'Buscar por número de venta';
+
+  @override
+  String get salesHistorySearchingAllDates => 'Buscando en todas las fechas.';
+
+  @override
+  String get salesHistoryPeriodToday => 'Hoy';
+
+  @override
+  String get salesHistoryPeriodYesterday => 'Ayer';
+
+  @override
+  String get salesHistoryPeriodLast7Days => 'Últimos 7 días';
+
+  @override
+  String get salesHistoryPeriodCustom => 'Elegir fechas';
+
+  @override
+  String salesHistoryRange(String from, String to) {
+    return '$from – $to';
+  }
+
+  @override
+  String get salesHistoryAllMethods => 'Todos los pagos';
+
+  @override
+  String salesHistoryDayTotal(int count, String total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ventas · $total',
+      one: '1 venta · $total',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String salesHistoryMoreProducts(int count, String first) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$first y $count productos más',
+      one: '$first y 1 producto más',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get salesHistoryEmptyTitle => 'No hay ventas en estas fechas';
+
+  @override
+  String get salesHistoryEmptyMessage =>
+      'Prueba con otro período o método de pago.';
+
+  @override
+  String get salesHistoryNumberNotFoundTitle => 'No encontramos esa venta';
+
+  @override
+  String salesHistoryNumberNotFoundMessage(String number) {
+    return 'Ninguna venta tiene el número $number.';
+  }
+
+  @override
+  String saleDetailTitle(String number) {
+    return 'Venta $number';
+  }
+
+  @override
+  String get saleDetailTitleLoading => 'Venta';
+
+  @override
+  String get saleDetailLoadError => 'No pudimos abrir esta venta';
+
+  @override
+  String saleDetailProducts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count productos',
+      one: '1 producto',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String saleDetailUnitPrice(int quantity, String price) {
+    return '$quantity × $price';
+  }
+
+  @override
+  String get saleDetailSubtotal => 'Subtotal';
+
+  @override
+  String get saleDetailDiscount => 'Descuento';
+
+  @override
+  String get saleDetailTotal => 'Total';
+
+  @override
+  String get saleDetailPayment => 'Pago';
+
+  @override
+  String get saleDetailMethod => 'Método';
+
+  @override
+  String get saleDetailReceived => 'Recibido';
+
+  @override
+  String get saleDetailChange => 'Cambio';
+
+  @override
+  String get saleDetailCashier => 'Atendió';
+
+  @override
+  String get saleDetailViewReceipt => 'Ver comprobante';
+
+  @override
+  String get accountOperationSalesHistoryHint =>
+      'Busca una venta y vuelve a imprimir o compartir su comprobante';
+
+  @override
+  String get dashboardCashCardHistory => 'Ver historial';
+
+  @override
+  String get cashRegisterViewSales => 'Ver las ventas del día';
+
+  @override
+  String get failureInvalidStockQuantity => 'La cantidad debe ser mayor a 0.';
+
+  @override
+  String get failureAdjustmentReasonRequired => 'Elige el motivo del ajuste.';
+
+  @override
+  String get failureNoStockChange =>
+      'El conteo es igual al stock actual: no hay nada que ajustar.';
+
+  @override
+  String get failureEmptyGoodsReceipt =>
+      'Agrega al menos un producto al ingreso.';
+
+  @override
+  String get catalogProductFormStockLockedTitle => 'El stock no se edita aquí';
+
+  @override
+  String get catalogProductFormStockLockedCaption =>
+      'Cámbialo con «Ingreso» o «Ajustar» en el detalle del producto, así queda registrado.';
+
+  @override
+  String get accountOperationMovementsHint =>
+      'Ingresos, ajustes y ventas de cada producto';
+
+  @override
+  String get inventoryMovementsTitle => 'Movimientos de stock';
+
+  @override
+  String get inventorySeeAll => 'Ver todos';
+
+  @override
+  String get inventoryNoMovements => 'Sin movimientos todavía';
+
+  @override
+  String get inventoryNoMovementsMessage => 'Prueba con otro tipo o período.';
+
+  @override
+  String get inventoryAddStock => 'Ingreso';
+
+  @override
+  String get inventoryAdjust => 'Ajustar';
+
+  @override
+  String get inventoryTypeInitial => 'Inventario inicial';
+
+  @override
+  String get inventoryTypePurchase => 'Ingreso';
+
+  @override
+  String get inventoryTypeAdjustment => 'Ajuste';
+
+  @override
+  String get inventoryTypeSale => 'Venta';
+
+  @override
+  String get inventoryTypeCancellation => 'Venta anulada';
+
+  @override
+  String get inventoryTypeReturn => 'Devolución';
+
+  @override
+  String get inventoryReasonCount => 'Conteo';
+
+  @override
+  String get inventoryReasonDamage => 'Dañado';
+
+  @override
+  String get inventoryReasonLoss => 'Pérdida';
+
+  @override
+  String get inventoryReasonOther => 'Otro';
+
+  @override
+  String inventoryMovementWhen(String date, String user) {
+    return '$date · $user';
+  }
+
+  @override
+  String inventoryStockAfter(int count) {
+    return 'Stock $count';
+  }
+
+  @override
+  String get inventoryFilterAll => 'Todos';
+
+  @override
+  String get inventoryFilterPurchases => 'Ingresos';
+
+  @override
+  String get inventoryFilterAdjustments => 'Ajustes';
+
+  @override
+  String get inventoryFilterSales => 'Ventas';
+
+  @override
+  String get inventoryPeriodLast30Days => 'Últimos 30 días';
+
+  @override
+  String get inventoryPeriodAll => 'Todo';
+
+  @override
+  String get inventoryAdjustTitle => 'Ajustar stock';
+
+  @override
+  String get inventoryAdjustSave => 'Guardar ajuste';
+
+  @override
+  String get inventoryAdjustSaved => 'Stock ajustado';
+
+  @override
+  String get inventoryVariantLabel => 'Variante';
+
+  @override
+  String inventoryVariantWithStock(String variant, int count) {
+    return '$variant · $count u.';
+  }
+
+  @override
+  String get inventoryModeCount => 'Contar';
+
+  @override
+  String get inventoryModeAdd => 'Agregar';
+
+  @override
+  String get inventoryModeRemove => 'Quitar';
+
+  @override
+  String get inventoryQuantityCounted => 'Unidades contadas';
+
+  @override
+  String get inventoryQuantityToAdd => 'Unidades a agregar';
+
+  @override
+  String get inventoryQuantityToRemove => 'Unidades a quitar';
+
+  @override
+  String get inventoryQuantityHint => '0';
+
+  @override
+  String get inventoryCurrentStock => 'Stock actual';
+
+  @override
+  String get inventoryNewStock => 'Nuevo stock';
+
+  @override
+  String get inventoryNotEnoughStock => 'No alcanza';
+
+  @override
+  String get inventoryReasonTitle => 'Motivo';
+
+  @override
+  String get inventoryNoteLabel => 'Nota';
+
+  @override
+  String get inventoryAdjustNoteHint => 'Ej.: se encontró en el depósito';
+
+  @override
+  String get inventoryReceiveTitle => 'Ingreso de mercadería';
+
+  @override
+  String get inventoryReceiveSubtitle => 'Registra lo que llegó a tu tienda';
+
+  @override
+  String get inventoryReceiveEmptyTitle => '¿Qué llegó hoy?';
+
+  @override
+  String get inventoryReceiveEmptyMessage =>
+      'Agrega los productos que recibiste, o escanéalos.';
+
+  @override
+  String get inventoryReceiveAddProduct => 'Agregar producto';
+
+  @override
+  String get inventoryReceiveSave => 'Registrar ingreso';
+
+  @override
+  String inventoryReceiveSaveUnits(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Registrar ingreso · $count unidades',
+      one: 'Registrar ingreso · 1 unidad',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String inventoryReceiveSaved(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Se agregaron $count unidades al stock',
+      one: 'Se agregó 1 unidad al stock',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get inventorySupplierLabel => 'Proveedor o nota';
+
+  @override
+  String get inventorySupplierHint => 'Ej.: Importadora Andina';
+
+  @override
+  String inventoryStockNow(int count) {
+    return 'Stock actual: $count';
+  }
+
+  @override
+  String get inventoryRemoveLine => 'Quitar del ingreso';
+
+  @override
+  String get inventoryUnitCostLabel => 'Costo c/u';
+
+  @override
+  String get inventoryPickProductTitle => 'Agregar producto';
+
+  @override
+  String get inventoryPickProductHint => 'Buscar por nombre o código';
+
+  @override
+  String get inventoryPickVariantSubtitle => '¿Qué variante llegó?';
+
+  @override
+  String get failureSaleAlreadyCancelled => 'Esta venta ya fue anulada.';
+
+  @override
+  String get failureSaleHasReturns =>
+      'Esta venta ya tiene devoluciones: registra otra devolución en lugar de anularla.';
+
+  @override
+  String get failureSaleCancelWindowClosed =>
+      'Solo puedes anular ventas de la caja abierta. Para ventas anteriores registra una devolución.';
+
+  @override
+  String get failureReturnWindowClosed =>
+      'Pasaron más de 30 días desde la venta: ya no se puede devolver.';
+
+  @override
+  String get failureReturnQuantityExceeded =>
+      'No puedes devolver más unidades de las que quedan en la venta.';
+
+  @override
+  String get failureInvalidRefundMethod =>
+      'El reembolso se hace con el mismo método de la venta o en efectivo.';
+
+  @override
+  String get failureEmptyReturn => 'Elige al menos una unidad para devolver.';
+
+  @override
+  String get failureReasonRequired => 'Escribe el motivo.';
+
+  @override
+  String get receiptMarkCancelled => 'ANULADA';
+
+  @override
+  String get receiptMarkPartiallyReturned => 'CON DEVOLUCIÓN PARCIAL';
+
+  @override
+  String get receiptMarkReturned => 'DEVUELTA';
+
+  @override
+  String get receiptMarkRefund => 'DEVOLUCIÓN';
+
+  @override
+  String receiptRefundOf(String number) {
+    return 'De la venta $number';
+  }
+
+  @override
+  String get salesRefundReceiptTitle => 'Comprobante de devolución';
+
+  @override
+  String get saleStatusCancelled => 'Anulada';
+
+  @override
+  String get saleStatusPartiallyReturned => 'Devolución parcial';
+
+  @override
+  String get saleStatusReturned => 'Devuelta';
+
+  @override
+  String get saleDetailCancel => 'Anular';
+
+  @override
+  String get saleDetailReturn => 'Devolver';
+
+  @override
+  String get saleDetailCancelled =>
+      'Venta anulada: sus productos volvieron al stock';
+
+  @override
+  String get saleDetailCancelledTitle => 'Venta anulada';
+
+  @override
+  String saleDetailCancelTitle(String number) {
+    return '¿Anular la venta $number?';
+  }
+
+  @override
+  String saleDetailCancelMessage(String total) {
+    return 'Sus $total salen de las ventas y de la caja, y sus productos vuelven al stock.';
+  }
+
+  @override
+  String get saleDetailReasonHint => 'Motivo, ej.: se cobró dos veces';
+
+  @override
+  String get saleDetailRefunded => 'Devuelto';
+
+  @override
+  String get saleDetailReturnsTitle => 'Devoluciones';
+
+  @override
+  String saleDetailReturnSummary(String number, int units) {
+    String _temp0 = intl.Intl.pluralLogic(
+      units,
+      locale: localeName,
+      other: '$units unidades',
+      one: '1 unidad',
+    );
+    return '$number · $_temp0';
+  }
+
+  @override
+  String saleDetailReturnedUnits(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count devueltas',
+      one: '1 devuelta',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get returnTitle => 'Devolución';
+
+  @override
+  String get returnWhatTitle => '¿Qué devuelve el cliente?';
+
+  @override
+  String returnDiscountNote(String discount) {
+    return 'El descuento de $discount se reparte entre los productos.';
+  }
+
+  @override
+  String returnReturnable(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Puede devolver $count',
+      one: 'Puede devolver 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String returnLineRefund(String amount) {
+    return 'Se devuelve $amount';
+  }
+
+  @override
+  String get returnRestock => 'Vuelve al stock';
+
+  @override
+  String get returnNoRestock =>
+      'No se podrá vender (por ejemplo, está dañado).';
+
+  @override
+  String get returnRefundTitle => 'Reembolso';
+
+  @override
+  String get returnReasonHint => 'Otro motivo';
+
+  @override
+  String get returnSave => 'Registrar devolución';
+
+  @override
+  String returnSaveAmount(String amount) {
+    return 'Devolver $amount';
+  }
+
+  @override
+  String returnSaved(String number, String amount) {
+    return 'Devolución $number registrada: $amount';
+  }
+
+  @override
+  String cashRegisterRefunds(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Devoluciones ($count)',
+      one: 'Devoluciones (1)',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get receiptRefundTotalLabel => 'TOTAL DEVUELTO';
+
+  @override
+  String get receiptRefundClosing => '¡Gracias por tu visita!';
 }

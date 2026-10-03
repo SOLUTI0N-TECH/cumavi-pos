@@ -22,6 +22,8 @@ final class Product extends Equatable {
     this.description = '',
     this.options = const <VariantOption>[],
     this.variants = const <ProductVariant>[],
+    this.sku,
+    this.barcode,
   }) : _ownStock = stockQuantity;
 
   final String id;
@@ -38,6 +40,12 @@ final class Product extends Equatable {
   /// Ways the product varies (`Color`, `Talla`); empty for simple products.
   final List<VariantOption> options;
   final List<ProductVariant> variants;
+
+  /// The seller's own code (`CAL-001`); variants may have theirs.
+  final String? sku;
+
+  /// Code on the label (EAN-13, UPC, Code 128…); variants may have theirs.
+  final String? barcode;
 
   /// Stock of a product without variants.
   final int _ownStock;
@@ -61,6 +69,12 @@ final class Product extends Equatable {
   ProductImage? imageById(String? imageId) => imageId == null
       ? null
       : images.where((ProductImage image) => image.id == imageId).firstOrNull;
+
+  /// Whether the product or any variant has a SKU or barcode.
+  bool get hasCodes =>
+      sku != null ||
+      barcode != null ||
+      variants.any((ProductVariant variant) => variant.hasCodes);
 
   ProductVariant? variantById(String variantId) => variants
       .where((ProductVariant variant) => variant.id == variantId)
@@ -86,6 +100,8 @@ final class Product extends Equatable {
     String? description,
     List<VariantOption>? options,
     List<ProductVariant>? variants,
+    String? sku,
+    String? barcode,
   }) {
     return Product(
       id: id,
@@ -99,6 +115,8 @@ final class Product extends Equatable {
       description: description ?? this.description,
       options: options ?? this.options,
       variants: variants ?? this.variants,
+      sku: sku ?? this.sku,
+      barcode: barcode ?? this.barcode,
     );
   }
 
@@ -115,5 +133,7 @@ final class Product extends Equatable {
     description,
     options,
     variants,
+    sku,
+    barcode,
   ];
 }

@@ -17,6 +17,8 @@ import '../../../../core/widgets/primary_button.dart';
 import '../../../../core/widgets/screen_header.dart';
 import '../../../../core/widgets/status_pill.dart';
 import '../../../../core/widgets/tinted_banner.dart';
+import '../../../inventory/domain/entities/stock_movement.dart';
+import '../../../inventory/presentation/widgets/stock_movement_tile.dart';
 import '../../domain/entities/product.dart';
 import '../../domain/entities/product_image.dart';
 import '../../domain/entities/product_variant.dart';
@@ -31,6 +33,9 @@ class ProductDetailScreen extends StatelessWidget {
   const ProductDetailScreen({
     required this.onBack,
     required this.onEdit,
+    required this.onReceiveStock,
+    required this.onAdjustStock,
+    required this.onOpenMovements,
     super.key,
   });
 
@@ -38,6 +43,15 @@ class ProductDetailScreen extends StatelessWidget {
 
   /// Opens the edit form; completes when the seller comes back.
   final Future<void> Function() onEdit;
+
+  /// "Ingreso": a goods receipt with this product.
+  final VoidCallback onReceiveStock;
+
+  /// "Ajustar": add, remove or count units with a reason.
+  final VoidCallback onAdjustStock;
+
+  /// Every stock movement of this product.
+  final VoidCallback onOpenMovements;
 
   void _edit() => unawaited(onEdit());
 
@@ -87,7 +101,15 @@ class ProductDetailScreen extends StatelessWidget {
                 Expanded(
                   child: product == null
                       ? _MissingProduct(state: state)
-                      : _ProductDetails(product: product),
+                      : _ProductDetails(
+                          product: product,
+                          movements: state.movements,
+                          actions: _StockActions(
+                            onReceive: onReceiveStock,
+                            onAdjust: onAdjustStock,
+                            onOpenMovements: onOpenMovements,
+                          ),
+                        ),
                 ),
                 if (product != null) _EditFooter(onEdit: _edit),
               ],
@@ -168,10 +190,29 @@ class _MissingProduct extends StatelessWidget {
   }
 }
 
+/// What the stock card and the movements card can open.
+final class _StockActions {
+  const _StockActions({
+    required this.onReceive,
+    required this.onAdjust,
+    required this.onOpenMovements,
+  });
+
+  final VoidCallback onReceive;
+  final VoidCallback onAdjust;
+  final VoidCallback onOpenMovements;
+}
+
 class _ProductDetails extends StatelessWidget {
-  const _ProductDetails({required this.product});
+  const _ProductDetails({
+    required this.product,
+    required this.movements,
+    required this.actions,
+  });
 
   final Product product;
+  final List<StockMovement> movements;
+  final _StockActions actions;
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +232,13 @@ class _ProductDetails extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
           _PricesCard(product: product),
           const SizedBox(height: AppSpacing.md),
-          _StockCard(product: product),
+          _StockCard(product: product, actions: actions),
+          const SizedBox(height: AppSpacing.md),
+          _MovementsCard(movements: movements, actions: actions),
+          if (product.sku != null || product.barcode != null) ...<Widget>[
+            const SizedBox(height: AppSpacing.md),
+            _CodesCard(product: product),
+          ],
           if (product.description.trim().isNotEmpty) ...<Widget>[
             const SizedBox(height: AppSpacing.md),
             _SectionCard(
@@ -486,6 +533,48 @@ class _SectionCard extends StatelessWidget {
   }
 }
 
+/// SKU and barcode of the product; each variant shows its own in the
+/// variants card.
+class _CodesCard extends StatelessWidget {
+  const _CodesCard({required this.product});
+
+  final Product product;
+
+  @override
+  Widget build(BuildContext context) {
+    final AppLocalizations l10n = context.l10n;
+
+    Widget line(String label, String value) => Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Text(
+              label,
+              style: AppTextStyles.bodySmall.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ),
+          SelectableText(value, style: AppTextStyles.bodySmallStrong),
+        ],
+      ),
+    );
+
+    return _SectionCard(
+      title: l10n.catalogProductFormCodesSection,
+      child: Column(
+        children: <Widget>[
+          if (product.sku case final String sku)
+            line(l10n.catalogProductFormSkuLabel, sku),
+          if (product.barcode case final String barcode)
+            line(l10n.catalogProductFormBarcodeLabel, barcode),
+        ],
+      ),
+    );
+  }
+}
+
 /// Sale price and cost side by side, then the profit per unit and margin.
 class _PricesCard extends StatelessWidget {
   const _PricesCard({required this.product});
@@ -579,9 +668,10 @@ class _PriceFigure extends StatelessWidget {
 
 /// Units in stock, tinted by level, and how many variants are sold out.
 class _StockCard extends StatelessWidget {
-  const _StockCard({required this.product});
+  const _StockCard({required this.product, required this.actions});
 
   final Product product;
+  final _StockActions actions;
 
   @override
   Widget build(BuildContext context) {
@@ -633,8 +723,66 @@ class _StockCard extends StatelessWidget {
                     ),
             ),
           ],
+          const SizedBox(height: AppSpacing.lg),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: FilledButton.tonalIcon(
+                  onPressed: actions.onReceive,
+                  icon: const Icon(Icons.add_rounded, size: 18),
+                  label: Text(l10n.inventoryAddStock),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: actions.onAdjust,
+                  icon: const Icon(Icons.tune_rounded, size: 18),
+                  label: Text(l10n.inventoryAdjust),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
+    );
+  }
+}
+
+/// The latest movements of the product and a way to see them all.
+class _MovementsCard extends StatelessWidget {
+  const _MovementsCard({required this.movements, required this.actions});
+
+  final List<StockMovement> movements;
+  final _StockActions actions;
+
+  @override
+  Widget build(BuildContext context) {
+    final AppLocalizations l10n = context.l10n;
+
+    return _SectionCard(
+      title: l10n.inventoryMovementsTitle,
+      trailing: movements.isEmpty
+          ? null
+          : TextButton(
+              onPressed: actions.onOpenMovements,
+              child: Text(l10n.inventorySeeAll),
+            ),
+      child: movements.isEmpty
+          ? Text(
+              l10n.inventoryNoMovements,
+              style: AppTextStyles.bodySmall.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            )
+          : Column(
+              children: <Widget>[
+                for (int i = 0; i < movements.length; i++) ...<Widget>[
+                  if (i > 0) const Divider(height: 1),
+                  StockMovementTile(movement: movements[i], showProduct: false),
+                ],
+              ],
+            ),
     );
   }
 }
@@ -646,6 +794,10 @@ class _VariantsCard extends StatelessWidget {
   const _VariantsCard({required this.product});
 
   final Product product;
+
+  /// `SKU · barcode` of a variant, empty without codes.
+  static String _codesOf(ProductVariant variant) =>
+      <String?>[variant.sku, variant.barcode].whereType<String>().join(' · ');
 
   /// Values shown on a row: all of them, or the ones after the group's.
   static String _rowLabel(ProductVariant variant, {String? groupedBy}) =>
@@ -686,6 +838,7 @@ class _VariantsCard extends StatelessWidget {
                     label: _rowLabel(variant),
                     quantity: variant.stockQuantity,
                     photoPath: showPhotos ? product.imagePathOf(variant) : null,
+                    codes: _codesOf(variant),
                   ),
               ],
             )
@@ -704,6 +857,7 @@ class _VariantsCard extends StatelessWidget {
                     _VariantRow(
                       label: _rowLabel(variant, groupedBy: groupedBy),
                       quantity: variant.stockQuantity,
+                      codes: _codesOf(variant),
                     ),
                 ],
               ),
@@ -872,11 +1026,15 @@ class _VariantRow extends StatelessWidget {
     required this.label,
     required this.quantity,
     this.photoPath,
+    this.codes = '',
   });
 
   final String label;
   final int quantity;
   final String? photoPath;
+
+  /// `SKU · barcode`, empty when the variant has none.
+  final String codes;
 
   @override
   Widget build(BuildContext context) {
@@ -900,15 +1058,27 @@ class _VariantRow extends StatelessWidget {
           ),
           const SizedBox(width: AppSpacing.sm + 2),
           Expanded(
-            child: Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.bodySmallStrong.copyWith(
-                color: level.isSellable
-                    ? AppColors.textPrimary
-                    : AppColors.textSecondary,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.bodySmallStrong.copyWith(
+                    color: level.isSellable
+                        ? AppColors.textPrimary
+                        : AppColors.textSecondary,
+                  ),
+                ),
+                if (codes.isNotEmpty)
+                  Text(
+                    codes,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.captionSmall,
+                  ),
+              ],
             ),
           ),
           const SizedBox(width: AppSpacing.sm),

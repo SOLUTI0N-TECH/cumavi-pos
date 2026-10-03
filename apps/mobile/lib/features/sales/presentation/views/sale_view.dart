@@ -15,6 +15,7 @@ import '../../../catalog/domain/entities/product.dart';
 import '../../../catalog/domain/entities/product_variant.dart';
 import '../../../catalog/presentation/cubit/catalog_cubit.dart';
 import '../../../catalog/presentation/cubit/catalog_state.dart';
+import '../../../catalog/presentation/scanner/barcode_camera.dart';
 import '../../domain/entities/cart.dart';
 import '../../domain/entities/cart_line.dart';
 import '../cubit/cart_cubit.dart';
@@ -23,6 +24,7 @@ import '../widgets/cart_line_tile.dart';
 import '../widgets/cart_summary_panel.dart';
 import '../widgets/category_shortcut_tiles.dart';
 import '../widgets/discount_sheet.dart';
+import '../widgets/scan_to_cart.dart';
 import '../widgets/variant_picker_sheet.dart';
 
 /// Ventas tab while the drawer is open: the cart is the screen, and the
@@ -32,6 +34,7 @@ class SaleView extends StatelessWidget {
     required this.onOpenCatalog,
     required this.onCheckout,
     required this.onManageCashRegister,
+    this.onScan,
     super.key,
   });
 
@@ -43,6 +46,9 @@ class SaleView extends StatelessWidget {
   final void Function({String? categoryId}) onOpenCatalog;
   final VoidCallback onCheckout;
   final VoidCallback onManageCashRegister;
+
+  /// Opens the scanner; without it the search bar has no scan button.
+  final ScanCode? onScan;
 
   Future<void> _editDiscount(BuildContext context, Cart cart) async {
     final double? discount = await DiscountSheet.show(
@@ -98,7 +104,13 @@ class SaleView extends StatelessWidget {
                     child: SearchFieldButton(
                       hintText: l10n.salesSearchProductHint,
                       onTap: () => onOpenCatalog(),
-                      onScanTap: () => onOpenCatalog(),
+                      onScanTap: switch (onScan) {
+                        final ScanCode scan => () => scanIntoCart(
+                          context,
+                          scan,
+                        ),
+                        null => null,
+                      },
                     ),
                   ),
                   const SizedBox(height: AppSpacing.lg),
@@ -313,7 +325,20 @@ void showVariantAddedMessage(
   BuildContext context,
   Product product,
   VariantChoice choice,
-) {
+) => showAddedToSaleMessage(
+  context,
+  product,
+  variant: choice.variant,
+  quantity: choice.quantity,
+);
+
+/// Confirms what went into the sale, e.g. after a scan.
+void showAddedToSaleMessage(
+  BuildContext context,
+  Product product, {
+  ProductVariant? variant,
+  int quantity = 1,
+}) {
   final AppLocalizations l10n = context.l10n;
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
@@ -321,8 +346,8 @@ void showVariantAddedMessage(
       SnackBar(
         content: Text(
           l10n.salesVariantAddedMessage(
-            choice.quantity,
-            _displayName(l10n, product, choice.variant),
+            quantity,
+            _displayName(l10n, product, variant),
           ),
         ),
       ),

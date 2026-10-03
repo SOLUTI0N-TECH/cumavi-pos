@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/error/failure.dart';
 import '../../../../core/usecases/use_case.dart';
 import '../../../../core/utils/result.dart';
 import '../../domain/entities/product.dart';
@@ -13,7 +14,10 @@ import '../../domain/usecases/capture_product_photo.dart';
 import '../../domain/usecases/create_product.dart';
 import '../../domain/usecases/get_categories.dart';
 import '../../domain/usecases/get_product.dart';
+import '../../domain/usecases/manage_categories.dart';
+import '../../domain/usecases/product_code_rules.dart';
 import '../../domain/usecases/remove_photo_background.dart';
+import '../../domain/usecases/suggest_sku.dart';
 import '../../domain/usecases/update_product.dart';
 import 'product_form_state.dart';
 
@@ -23,34 +27,44 @@ import 'product_form_state.dart';
 class ProductFormCubit extends Cubit<ProductFormState> {
   ProductFormCubit({
     required GetCategories getCategories,
+    required CreateCategory createCategory,
     required GetProduct getProduct,
     required CreateProduct createProduct,
     required UpdateProduct updateProduct,
     required CaptureProductPhoto captureProductPhoto,
     required RemovePhotoBackground removePhotoBackground,
+    required SuggestSku suggestSku,
   }) : _getCategories = getCategories,
+       _createCategory = createCategory,
        _getProduct = getProduct,
        _createProduct = createProduct,
        _updateProduct = updateProduct,
        _captureProductPhoto = captureProductPhoto,
        _removePhotoBackground = removePhotoBackground,
+       _suggestSku = suggestSku,
        super(const ProductFormState());
 
   final GetCategories _getCategories;
+  final CreateCategory _createCategory;
   final GetProduct _getProduct;
   final CreateProduct _createProduct;
   final UpdateProduct _updateProduct;
   final CaptureProductPhoto _captureProductPhoto;
   final RemovePhotoBackground _removePhotoBackground;
+  final SuggestSku _suggestSku;
 
   int _imageSequence = 0;
 
-  /// Loads the categories and, to edit, the product [productId].
-  Future<void> load({String? productId}) async {
+  /// Loads the categories and, to edit, the product [productId]. A new
+  /// product can start with the [barcode] a scan did not find.
+  Future<void> load({String? productId, String? barcode}) async {
     // A cubit reused for another product, or to create one after editing,
     // starts from a blank form.
-    if (productId != state.productId) {
+    if (productId != state.productId || barcode != null) {
       emit(ProductFormState(categories: state.categories));
+    }
+    if (productId == null && barcode != null) {
+      emit(state.copyWith(barcode: barcode));
     }
     if (productId != null) {
       emit(
@@ -87,8 +101,15 @@ class ProductFormCubit extends Cubit<ProductFormState> {
 
   ProductFormState _prefilledWith(Product product) {
     final ProductImage? main = product.images.firstOrNull;
+    final bool categoryListed = state.categories.any(
+      (ProductCategory category) => category.id == product.category.id,
+    );
     return state.copyWith(
       status: ProductFormStatus.editing,
+      // An archived category is not offered, but the product keeps it.
+      categories: categoryListed
+          ? null
+          : <ProductCategory>[...state.categories, product.category],
       name: product.name,
       description: product.description,
       categoryId: product.category.id,
@@ -100,6 +121,8 @@ class ProductFormCubit extends Cubit<ProductFormState> {
       extraImages: product.images.skip(1).toList(),
       options: product.options,
       variants: product.variants,
+      sku: product.sku ?? '',
+      barcode: product.barcode ?? '',
     );
   }
 
@@ -113,20 +136,97 @@ class ProductFormCubit extends Cubit<ProductFormState> {
   void categorySelected(String categoryId) =>
       emit(state.copyWith(categoryId: categoryId));
 
+  /// Creates a category from the form and selects it. Returns the failure
+  /// (e.g. the name is taken) so the sheet can show it.
+  Future<Failure?> createCategory(String name) async {
+    switch (await _createCategory(name)) {
+      case Success<ProductCategory>(:final ProductCategory value):
+        emit(
+          state.copyWith(
+            categories: <ProductCategory>[...state.categories, value],
+            categoryId: value.id,
+          ),
+        );
+        return null;
+      case Failed<ProductCategory>(:final failure):
+        return failure;
+    }
+  }
+
+  // ----------------------------------------------------------------- codes
+
+  void skuChanged(String sku) => emit(state.copyWith(sku: sku));
+
+  void barcodeChanged(String barcode) => emit(state.copyWith(barcode: barcode));
+
+  /// Proposes the next free SKU of the category (`CAL-004`) and gives each
+  /// variant without one its own (`CAL-004-ROJ-38`). Returns the product's
+  /// SKU for the field, or `null` when it could not be made.
+  Future<String?> generateSku() async {
+    final String categoryName =
+        state.categories
+            .where(
+              (ProductCategory category) => category.id == state.categoryId,
+            )
+            .firstOrNull
+            ?.name ??
+        '';
+    final Result<String> result = await _suggestSku(categoryName);
+    final String? sku = result.valueOrNull;
+    if (sku == null) return null;
+    emit(
+      state.copyWith(
+        sku: sku,
+        variants: <ProductVariant>[
+          for (final ProductVariant variant in state.variants)
+            variant.sku == null
+                ? variant.withCodes(
+                    sku: SuggestSku.variantSku(sku, variant),
+                    barcode: variant.barcode,
+                  )
+                : variant,
+        ],
+      ),
+    );
+    return sku;
+  }
+
+  /// Sets the codes of one variant; blank removes them.
+  void variantCodesChanged(
+    String variantId, {
+    required String sku,
+    required String barcode,
+  }) => _updateVariant(
+    variantId,
+    (ProductVariant variant) => variant.withCodes(
+      sku: ProductCodeRules.normalizeOrNull(sku),
+      barcode: ProductCodeRules.normalizeOrNull(barcode),
+    ),
+  );
+
   void salePriceChanged(double? price) =>
       emit(state.withPrices(salePrice: price, costPrice: state.costPrice));
 
   void costPriceChanged(double? cost) =>
       emit(state.withPrices(salePrice: state.salePrice, costPrice: cost));
 
-  void incrementQuantity() =>
-      emit(state.copyWith(stockQuantity: state.stockQuantity + 1));
+  /// While editing, stock is read-only: it changes through movements
+  /// ("Ajustar stock", "Ingreso de mercadería") so every change is recorded.
+  bool get _stockLocked => state.isEditing;
 
-  void decrementQuantity() => emit(
-    state.copyWith(
-      stockQuantity: state.stockQuantity <= 0 ? 0 : state.stockQuantity - 1,
-    ),
-  );
+  void incrementQuantity() {
+    if (_stockLocked) return;
+    emit(state.copyWith(stockQuantity: state.stockQuantity + 1));
+  }
+
+  void decrementQuantity() {
+    if (_stockLocked) return;
+    emit(
+      state.copyWith(
+        stockQuantity: state.stockQuantity <= 0 ? 0 : state.stockQuantity - 1,
+      ),
+    );
+  }
 
   // ------------------------------------------------------------ main photo
 
@@ -276,6 +376,8 @@ class ProductFormCubit extends Cubit<ProductFormState> {
           },
           stockQuantity: variant.stockQuantity,
           imageId: variant.imageId,
+          sku: variant.sku,
+          barcode: variant.barcode,
         ),
     ];
     emit(state.copyWith(variants: renamed));
@@ -317,21 +419,27 @@ class ProductFormCubit extends Cubit<ProductFormState> {
     );
   }
 
-  void variantStockChanged(String variantId, int stock) =>
-      _updateVariant(variantId, (ProductVariant variant) {
-        return variant.copyWith(stockQuantity: stock < 0 ? 0 : stock);
-      });
+  void variantStockChanged(String variantId, int stock) {
+    if (_stockLocked) return;
+    _updateVariant(variantId, (ProductVariant variant) {
+      return variant.copyWith(stockQuantity: stock < 0 ? 0 : stock);
+    });
+  }
 
-  void incrementVariantStock(String variantId) =>
-      _updateVariant(variantId, (ProductVariant variant) {
-        return variant.copyWith(stockQuantity: variant.stockQuantity + 1);
-      });
+  void incrementVariantStock(String variantId) {
+    if (_stockLocked) return;
+    _updateVariant(variantId, (ProductVariant variant) {
+      return variant.copyWith(stockQuantity: variant.stockQuantity + 1);
+    });
+  }
 
-  void decrementVariantStock(String variantId) =>
-      _updateVariant(variantId, (ProductVariant variant) {
-        final int stock = variant.stockQuantity;
-        return variant.copyWith(stockQuantity: stock <= 0 ? 0 : stock - 1);
-      });
+  void decrementVariantStock(String variantId) {
+    if (_stockLocked) return;
+    _updateVariant(variantId, (ProductVariant variant) {
+      final int stock = variant.stockQuantity;
+      return variant.copyWith(stockQuantity: stock <= 0 ? 0 : stock - 1);
+    });
+  }
 
   /// Sets the photo of a variant (`null` = the main photo). With
   /// [sharedOption] (e.g. `Color`), every variant with the same value of
@@ -428,6 +536,8 @@ class ProductFormCubit extends Cubit<ProductFormState> {
         optionValues: values,
         stockQuantity: existing.stockQuantity,
         imageId: existing.imageId,
+        sku: existing.sku,
+        barcode: existing.barcode,
       );
     }
     return ProductVariant.fromValues(
@@ -478,6 +588,8 @@ class ProductFormCubit extends Cubit<ProductFormState> {
       images: state.images,
       options: state.options,
       variants: state.variants,
+      sku: ProductCodeRules.normalizeOrNull(state.sku),
+      barcode: ProductCodeRules.normalizeOrNull(state.barcode),
     );
     final String? productId = state.productId;
     final Result<Product> result = productId == null

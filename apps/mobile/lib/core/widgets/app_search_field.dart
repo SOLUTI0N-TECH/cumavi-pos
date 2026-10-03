@@ -14,11 +14,15 @@ class AppSearchField extends StatelessWidget {
     this.autofocus = false,
     this.focused = false,
     this.trailing,
+    this.keyboardType,
     super.key,
   });
 
   final String hintText;
   final TextEditingController? controller;
+
+  /// E.g. digits to search a sale by number.
+  final TextInputType? keyboardType;
   final ValueChanged<String>? onChanged;
   final bool autofocus;
 
@@ -48,6 +52,7 @@ class AppSearchField extends StatelessWidget {
               controller: controller,
               onChanged: onChanged,
               autofocus: autofocus,
+              keyboardType: keyboardType,
               textInputAction: TextInputAction.search,
               style: AppTextStyles.bodyLarge,
               decoration: InputDecoration(

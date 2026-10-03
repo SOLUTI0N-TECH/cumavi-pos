@@ -48,8 +48,5 @@ final class InMemorySessionStore implements SessionRepository {
   void saveBusiness(BusinessProfile business) => _business = business;
 
   @override
-  void clear() {
-    _user = null;
-    _business = null;
-  }
+  void clearUser() => _user = null;
 }

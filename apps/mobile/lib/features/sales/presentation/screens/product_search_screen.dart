@@ -15,12 +15,12 @@ import '../../../catalog/domain/entities/product.dart';
 import '../../../catalog/domain/entities/product_category.dart';
 import '../../../catalog/presentation/cubit/catalog_cubit.dart';
 import '../../../catalog/presentation/cubit/catalog_state.dart';
+import '../../../catalog/presentation/scanner/barcode_camera.dart';
 import '../../domain/entities/cart.dart';
 import '../cubit/cart_cubit.dart';
 import '../cubit/cart_state.dart';
-import '../views/sale_view.dart';
 import '../widgets/product_grid_card.dart';
-import '../widgets/variant_picker_sheet.dart';
+import '../widgets/scan_to_cart.dart';
 
 /// Full-screen catalog opened from the sale search bar: search, filter by
 /// category and add products to the cart.
@@ -28,11 +28,15 @@ class ProductSearchScreen extends StatefulWidget {
   const ProductSearchScreen({
     required this.onBack,
     this.initialCategoryId,
+    this.onScan,
     super.key,
   });
 
   final VoidCallback onBack;
   final String? initialCategoryId;
+
+  /// Opens the scanner; without it the search has no scan button.
+  final ScanCode? onScan;
 
   @override
   State<ProductSearchScreen> createState() => _ProductSearchScreenState();
@@ -53,34 +57,8 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
     super.dispose();
   }
 
-  /// One tap adds a simple product; a product with variants first asks
-  /// which one and how many units.
-  Future<void> _addProduct(Product product) async {
-    final CartCubit cartCubit = context.read<CartCubit>();
-    if (!product.hasVariants) {
-      if (!cartCubit.addProduct(product)) {
-        showStockLimitMessage(context, product);
-      }
-      return;
-    }
-
-    final VariantChoice? choice = await VariantPickerSheet.show(
-      context,
-      product: product,
-      cart: cartCubit.state.cart,
-    );
-    if (choice == null || !mounted) return;
-    final bool added = cartCubit.addProduct(
-      product,
-      variant: choice.variant,
-      quantity: choice.quantity,
-    );
-    if (added) {
-      showVariantAddedMessage(context, product, choice);
-    } else {
-      showStockLimitMessage(context, product, variant: choice.variant);
-    }
-  }
+  Future<void> _addProduct(Product product) =>
+      addProductToCart(context, product);
 
   @override
   Widget build(BuildContext context) {
@@ -112,10 +90,17 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
                       controller: _queryController,
                       focused: true,
                       onChanged: context.read<CatalogCubit>().queryChanged,
-                      trailing: const Icon(
-                        Icons.qr_code_scanner_rounded,
-                        size: 20,
-                      ),
+                      trailing: switch (widget.onScan) {
+                        final ScanCode scan => IconButton(
+                          tooltip: l10n.commonScanBarcodeTooltip,
+                          onPressed: () => scanIntoCart(context, scan),
+                          icon: const Icon(
+                            Icons.qr_code_scanner_rounded,
+                            size: 20,
+                          ),
+                        ),
+                        null => null,
+                      },
                     ),
                   ),
                 ],

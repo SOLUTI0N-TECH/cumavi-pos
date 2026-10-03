@@ -118,7 +118,11 @@ final class MockAuthRepository implements AuthRepository {
       type: draft.type,
       department: draft.department,
       logoPath: draft.logoPath,
-      taxId: _sessionRepository.currentBusiness?.taxId,
+      taxId: switch (draft.taxId?.trim()) {
+        null => _sessionRepository.currentBusiness?.taxId,
+        '' => null,
+        final String taxId => taxId,
+      },
     );
     _sessionRepository.saveBusiness(business);
     return Success<BusinessProfile>(business);
@@ -146,6 +150,13 @@ final class MockAuthRepository implements AuthRepository {
         demoCode: demoVerificationCode,
       ),
     );
+  }
+
+  @override
+  Future<Result<void>> signOut() async {
+    await _simulateLatency();
+    _sessionRepository.clearUser();
+    return const Success<void>(null);
   }
 
   Future<void> _simulateLatency() => Future<void>.delayed(_latency);

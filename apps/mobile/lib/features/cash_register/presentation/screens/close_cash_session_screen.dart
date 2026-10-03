@@ -25,6 +25,7 @@ class CloseCashSessionScreen extends StatefulWidget {
   const CloseCashSessionScreen({
     required this.onClosed,
     required this.onBack,
+    required this.onOpenSales,
     super.key,
   });
 
@@ -32,6 +33,9 @@ class CloseCashSessionScreen extends StatefulWidget {
   /// to the opening form.
   final VoidCallback onClosed;
   final VoidCallback onBack;
+
+  /// The day's sales in the history, to check one before closing.
+  final VoidCallback onOpenSales;
 
   @override
   State<CloseCashSessionScreen> createState() => _CloseCashSessionScreenState();
@@ -120,7 +124,18 @@ class _CloseCashSessionScreenState extends State<CloseCashSessionScreen> {
                     ),
                     children: <Widget>[
                       _SessionSummaryCard(summary: summary),
-                      const SizedBox(height: AppSpacing.lg),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton.icon(
+                          onPressed: widget.onOpenSales,
+                          icon: const Icon(
+                            Icons.receipt_long_outlined,
+                            size: 18,
+                          ),
+                          label: Text(l10n.cashRegisterViewSales),
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
                       _ExpectedCashCard(summary: summary),
                       const SizedBox(height: AppSpacing.xl),
                       LabeledField(
@@ -207,6 +222,15 @@ class _SessionSummaryCard extends StatelessWidget {
                   method.localizedName(l10n).toLowerCase(),
                 ),
                 value: MoneyFormatter.format(summary.sales.totalFor(method)),
+              ),
+            ),
+          // Refunds are already out of the method totals above.
+          if (summary.sales.refundCount > 0)
+            Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.sm + 2),
+              child: KeyValueRow(
+                label: l10n.cashRegisterRefunds(summary.sales.refundCount),
+                value: '− ${MoneyFormatter.format(summary.sales.refundTotal)}',
               ),
             ),
           const Divider(height: AppSpacing.xxl),

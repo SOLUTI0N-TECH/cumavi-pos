@@ -19,17 +19,25 @@ class VariantListEditor extends StatelessWidget {
     required this.variants,
     required this.imagePathOf,
     required this.onPickImage,
+    required this.onEditCodes,
     required this.onIncrement,
     required this.onDecrement,
     this.groupBy,
+    this.stockReadOnly = false,
     super.key,
   });
 
   final List<ProductVariant> variants;
 
+  /// Shows the stock without steppers (editing a product).
+  final bool stockReadOnly;
+
   /// Photo a variant shows; `null` when the product has none yet.
   final String? Function(ProductVariant variant) imagePathOf;
   final ValueChanged<ProductVariant> onPickImage;
+
+  /// Opens the SKU and barcode of a variant.
+  final ValueChanged<ProductVariant> onEditCodes;
 
   /// Called with the id of the variant.
   final ValueChanged<String> onIncrement;
@@ -94,9 +102,15 @@ class VariantListEditor extends StatelessWidget {
       fullLabel: variant.label,
       imagePath: imagePathOf(variant),
       stock: variant.stockQuantity,
+      codes: <String?>[
+        variant.sku,
+        variant.barcode,
+      ].whereType<String>().join(' · '),
       onPickImage: () => onPickImage(variant),
+      onEditCodes: () => onEditCodes(variant),
       onIncrement: () => onIncrement(variant.id),
       onDecrement: () => onDecrement(variant.id),
+      stockReadOnly: stockReadOnly,
     );
   }
 }
@@ -164,9 +178,12 @@ class _VariantRow extends StatelessWidget {
     required this.fullLabel,
     required this.imagePath,
     required this.stock,
+    required this.codes,
     required this.onPickImage,
+    required this.onEditCodes,
     required this.onIncrement,
     required this.onDecrement,
+    required this.stockReadOnly,
   });
 
   /// What the row shows (without the grouped value).
@@ -176,9 +193,14 @@ class _VariantRow extends StatelessWidget {
   final String fullLabel;
   final String? imagePath;
   final int stock;
+
+  /// `SKU · barcode`, empty when the variant has none.
+  final String codes;
   final VoidCallback onPickImage;
+  final VoidCallback onEditCodes;
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
+  final bool stockReadOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -193,20 +215,50 @@ class _VariantRow extends StatelessWidget {
           ),
           const SizedBox(width: AppSpacing.md),
           Expanded(
-            child: Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.bodyStrong,
+            child: InkWell(
+              onTap: onEditCodes,
+              borderRadius: BorderRadius.circular(AppRadius.sm),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.bodyStrong,
+                    ),
+                    Text(
+                      codes.isEmpty
+                          ? context.l10n.catalogVariantAddCodes
+                          : codes,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.captionSmall.copyWith(
+                        color: codes.isEmpty
+                            ? AppColors.infoText
+                            : AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
           const SizedBox(width: AppSpacing.sm),
-          QuantityStepper(
-            quantity: stock,
-            buttonSize: 38,
-            onIncrement: onIncrement,
-            onDecrement: onDecrement,
-          ),
+          if (stockReadOnly)
+            Text(
+              context.l10n.catalogStockBadgeUnits(stock),
+              style: AppTextStyles.bodyStrong,
+            )
+          else
+            QuantityStepper(
+              quantity: stock,
+              buttonSize: 38,
+              onIncrement: onIncrement,
+              onDecrement: onDecrement,
+            ),
         ],
       ),
     );

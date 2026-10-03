@@ -11,14 +11,19 @@ import '../../domain/services/photo_capturer.dart';
 class PhotoSourceSheet extends StatelessWidget {
   const PhotoSourceSheet({super.key});
 
-  /// Returns the chosen source, or `null` when dismissed.
-  static Future<PhotoSource?> show(BuildContext context) {
+  /// Returns the chosen source, or `null` when dismissed. The title and
+  /// subtitle default to the product photo's.
+  static Future<PhotoSource?> show(
+    BuildContext context, {
+    String? title,
+    String? subtitle,
+  }) {
     final AppLocalizations l10n = context.l10n;
 
     return AppBottomSheet.show<PhotoSource>(
       context: context,
-      title: l10n.catalogPhotoSourceTitle,
-      subtitle: l10n.catalogPhotoSourceSubtitle,
+      title: title ?? l10n.catalogPhotoSourceTitle,
+      subtitle: subtitle ?? l10n.catalogPhotoSourceSubtitle,
       builder: (_) => const PhotoSourceSheet(),
     );
   }

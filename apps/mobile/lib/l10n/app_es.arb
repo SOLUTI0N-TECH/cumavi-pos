@@ -31,6 +31,7 @@
   "failureSalesCategoryRequired": "Elige al menos una categoría.",
   "failurePaymentMethodRequired": "Elige al menos un método de pago.",
   "failureBusinessProfileRequired": "Primero registra los datos de tu negocio.",
+  "failureInvalidTaxId": "El NIT debe tener solo números (entre 5 y 15).",
   "failureNegativeOpeningAmount": "El monto inicial no puede ser negativo.",
   "failureNegativeCountedCash": "El efectivo contado no puede ser negativo.",
   "failureCashSessionAlreadyOpen": "La caja ya está abierta.",
@@ -39,6 +40,35 @@
   "failureProductNameTooShort": "El nombre del producto debe tener al menos 3 caracteres.",
   "failureCategoryRequired": "Elige una categoría.",
   "failureCategoryNotFound": "La categoría seleccionada no existe.",
+  "failureCategoryNameInvalid": "El nombre de la categoría debe tener entre 2 y 30 caracteres.",
+  "failureCategoryNameTaken": "Ya tienes una categoría con ese nombre.",
+  "failureInvalidSku": "El SKU debe tener de 2 a 32 letras sin tilde, números, guiones o puntos.",
+  "failureInvalidBarcode": "El código de barras debe tener de 4 a 32 letras o números.",
+  "failureProductCodeRepeated": "El código {code} está repetido en este producto.",
+  "@failureProductCodeRepeated": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "failureProductCodeTaken": "Ese código ya lo usa «{productName}».",
+  "@failureProductCodeTaken": {
+    "placeholders": {
+      "productName": {
+        "type": "String"
+      }
+    }
+  },
+  "failureProductCodeTakenGeneric": "Ese código ya lo usa otro producto.",
+  "failureProductCodeNotFound": "Ningún producto tiene el código {code}.",
+  "@failureProductCodeNotFound": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
   "failureInvalidSalePrice": "El precio de venta debe ser mayor a 0.",
   "failureNegativeCostPrice": "El costo no puede ser negativo.",
   "failureCostAbovePrice": "El costo no puede ser mayor al precio de venta.",
@@ -258,8 +288,9 @@
   "authBusinessProfileTitle": "Sobre tu negocio",
   "authBusinessProfileSubtitle": "Lo usamos en tu POS y en tus comprobantes.",
   "authBusinessProfileLogoTitle": "Logo del negocio",
-  "authBusinessProfileLogoReady": "Listo. Aparecerá en tus comprobantes.",
+  "authBusinessProfileLogoReady": "Listo. Toca para cambiarlo.",
   "authBusinessProfileLogoOptional": "Opcional. Aparece en tus comprobantes.",
+  "authBusinessProfileLogoSourceSubtitle": "Aparece en tus comprobantes y en tu catálogo.",
   "authBusinessProfileNameLabel": "Nombre del negocio",
   "authBusinessProfileNameHint": "Ej. Illimani Store",
   "authBusinessProfileTypeLabel": "Tipo de negocio",
@@ -1160,7 +1191,7 @@
       }
     }
   },
-  "catalogVariantListCaption": "Toca la foto de una variante para cambiarla.",
+  "catalogVariantListCaption": "Toca la foto para cambiarla o el nombre para sus códigos.",
   "catalogVariantPhotoTooltip": "Foto de {variant}",
   "@catalogVariantPhotoTooltip": {
     "placeholders": {
@@ -1281,5 +1312,492 @@
         "type": "String"
       }
     }
-  }
+  },
+  "accountMoreTitle": "Más",
+  "accountOpenMenuTooltip": "Tu cuenta y tu negocio",
+  "accountSectionBusiness": "Negocio",
+  "accountProviderGoogle": "Google",
+  "accountProviderEmail": "correo",
+  "accountProviderPhone": "teléfono",
+  "accountSignedInWith": "Ingresaste con {method}",
+  "@accountSignedInWith": {
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "accountBusinessEdit": "Editar datos del negocio",
+  "accountBusinessNoTaxId": "Sin NIT",
+  "accountSignOut": "Cerrar sesión",
+  "accountSignOutTitle": "¿Cerrar sesión?",
+  "accountSignOutMessage": "Tendrás que ingresar de nuevo para vender.",
+  "accountSignOutCashOpen": "La caja queda abierta. Podrás cerrarla cuando vuelvas a ingresar.",
+  "accountVersion": "{app} · versión {version} ({build})",
+  "@accountVersion": {
+    "placeholders": {
+      "app": {
+        "type": "String"
+      },
+      "version": {
+        "type": "String"
+      },
+      "build": {
+        "type": "String"
+      }
+    }
+  },
+  "accountBusinessTitle": "Datos del negocio",
+  "accountBusinessSubtitle": "Así aparece tu tienda en los comprobantes y en tu catálogo.",
+  "accountBusinessLogoChange": "Cambiar logo",
+  "accountBusinessTaxIdLabel": "NIT",
+  "accountBusinessOptional": "(opcional)",
+  "accountBusinessTaxIdHint": "Ej.: 1020304050",
+  "accountBusinessTaxIdHelper": "Se imprime en tus comprobantes.",
+  "accountBusinessSave": "Guardar cambios",
+  "accountBusinessSaved": "Datos del negocio guardados",
+  "accountSectionOperation": "Operación",
+  "accountOperationCategoriesHint": "Crea, ordena y archiva tus categorías",
+  "catalogCategoriesTitle": "Categorías",
+  "catalogCategoriesSubtitle": "Arrastra para ordenarlas como las ves al vender.",
+  "catalogCategoriesNew": "Nueva categoría",
+  "catalogCategoriesCreate": "Crear categoría",
+  "catalogCategoriesCreated": "Categoría creada",
+  "catalogCategoriesRename": "Renombrar",
+  "catalogCategoriesRenameTitle": "Renombrar categoría",
+  "catalogCategoriesRenamed": "Categoría renombrada",
+  "catalogCategoriesArchive": "Archivar",
+  "catalogCategoriesArchiveTitle": "¿Archivar {name}?",
+  "@catalogCategoriesArchiveTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "catalogCategoriesArchiveMessage": "{count, plural, =1{Su producto sigue} other{Sus {count} productos siguen}} en tu inventario. La categoría ya no aparecerá al crear productos ni en los filtros.",
+  "@catalogCategoriesArchiveMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogCategoriesArchived": "Categoría archivada",
+  "catalogCategoriesUndo": "Deshacer",
+  "catalogCategoriesArchivedSection": "Archivadas",
+  "catalogCategoriesRestore": "Restaurar",
+  "catalogCategoriesRestored": "Categoría restaurada",
+  "catalogCategoriesProductCount": "{count, plural, =0{Sin productos} =1{1 producto} other{{count} productos}}",
+  "@catalogCategoriesProductCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "catalogCategoriesEmptyTitle": "Todavía no tienes categorías",
+  "catalogCategoriesEmptyMessage": "Crea la primera para ordenar tu inventario.",
+  "catalogCategoriesMenu": "Opciones de {name}",
+  "@catalogCategoriesMenu": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "catalogCategoriesDragHandle": "Arrastrar para ordenar",
+  "catalogCategoriesManage": "Gestionar",
+  "catalogCategoryNameHint": "Ej.: Ropa de niños",
+  "catalogProductFormArchivedCategory": "{name} (archivada)",
+  "@catalogProductFormArchivedCategory": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "scannerSellTitle": "Escanear producto",
+  "scannerSellSubtitle": "Apunta al código de barras y se agrega a la venta.",
+  "scannerFindTitle": "Buscar por código",
+  "scannerFindSubtitle": "Apunta al código de barras para abrir el producto.",
+  "scannerAssignTitle": "Escanear código",
+  "scannerAssignSubtitle": "Apunta al código de barras de la etiqueta.",
+  "scannerTorchTooltip": "Linterna",
+  "scannerDemoCamera": "La cámara no está disponible en este dispositivo. Escribe el código o usa uno de prueba.",
+  "scannerTypeTitle": "¿No lo lee? Escríbelo",
+  "scannerTypeHint": "Ej.: 7770000008001",
+  "scannerTypeSubmit": "Usar código",
+  "scannerDemoCodesTitle": "Códigos de prueba",
+  "scannerDemoCodesCaption": "Toca uno para probar sin etiquetas impresas.",
+  "catalogProductFormCodesSection": "Códigos",
+  "catalogProductFormSkuLabel": "SKU",
+  "catalogProductFormSkuHint": "Ej.: CAL-001",
+  "catalogProductFormGenerateSku": "Generar",
+  "catalogProductFormBarcodeLabel": "Código de barras",
+  "catalogProductFormBarcodeHint": "Escanéalo o escríbelo",
+  "catalogProductFormCodesCaption": "Con el código de barras, escanear la etiqueta agrega el producto a la venta.",
+  "catalogProductFormCodesVariantsCaption": "Cada variante puede tener su propio SKU y código de barras: tócala en la lista de stock.",
+  "catalogVariantCodesTitle": "Códigos · {variant}",
+  "@catalogVariantCodesTitle": {
+    "placeholders": {
+      "variant": {
+        "type": "String"
+      }
+    }
+  },
+  "catalogVariantAddCodes": "Agregar SKU o código",
+  "catalogScanUnknownTitle": "Código sin producto",
+  "catalogScanUnknownMessage": "Ningún producto tiene el código {code}. ¿Quieres crear uno con este código?",
+  "@catalogScanUnknownMessage": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "catalogScanUnknownCreate": "Crear producto con este código",
+  "salesHistoryTitle": "Historial de ventas",
+  "salesHistorySummary": "{count, plural, =0{Sin ventas} =1{1 venta · {total}} other{{count} ventas · {total}}}",
+  "@salesHistorySummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "salesHistorySearchHint": "Buscar por número de venta",
+  "salesHistorySearchingAllDates": "Buscando en todas las fechas.",
+  "salesHistoryPeriodToday": "Hoy",
+  "salesHistoryPeriodYesterday": "Ayer",
+  "salesHistoryPeriodLast7Days": "Últimos 7 días",
+  "salesHistoryPeriodCustom": "Elegir fechas",
+  "salesHistoryRange": "{from} – {to}",
+  "@salesHistoryRange": {
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
+  },
+  "salesHistoryAllMethods": "Todos los pagos",
+  "salesHistoryDayTotal": "{count, plural, =1{1 venta · {total}} other{{count} ventas · {total}}}",
+  "@salesHistoryDayTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "salesHistoryMoreProducts": "{count, plural, =1{{first} y 1 producto más} other{{first} y {count} productos más}}",
+  "@salesHistoryMoreProducts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "first": {
+        "type": "String"
+      }
+    }
+  },
+  "salesHistoryEmptyTitle": "No hay ventas en estas fechas",
+  "salesHistoryEmptyMessage": "Prueba con otro período o método de pago.",
+  "salesHistoryNumberNotFoundTitle": "No encontramos esa venta",
+  "salesHistoryNumberNotFoundMessage": "Ninguna venta tiene el número {number}.",
+  "@salesHistoryNumberNotFoundMessage": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "saleDetailTitle": "Venta {number}",
+  "@saleDetailTitle": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "saleDetailTitleLoading": "Venta",
+  "saleDetailLoadError": "No pudimos abrir esta venta",
+  "saleDetailProducts": "{count, plural, =1{1 producto} other{{count} productos}}",
+  "@saleDetailProducts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "saleDetailUnitPrice": "{quantity} × {price}",
+  "@saleDetailUnitPrice": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "saleDetailSubtotal": "Subtotal",
+  "saleDetailDiscount": "Descuento",
+  "saleDetailTotal": "Total",
+  "saleDetailPayment": "Pago",
+  "saleDetailMethod": "Método",
+  "saleDetailReceived": "Recibido",
+  "saleDetailChange": "Cambio",
+  "saleDetailCashier": "Atendió",
+  "saleDetailViewReceipt": "Ver comprobante",
+  "accountOperationSalesHistoryHint": "Busca una venta y vuelve a imprimir o compartir su comprobante",
+  "dashboardCashCardHistory": "Ver historial",
+  "cashRegisterViewSales": "Ver las ventas del día",
+  "failureInvalidStockQuantity": "La cantidad debe ser mayor a 0.",
+  "failureAdjustmentReasonRequired": "Elige el motivo del ajuste.",
+  "failureNoStockChange": "El conteo es igual al stock actual: no hay nada que ajustar.",
+  "failureEmptyGoodsReceipt": "Agrega al menos un producto al ingreso.",
+  "catalogProductFormStockLockedTitle": "El stock no se edita aquí",
+  "catalogProductFormStockLockedCaption": "Cámbialo con «Ingreso» o «Ajustar» en el detalle del producto, así queda registrado.",
+  "accountOperationMovementsHint": "Ingresos, ajustes y ventas de cada producto",
+  "inventoryMovementsTitle": "Movimientos de stock",
+  "inventorySeeAll": "Ver todos",
+  "inventoryNoMovements": "Sin movimientos todavía",
+  "inventoryNoMovementsMessage": "Prueba con otro tipo o período.",
+  "inventoryAddStock": "Ingreso",
+  "inventoryAdjust": "Ajustar",
+  "inventoryTypeInitial": "Inventario inicial",
+  "inventoryTypePurchase": "Ingreso",
+  "inventoryTypeAdjustment": "Ajuste",
+  "inventoryTypeSale": "Venta",
+  "inventoryTypeCancellation": "Venta anulada",
+  "inventoryTypeReturn": "Devolución",
+  "inventoryReasonCount": "Conteo",
+  "inventoryReasonDamage": "Dañado",
+  "inventoryReasonLoss": "Pérdida",
+  "inventoryReasonOther": "Otro",
+  "inventoryMovementWhen": "{date} · {user}",
+  "@inventoryMovementWhen": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "user": {
+        "type": "String"
+      }
+    }
+  },
+  "inventoryStockAfter": "Stock {count}",
+  "@inventoryStockAfter": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inventoryFilterAll": "Todos",
+  "inventoryFilterPurchases": "Ingresos",
+  "inventoryFilterAdjustments": "Ajustes",
+  "inventoryFilterSales": "Ventas",
+  "inventoryPeriodLast30Days": "Últimos 30 días",
+  "inventoryPeriodAll": "Todo",
+  "inventoryAdjustTitle": "Ajustar stock",
+  "inventoryAdjustSave": "Guardar ajuste",
+  "inventoryAdjustSaved": "Stock ajustado",
+  "inventoryVariantLabel": "Variante",
+  "inventoryVariantWithStock": "{variant} · {count} u.",
+  "@inventoryVariantWithStock": {
+    "placeholders": {
+      "variant": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inventoryModeCount": "Contar",
+  "inventoryModeAdd": "Agregar",
+  "inventoryModeRemove": "Quitar",
+  "inventoryQuantityCounted": "Unidades contadas",
+  "inventoryQuantityToAdd": "Unidades a agregar",
+  "inventoryQuantityToRemove": "Unidades a quitar",
+  "inventoryQuantityHint": "0",
+  "inventoryCurrentStock": "Stock actual",
+  "inventoryNewStock": "Nuevo stock",
+  "inventoryNotEnoughStock": "No alcanza",
+  "inventoryReasonTitle": "Motivo",
+  "inventoryNoteLabel": "Nota",
+  "inventoryAdjustNoteHint": "Ej.: se encontró en el depósito",
+  "inventoryReceiveTitle": "Ingreso de mercadería",
+  "inventoryReceiveSubtitle": "Registra lo que llegó a tu tienda",
+  "inventoryReceiveEmptyTitle": "¿Qué llegó hoy?",
+  "inventoryReceiveEmptyMessage": "Agrega los productos que recibiste, o escanéalos.",
+  "inventoryReceiveAddProduct": "Agregar producto",
+  "inventoryReceiveSave": "Registrar ingreso",
+  "inventoryReceiveSaveUnits": "{count, plural, =1{Registrar ingreso · 1 unidad} other{Registrar ingreso · {count} unidades}}",
+  "@inventoryReceiveSaveUnits": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inventoryReceiveSaved": "{count, plural, =1{Se agregó 1 unidad al stock} other{Se agregaron {count} unidades al stock}}",
+  "@inventoryReceiveSaved": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inventorySupplierLabel": "Proveedor o nota",
+  "inventorySupplierHint": "Ej.: Importadora Andina",
+  "inventoryStockNow": "Stock actual: {count}",
+  "@inventoryStockNow": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inventoryRemoveLine": "Quitar del ingreso",
+  "inventoryUnitCostLabel": "Costo c/u",
+  "inventoryPickProductTitle": "Agregar producto",
+  "inventoryPickProductHint": "Buscar por nombre o código",
+  "inventoryPickVariantSubtitle": "¿Qué variante llegó?",
+  "failureSaleAlreadyCancelled": "Esta venta ya fue anulada.",
+  "failureSaleHasReturns": "Esta venta ya tiene devoluciones: registra otra devolución en lugar de anularla.",
+  "failureSaleCancelWindowClosed": "Solo puedes anular ventas de la caja abierta. Para ventas anteriores registra una devolución.",
+  "failureReturnWindowClosed": "Pasaron más de 30 días desde la venta: ya no se puede devolver.",
+  "failureReturnQuantityExceeded": "No puedes devolver más unidades de las que quedan en la venta.",
+  "failureInvalidRefundMethod": "El reembolso se hace con el mismo método de la venta o en efectivo.",
+  "failureEmptyReturn": "Elige al menos una unidad para devolver.",
+  "failureReasonRequired": "Escribe el motivo.",
+  "receiptMarkCancelled": "ANULADA",
+  "receiptMarkPartiallyReturned": "CON DEVOLUCIÓN PARCIAL",
+  "receiptMarkReturned": "DEVUELTA",
+  "receiptMarkRefund": "DEVOLUCIÓN",
+  "receiptRefundOf": "De la venta {number}",
+  "@receiptRefundOf": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "salesRefundReceiptTitle": "Comprobante de devolución",
+  "saleStatusCancelled": "Anulada",
+  "saleStatusPartiallyReturned": "Devolución parcial",
+  "saleStatusReturned": "Devuelta",
+  "saleDetailCancel": "Anular",
+  "saleDetailReturn": "Devolver",
+  "saleDetailCancelled": "Venta anulada: sus productos volvieron al stock",
+  "saleDetailCancelledTitle": "Venta anulada",
+  "saleDetailCancelTitle": "¿Anular la venta {number}?",
+  "@saleDetailCancelTitle": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "saleDetailCancelMessage": "Sus {total} salen de las ventas y de la caja, y sus productos vuelven al stock.",
+  "@saleDetailCancelMessage": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "saleDetailReasonHint": "Motivo, ej.: se cobró dos veces",
+  "saleDetailRefunded": "Devuelto",
+  "saleDetailReturnsTitle": "Devoluciones",
+  "saleDetailReturnSummary": "{number} · {units, plural, =1{1 unidad} other{{units} unidades}}",
+  "@saleDetailReturnSummary": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "units": {
+        "type": "int"
+      }
+    }
+  },
+  "saleDetailReturnedUnits": "{count, plural, =1{1 devuelta} other{{count} devueltas}}",
+  "@saleDetailReturnedUnits": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "returnTitle": "Devolución",
+  "returnWhatTitle": "¿Qué devuelve el cliente?",
+  "returnDiscountNote": "El descuento de {discount} se reparte entre los productos.",
+  "@returnDiscountNote": {
+    "placeholders": {
+      "discount": {
+        "type": "String"
+      }
+    }
+  },
+  "returnReturnable": "{count, plural, =1{Puede devolver 1} other{Puede devolver {count}}}",
+  "@returnReturnable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "returnLineRefund": "Se devuelve {amount}",
+  "@returnLineRefund": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "returnRestock": "Vuelve al stock",
+  "returnNoRestock": "No se podrá vender (por ejemplo, está dañado).",
+  "returnRefundTitle": "Reembolso",
+  "returnReasonHint": "Otro motivo",
+  "returnSave": "Registrar devolución",
+  "returnSaveAmount": "Devolver {amount}",
+  "@returnSaveAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "returnSaved": "Devolución {number} registrada: {amount}",
+  "@returnSaved": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cashRegisterRefunds": "{count, plural, =1{Devoluciones (1)} other{Devoluciones ({count})}}",
+  "@cashRegisterRefunds": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "receiptRefundTotalLabel": "TOTAL DEVUELTO",
+  "receiptRefundClosing": "¡Gracias por tu visita!"
 }

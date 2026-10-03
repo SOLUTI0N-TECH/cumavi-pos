@@ -20,5 +20,7 @@ abstract interface class SessionRepository {
 
   void saveBusiness(BusinessProfile business);
 
-  void clear();
+  /// Signs the user out. The business stays: it belongs to this device's
+  /// POS, not to the person using it.
+  void clearUser();
 }

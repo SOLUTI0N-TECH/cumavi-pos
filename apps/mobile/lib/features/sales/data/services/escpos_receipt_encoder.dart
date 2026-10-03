@@ -50,6 +50,21 @@ final class EscPosReceiptEncoder {
           styles: const PosStyles(align: PosAlign.center),
         ),
       ...ticket.hr(),
+      if (receipt.markLabel(_l10n) case final String mark)
+        ...ticket.text(
+          _printable(mark),
+          styles: const PosStyles(
+            align: PosAlign.center,
+            bold: true,
+            height: PosTextSize.size2,
+          ),
+          linesAfter: 1,
+        ),
+      if (receipt.referenceLabel(_l10n) case final String reference)
+        ...ticket.text(
+          _printable(reference),
+          styles: const PosStyles(align: PosAlign.center),
+        ),
       ..._pair(ticket, _l10n.receiptNumberLabel, receipt.number),
       ..._pair(
         ticket,
@@ -98,7 +113,7 @@ final class EscPosReceiptEncoder {
       ..addAll(
         _pair(
           ticket,
-          _l10n.receiptTotalLabel,
+          receipt.totalLabel(_l10n),
           MoneyFormatter.format(sale.total),
           styles: const PosStyles(bold: true, height: PosTextSize.size2),
         ),
@@ -124,7 +139,7 @@ final class EscPosReceiptEncoder {
       ..addAll(ticket.hr())
       ..addAll(
         ticket.text(
-          _printable(_l10n.receiptThanks),
+          _printable(receipt.closingLine(_l10n)),
           styles: const PosStyles(align: PosAlign.center, bold: true),
         ),
       )

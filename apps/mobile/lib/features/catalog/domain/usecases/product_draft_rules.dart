@@ -2,6 +2,7 @@ import '../../../../core/error/failure.dart';
 import '../entities/product_draft.dart';
 import '../entities/product_image.dart';
 import '../entities/product_variant.dart';
+import 'product_code_rules.dart';
 
 /// Business rules of the product form, shared by create and update.
 abstract final class ProductDraftRules {
@@ -30,7 +31,7 @@ abstract final class ProductDraftRules {
         )) {
       return const ValidationFailure(FailureCode.negativeStock);
     }
-    return _validateVariants(draft);
+    return _validateVariants(draft) ?? ProductCodeRules.validate(draft);
   }
 
   static Failure? _validateVariants(ProductDraft draft) {

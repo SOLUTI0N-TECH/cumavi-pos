@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/error/failure.dart';
 import '../../../../core/l10n/l10n.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/app_image.dart';
 import '../../../../core/widgets/labeled_field.dart';
 import '../../../../core/widgets/primary_button.dart';
 import '../../../../core/widgets/selectable_tile.dart';
 import '../../../../core/widgets/step_progress_header.dart';
+import '../../../account/presentation/widgets/business_logo.dart';
+import '../../../catalog/domain/services/photo_capturer.dart';
+import '../../../catalog/presentation/widgets/photo_source_sheet.dart';
 import '../../domain/entities/business_profile.dart';
 import '../cubit/registration_cubit.dart';
 import '../cubit/registration_state.dart';
@@ -37,6 +42,21 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
   void dispose() {
     _nameController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickLogo(RegistrationCubit cubit) async {
+    final PhotoSource? source = await PhotoSourceSheet.show(
+      context,
+      title: context.l10n.authBusinessProfileLogoTitle,
+      subtitle: context.l10n.authBusinessProfileLogoSourceSubtitle,
+    );
+    if (source == null || !mounted) return;
+    final Failure? failure = await cubit.pickLogo(source);
+    if (failure != null && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(failure.localizedMessage(context.l10n))),
+      );
+    }
   }
 
   @override
@@ -100,8 +120,8 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
                       ),
                       const SizedBox(height: AppSpacing.xxl),
                       _LogoPicker(
-                        hasLogo: state.logoPath != null,
-                        onPick: () => cubit.logoSelected('logo-demo'),
+                        logoPath: state.logoPath,
+                        onPick: () => _pickLogo(cubit),
                       ),
                       const SizedBox(height: AppSpacing.xxl),
                       LabeledField(
@@ -189,20 +209,22 @@ class _BusinessProfileScreenState extends State<BusinessProfileScreen> {
 }
 
 class _LogoPicker extends StatelessWidget {
-  const _LogoPicker({required this.hasLogo, required this.onPick});
+  const _LogoPicker({required this.logoPath, required this.onPick});
 
-  final bool hasLogo;
+  final String? logoPath;
   final VoidCallback onPick;
 
   @override
   Widget build(BuildContext context) {
     final AppLocalizations l10n = context.l10n;
+    final bool hasLogo = BusinessLogo.isImage(logoPath);
+    final BorderRadius radius = BorderRadius.circular(AppRadius.xxl - 2);
 
     return Row(
       children: <Widget>[
         InkWell(
           onTap: onPick,
-          borderRadius: BorderRadius.circular(AppRadius.xxl - 2),
+          borderRadius: radius,
           child: Stack(
             clipBehavior: Clip.none,
             children: <Widget>[
@@ -211,20 +233,21 @@ class _LogoPicker extends StatelessWidget {
                 width: 76,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: hasLogo
-                      ? AppColors.successSurface
-                      : AppColors.surfaceMuted,
-                  borderRadius: BorderRadius.circular(AppRadius.xxl - 2),
-                  border: Border.all(
-                    color: hasLogo ? AppColors.successText : AppColors.border,
-                    width: 2,
-                  ),
+                  color: AppColors.surfaceMuted,
+                  borderRadius: radius,
+                  border: Border.all(color: AppColors.border, width: 2),
                 ),
-                child: Icon(
-                  hasLogo ? Icons.check_rounded : Icons.photo_camera_outlined,
-                  size: 26,
-                  color: hasLogo ? AppColors.successText : AppColors.inkSoft,
-                ),
+                // The chosen photo, or a camera until there is one.
+                child: hasLogo
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(AppRadius.xxl - 4),
+                        child: AppImage(logoPath!, width: 72, height: 72),
+                      )
+                    : const Icon(
+                        Icons.photo_camera_outlined,
+                        size: 26,
+                        color: AppColors.inkSoft,
+                      ),
               ),
               Positioned(
                 right: -6,
@@ -238,8 +261,8 @@ class _LogoPicker extends StatelessWidget {
                     shape: BoxShape.circle,
                     border: Border.all(color: AppColors.surface, width: 3),
                   ),
-                  child: const Icon(
-                    Icons.add_rounded,
+                  child: Icon(
+                    hasLogo ? Icons.edit_rounded : Icons.add_rounded,
                     size: 12,
                     color: AppColors.white,
                   ),

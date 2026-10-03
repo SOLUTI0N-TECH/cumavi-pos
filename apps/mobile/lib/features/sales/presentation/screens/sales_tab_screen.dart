@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../cash_register/presentation/cubit/cash_register_cubit.dart';
 import '../../../cash_register/presentation/cubit/cash_register_state.dart';
 import '../../../cash_register/presentation/views/open_cash_session_view.dart';
+import '../../../catalog/presentation/scanner/barcode_camera.dart';
 import '../cubit/cart_cubit.dart';
 import '../views/sale_view.dart';
 
@@ -14,12 +15,14 @@ class SalesTabScreen extends StatefulWidget {
     required this.onOpenCatalog,
     required this.onCheckout,
     required this.onManageCashRegister,
+    this.onScan,
     super.key,
   });
 
   final void Function({String? categoryId}) onOpenCatalog;
   final VoidCallback onCheckout;
   final VoidCallback onManageCashRegister;
+  final ScanCode? onScan;
 
   @override
   State<SalesTabScreen> createState() => _SalesTabScreenState();
@@ -50,6 +53,7 @@ class _SalesTabScreenState extends State<SalesTabScreen> {
             onOpenCatalog: widget.onOpenCatalog,
             onCheckout: widget.onCheckout,
             onManageCashRegister: widget.onManageCashRegister,
+            onScan: widget.onScan,
           );
         },
       ),

@@ -1,8 +1,12 @@
 import 'package:get_it/get_it.dart';
 
 import '../../core/l10n/l10n.dart';
+import '../../features/account/domain/usecases/pick_business_logo.dart';
+import '../../features/account/presentation/cubit/business_settings_cubit.dart';
+import '../../features/account/presentation/cubit/sign_out_cubit.dart';
 import '../../features/auth/data/datasources/in_memory_session_store.dart';
 import '../../features/auth/data/repositories/mock_auth_repository.dart';
+import '../../features/auth/domain/entities/business_profile.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/repositories/session_repository.dart';
 import '../../features/auth/domain/usecases/get_session_info.dart';
@@ -13,6 +17,7 @@ import '../../features/auth/domain/usecases/save_sales_setup.dart';
 import '../../features/auth/domain/usecases/sign_in_with_email.dart';
 import '../../features/auth/domain/usecases/sign_in_with_google.dart';
 import '../../features/auth/domain/usecases/sign_in_with_phone.dart';
+import '../../features/auth/domain/usecases/sign_out.dart';
 import '../../features/auth/domain/usecases/verify_phone_code.dart';
 import '../../features/auth/presentation/cubit/registration_cubit.dart';
 import '../../features/auth/presentation/cubit/session_cubit.dart';
@@ -39,17 +44,31 @@ import '../../features/catalog/domain/services/image_background_remover.dart';
 import '../../features/catalog/domain/services/photo_capturer.dart';
 import '../../features/catalog/domain/usecases/capture_product_photo.dart';
 import '../../features/catalog/domain/usecases/create_product.dart';
+import '../../features/catalog/domain/usecases/find_product_by_code.dart';
 import '../../features/catalog/domain/usecases/get_categories.dart';
 import '../../features/catalog/domain/usecases/get_low_stock_products.dart';
 import '../../features/catalog/domain/usecases/get_product.dart';
 import '../../features/catalog/domain/usecases/get_products.dart';
+import '../../features/catalog/domain/usecases/manage_categories.dart';
 import '../../features/catalog/domain/usecases/remove_photo_background.dart';
+import '../../features/catalog/domain/usecases/suggest_sku.dart';
 import '../../features/catalog/domain/usecases/update_product.dart';
 import '../../features/catalog/presentation/cubit/catalog_cubit.dart';
+import '../../features/catalog/presentation/cubit/categories_cubit.dart';
 import '../../features/catalog/presentation/cubit/product_detail_cubit.dart';
 import '../../features/catalog/presentation/cubit/product_form_cubit.dart';
+import '../../features/catalog/presentation/scanner/barcode_camera.dart';
+import '../../features/catalog/presentation/scanner/demo_barcode_camera.dart';
+import '../../features/catalog/presentation/scanner/mobile_scanner_camera.dart';
 import '../../features/dashboard/domain/usecases/get_dashboard_snapshot.dart';
 import '../../features/dashboard/presentation/cubit/dashboard_cubit.dart';
+import '../../features/inventory/data/datasources/in_memory_inventory_data_source.dart';
+import '../../features/inventory/data/repositories/inventory_repository_impl.dart';
+import '../../features/inventory/domain/repositories/inventory_repository.dart';
+import '../../features/inventory/domain/usecases/stock_usecases.dart';
+import '../../features/inventory/presentation/cubit/adjust_stock_cubit.dart';
+import '../../features/inventory/presentation/cubit/receive_stock_cubit.dart';
+import '../../features/inventory/presentation/cubit/stock_movements_cubit.dart';
 import '../../features/sales/data/datasources/in_memory_sales_data_source.dart';
 import '../../features/sales/data/datasources/sales_data_source.dart';
 import '../../features/sales/data/repositories/sales_repository_impl.dart';
@@ -63,15 +82,20 @@ import '../../features/sales/domain/entities/cart.dart';
 import '../../features/sales/domain/repositories/sales_repository.dart';
 import '../../features/sales/domain/services/receipt_printer.dart';
 import '../../features/sales/domain/services/receipt_sharer.dart';
+import '../../features/sales/domain/usecases/cancel_and_return.dart';
 import '../../features/sales/domain/usecases/get_daily_sales_summary.dart';
 import '../../features/sales/domain/usecases/get_next_sale_number.dart';
 import '../../features/sales/domain/usecases/get_paired_printers.dart';
+import '../../features/sales/domain/usecases/get_sales.dart';
 import '../../features/sales/domain/usecases/print_receipt.dart';
 import '../../features/sales/domain/usecases/register_sale.dart';
 import '../../features/sales/domain/usecases/share_receipt.dart';
 import '../../features/sales/presentation/cubit/cart_cubit.dart';
 import '../../features/sales/presentation/cubit/checkout_cubit.dart';
 import '../../features/sales/presentation/cubit/print_receipt_cubit.dart';
+import '../../features/sales/presentation/cubit/return_sale_cubit.dart';
+import '../../features/sales/presentation/cubit/sale_detail_cubit.dart';
+import '../../features/sales/presentation/cubit/sales_history_cubit.dart';
 import '../../features/sales/presentation/cubit/share_receipt_cubit.dart';
 
 /// Service locator of the app.
@@ -118,7 +142,17 @@ void _registerLocalizations() {
 void _registerDataSources() {
   injector
     ..registerLazySingleton<SessionRepository>(InMemorySessionStore.new)
-    ..registerLazySingleton<ProductDataSource>(InMemoryProductDataSource.new)
+    ..registerLazySingleton<InMemoryProductDataSource>(
+      InMemoryProductDataSource.new,
+    )
+    ..registerLazySingleton<ProductDataSource>(
+      () => injector<InMemoryProductDataSource>(),
+    )
+    ..registerLazySingleton<InventoryDataSource>(
+      () => InMemoryInventoryDataSource(
+        products: injector<InMemoryProductDataSource>(),
+      ),
+    )
     ..registerLazySingleton<SalesDataSource>(InMemorySalesDataSource.new)
     ..registerLazySingleton<CashRegisterDataSource>(
       InMemoryCashRegisterDataSource.new,
@@ -143,7 +177,8 @@ void _registerDeviceServices(DeviceServices deviceServices) {
             renderer: ReceiptDocumentRenderer(injector<AppLocalizations>()),
             textBuilder: injector<ReceiptTextBuilder>(),
           ),
-        );
+        )
+        ..registerLazySingleton<BarcodeCamera>(MobileScannerCamera.new);
     case DeviceServices.demo:
       injector
         ..registerLazySingleton<PhotoCapturer>(DemoPhotoCapturer.new)
@@ -151,7 +186,8 @@ void _registerDeviceServices(DeviceServices deviceServices) {
           MockImageBackgroundRemover.new,
         )
         ..registerLazySingleton<ReceiptPrinter>(DemoReceiptPrinter.new)
-        ..registerLazySingleton<ReceiptSharer>(DemoReceiptSharer.new);
+        ..registerLazySingleton<ReceiptSharer>(DemoReceiptSharer.new)
+        ..registerLazySingleton<BarcodeCamera>(DemoBarcodeCamera.new);
   }
 }
 
@@ -163,6 +199,12 @@ void _registerRepositories() {
     )
     ..registerLazySingleton<ProductRepository>(
       () => ProductRepositoryImpl(injector<ProductDataSource>()),
+    )
+    ..registerLazySingleton<InventoryRepository>(
+      () => InventoryRepositoryImpl(
+        dataSource: injector<InventoryDataSource>(),
+        sessionRepository: injector<SessionRepository>(),
+      ),
     )
     ..registerLazySingleton<SalesRepository>(
       () => SalesRepositoryImpl(
@@ -190,6 +232,10 @@ void _registerUseCases() {
     ..registerLazySingleton<RequestPhoneCode>(
       () => RequestPhoneCode(injector<AuthRepository>()),
     )
+    ..registerLazySingleton<SignOut>(() => SignOut(injector<AuthRepository>()))
+    ..registerLazySingleton<PickBusinessLogo>(
+      () => PickBusinessLogo(injector<PhotoCapturer>()),
+    )
     ..registerLazySingleton<RequestSignInCode>(
       () => RequestSignInCode(injector<AuthRepository>()),
     )
@@ -203,7 +249,10 @@ void _registerUseCases() {
       () => SaveBusinessProfile(injector<AuthRepository>()),
     )
     ..registerLazySingleton<SaveSalesSetup>(
-      () => SaveSalesSetup(injector<AuthRepository>()),
+      () => SaveSalesSetup(
+        authRepository: injector<AuthRepository>(),
+        productRepository: injector<ProductRepository>(),
+      ),
     )
     ..registerLazySingleton<GetSessionInfo>(
       () => GetSessionInfo(injector<SessionRepository>()),
@@ -219,7 +268,43 @@ void _registerUseCases() {
       () => GetLowStockProducts(injector<ProductRepository>()),
     )
     ..registerLazySingleton<CreateProduct>(
-      () => CreateProduct(injector<ProductRepository>()),
+      () => CreateProduct(
+        productRepository: injector<ProductRepository>(),
+        inventoryRepository: injector<InventoryRepository>(),
+      ),
+    )
+    ..registerLazySingleton<ReceiveStock>(
+      () => ReceiveStock(injector<InventoryRepository>()),
+    )
+    ..registerLazySingleton<AdjustStock>(
+      () => AdjustStock(
+        inventoryRepository: injector<InventoryRepository>(),
+        productRepository: injector<ProductRepository>(),
+      ),
+    )
+    ..registerLazySingleton<GetStockMovements>(
+      () => GetStockMovements(injector<InventoryRepository>()),
+    )
+    ..registerLazySingleton<FindProductByCode>(
+      () => FindProductByCode(injector<ProductRepository>()),
+    )
+    ..registerLazySingleton<SuggestSku>(
+      () => SuggestSku(injector<ProductRepository>()),
+    )
+    ..registerLazySingleton<GetCategoryOverview>(
+      () => GetCategoryOverview(injector<ProductRepository>()),
+    )
+    ..registerLazySingleton<CreateCategory>(
+      () => CreateCategory(injector<ProductRepository>()),
+    )
+    ..registerLazySingleton<RenameCategory>(
+      () => RenameCategory(injector<ProductRepository>()),
+    )
+    ..registerLazySingleton<ReorderCategories>(
+      () => ReorderCategories(injector<ProductRepository>()),
+    )
+    ..registerLazySingleton<SetCategoryArchived>(
+      () => SetCategoryArchived(injector<ProductRepository>()),
     )
     ..registerLazySingleton<UpdateProduct>(
       () => UpdateProduct(injector<ProductRepository>()),
@@ -237,7 +322,25 @@ void _registerUseCases() {
     ..registerLazySingleton<RegisterSale>(
       () => RegisterSale(
         salesRepository: injector<SalesRepository>(),
-        productRepository: injector<ProductRepository>(),
+        inventoryRepository: injector<InventoryRepository>(),
+        cashRegisterRepository: injector<CashRegisterRepository>(),
+      ),
+    )
+    ..registerLazySingleton<GetSales>(
+      () => GetSales(injector<SalesRepository>()),
+    )
+    ..registerLazySingleton<GetSale>(() => GetSale(injector<SalesRepository>()))
+    ..registerLazySingleton<CancelSale>(
+      () => CancelSale(
+        salesRepository: injector<SalesRepository>(),
+        inventoryRepository: injector<InventoryRepository>(),
+        cashRegisterRepository: injector<CashRegisterRepository>(),
+      ),
+    )
+    ..registerLazySingleton<RegisterReturn>(
+      () => RegisterReturn(
+        salesRepository: injector<SalesRepository>(),
+        inventoryRepository: injector<InventoryRepository>(),
         cashRegisterRepository: injector<CashRegisterRepository>(),
       ),
     )
@@ -317,22 +420,44 @@ void _registerCubits() {
         signInWithGoogle: injector<SignInWithGoogle>(),
         saveBusinessProfile: injector<SaveBusinessProfile>(),
         saveSalesSetup: injector<SaveSalesSetup>(),
+        pickBusinessLogo: injector<PickBusinessLogo>(),
       ),
     )
     ..registerFactory<CatalogCubit>(
       () => CatalogCubit(
         getProducts: injector<GetProducts>(),
         getCategories: injector<GetCategories>(),
+        findProductByCode: injector<FindProductByCode>(),
       ),
     )
     ..registerFactory<ProductFormCubit>(
       () => ProductFormCubit(
         getCategories: injector<GetCategories>(),
+        createCategory: injector<CreateCategory>(),
         getProduct: injector<GetProduct>(),
         createProduct: injector<CreateProduct>(),
         updateProduct: injector<UpdateProduct>(),
         captureProductPhoto: injector<CaptureProductPhoto>(),
         removePhotoBackground: injector<RemovePhotoBackground>(),
+        suggestSku: injector<SuggestSku>(),
+      ),
+    )
+    ..registerFactory<SalesHistoryCubit>(
+      () => SalesHistoryCubit(getSales: injector<GetSales>()),
+    )
+    ..registerFactoryParam<SaleDetailCubit, String, void>(
+      (String saleId, _) => SaleDetailCubit(
+        getSale: injector<GetSale>(),
+        getCurrentCashSession: injector<GetCurrentCashSession>(),
+        cancelSale: injector<CancelSale>(),
+        saleId: saleId,
+      ),
+    )
+    ..registerFactoryParam<ReturnSaleCubit, String, void>(
+      (String saleId, _) => ReturnSaleCubit(
+        getSale: injector<GetSale>(),
+        registerReturn: injector<RegisterReturn>(),
+        saleId: saleId,
       ),
     )
     ..registerFactory<PrintReceiptCubit>(
@@ -350,8 +475,48 @@ void _registerCubits() {
         closeCashSession: injector<CloseCashSession>(),
       ),
     )
+    ..registerFactory<CategoriesCubit>(
+      () => CategoriesCubit(
+        getCategoryOverview: injector<GetCategoryOverview>(),
+        createCategory: injector<CreateCategory>(),
+        renameCategory: injector<RenameCategory>(),
+        reorderCategories: injector<ReorderCategories>(),
+        setCategoryArchived: injector<SetCategoryArchived>(),
+      ),
+    )
+    ..registerFactory<SignOutCubit>(
+      () => SignOutCubit(signOut: injector<SignOut>()),
+    )
+    ..registerFactoryParam<BusinessSettingsCubit, BusinessProfile, void>(
+      (BusinessProfile business, _) => BusinessSettingsCubit(
+        business: business,
+        saveBusinessProfile: injector<SaveBusinessProfile>(),
+        pickBusinessLogo: injector<PickBusinessLogo>(),
+      ),
+    )
+    ..registerFactory<ReceiveStockCubit>(
+      () => ReceiveStockCubit(
+        getProducts: injector<GetProducts>(),
+        findProductByCode: injector<FindProductByCode>(),
+        receiveStock: injector<ReceiveStock>(),
+      ),
+    )
+    ..registerFactoryParam<AdjustStockCubit, String, void>(
+      (String productId, _) => AdjustStockCubit(
+        getProduct: injector<GetProduct>(),
+        adjustStock: injector<AdjustStock>(),
+        productId: productId,
+      ),
+    )
+    ..registerFactoryParam<StockMovementsCubit, String?, void>(
+      (String? productId, _) => StockMovementsCubit(
+        getStockMovements: injector<GetStockMovements>(),
+        productId: productId,
+      ),
+    )
     ..registerFactoryParam<ProductDetailCubit, String, void>(
       (String productId, _) => ProductDetailCubit(
+        getStockMovements: injector<GetStockMovements>(),
         getProduct: injector<GetProduct>(),
         productId: productId,
       ),

@@ -4,7 +4,6 @@ import 'package:cumavi_pos_mobile/features/catalog/domain/entities/product.dart'
 import 'package:cumavi_pos_mobile/features/catalog/domain/entities/product_draft.dart';
 import 'package:cumavi_pos_mobile/features/catalog/domain/entities/product_image.dart';
 import 'package:cumavi_pos_mobile/features/catalog/domain/entities/product_variant.dart';
-import 'package:cumavi_pos_mobile/features/catalog/domain/repositories/product_repository.dart';
 import 'package:cumavi_pos_mobile/features/catalog/domain/usecases/product_draft_rules.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -160,8 +159,8 @@ void main() {
       final Product before = await sneakers();
       final ProductVariant red40 = before.variantById('rojo/40')!;
 
-      await dataSource.applyStockMovements(<StockMovement>[
-        StockMovement(productId: 'p-001', variantId: red40.id, quantity: 2),
+      await dataSource.applyStockChanges(<StockChange>[
+        StockChange(productId: 'p-001', variantId: red40.id, delta: -2),
       ]);
 
       final Product after = await sneakers();
@@ -174,9 +173,9 @@ void main() {
       final Product before = await sneakers();
 
       await expectLater(
-        dataSource.applyStockMovements(const <StockMovement>[
-          StockMovement(productId: 'p-001', variantId: 'rojo/40', quantity: 1),
-          StockMovement(productId: 'p-001', variantId: 'negro/38', quantity: 1),
+        dataSource.applyStockChanges(const <StockChange>[
+          StockChange(productId: 'p-001', variantId: 'rojo/40', delta: -1),
+          StockChange(productId: 'p-001', variantId: 'negro/38', delta: -1),
         ]),
         throwsA(
           isA<DataSourceException>().having(
@@ -189,7 +188,7 @@ void main() {
       expect(await sneakers(), before);
     });
 
-    test('editing keeps the id and creation date', () async {
+    test('editing keeps the id, creation date and stock', () async {
       final Product before = await sneakers();
 
       final Product updated = await dataSource.updateProduct('p-001', _draft());
@@ -198,7 +197,8 @@ void main() {
       expect(updated.createdAt, before.createdAt);
       expect(updated.name, 'Polera básica');
       expect(updated.variants, hasLength(6));
-      expect(updated.stockQuantity, 12);
+      // Stock only changes through movements: the new sizes start empty.
+      expect(updated.stockQuantity, 0);
     });
   });
 }

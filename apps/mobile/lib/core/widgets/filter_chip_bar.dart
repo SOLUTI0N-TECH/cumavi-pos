@@ -29,10 +29,14 @@ class FilterChipBar<T> extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(
       horizontal: AppSpacing.pageHorizontal,
     ),
+    this.trailing,
     super.key,
   });
 
   final List<FilterChipOption<T>> options;
+
+  /// Extra action after the chips, e.g. "Gestionar" categories.
+  final Widget? trailing;
   final T selectedValue;
   final ValueChanged<T> onSelected;
   final EdgeInsetsGeometry padding;
@@ -44,9 +48,10 @@ class FilterChipBar<T> extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: padding,
-        itemCount: options.length,
+        itemCount: options.length + (trailing == null ? 0 : 1),
         separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.sm),
         itemBuilder: (BuildContext context, int index) {
+          if (index == options.length) return trailing!;
           final FilterChipOption<T> option = options[index];
           final bool isSelected = option.value == selectedValue;
           return _Chip(

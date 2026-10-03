@@ -85,6 +85,18 @@ abstract final class AppTheme {
         errorBorder: _inputBorder(AppColors.error),
         focusedErrorBorder: _inputBorder(AppColors.error, width: 2),
       ),
+      // White dialogs like the rest of the surfaces (no Material tint).
+      dialogTheme: DialogThemeData(
+        backgroundColor: AppColors.surface,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.xxl),
+        ),
+        titleTextStyle: AppTextStyles.title,
+        contentTextStyle: AppTextStyles.body.copyWith(
+          color: AppColors.textSecondary,
+        ),
+      ),
       bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: AppColors.surface,
         surfaceTintColor: Colors.transparent,

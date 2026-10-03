@@ -21,6 +21,8 @@ dependencies:
   image_background_remover: ^2.0.1
   image_picker: ^1.2.3
   intl: ^0.20.3
+  mobile_scanner: ^7.4.2
+  package_info_plus: ^10.2.1
   path_provider: ^2.1.6
   pdf: ^3.13.0
   # 13.x needs compileSdk 37, which the Android Gradle plugin bundled with

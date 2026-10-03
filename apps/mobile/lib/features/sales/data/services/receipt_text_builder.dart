@@ -17,7 +17,14 @@ final class ReceiptTextBuilder {
     final Sale sale = receipt.sale;
     final StringBuffer buffer = StringBuffer()
       ..writeln('*${businessName(receipt)}*')
-      ..writeln(_l10n.receiptNumberTitle(receipt.number))
+      ..writeln(_l10n.receiptNumberTitle(receipt.number));
+    if (receipt.markLabel(_l10n) case final String mark) {
+      buffer.writeln('*$mark*');
+    }
+    if (receipt.referenceLabel(_l10n) case final String reference) {
+      buffer.writeln(reference);
+    }
+    buffer
       ..writeln(DateFormatter.receiptStamp(sale.createdAt))
       ..writeln();
 
@@ -42,7 +49,8 @@ final class ReceiptTextBuilder {
     }
     buffer
       ..writeln(
-        '*${_l10n.receiptTotalLabel}: ${MoneyFormatter.format(sale.total)}*',
+        '*${receipt.totalLabel(_l10n)}: '
+        '${MoneyFormatter.format(sale.total)}*',
       )
       ..writeln(
         '${sale.paymentMethod.localizedName(_l10n)}: '
@@ -55,7 +63,7 @@ final class ReceiptTextBuilder {
     }
     buffer
       ..writeln()
-      ..write(_l10n.receiptThanks);
+      ..write(receipt.closingLine(_l10n));
 
     return buffer.toString();
   }

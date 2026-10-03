@@ -25,6 +25,7 @@ import 'package:cumavi_pos_mobile/features/catalog/presentation/screens/product_
 import 'package:cumavi_pos_mobile/features/dashboard/presentation/cubit/dashboard_cubit.dart';
 import 'package:cumavi_pos_mobile/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:cumavi_pos_mobile/features/sales/domain/entities/cart.dart';
+import 'package:cumavi_pos_mobile/features/sales/domain/entities/receipt.dart';
 import 'package:cumavi_pos_mobile/features/sales/domain/entities/sale.dart';
 import 'package:cumavi_pos_mobile/features/sales/domain/entities/sale_line.dart';
 import 'package:cumavi_pos_mobile/features/sales/presentation/cubit/cart_cubit.dart';
@@ -134,7 +135,12 @@ void main() {
   testWidgets('dashboard renders', (WidgetTester tester) async {
     await pumpScreen(
       tester,
-      DashboardScreen(onStartSale: () {}, onOpenInventory: () {}),
+      DashboardScreen(
+        onStartSale: () {},
+        onOpenInventory: () {},
+        onOpenMore: () {},
+        onOpenSalesHistory: () {},
+      ),
       providers: <AnyBlocProvider>[
         BlocProvider<DashboardCubit>(create: (_) => injector<DashboardCubit>()),
       ],
@@ -258,7 +264,13 @@ void main() {
   });
 
   testWidgets('receipt renders', (WidgetTester tester) async {
-    await pumpScreen(tester, ReceiptScreen(sale: buildSale(), onBack: () {}));
+    await pumpScreen(
+      tester,
+      ReceiptScreen(
+        receipt: Receipt(sale: buildSale()),
+        onBack: () {},
+      ),
+    );
 
     expect(find.text('TOTAL'), findsOneWidget);
     expect(find.text('¡Gracias por tu compra!'), findsOneWidget);
@@ -267,7 +279,11 @@ void main() {
   testWidgets('close cash drawer renders', (WidgetTester tester) async {
     await pumpScreen(
       tester,
-      CloseCashSessionScreen(onClosed: () {}, onBack: () {}),
+      CloseCashSessionScreen(
+        onClosed: () {},
+        onBack: () {},
+        onOpenSales: () {},
+      ),
       providers: <AnyBlocProvider>[
         BlocProvider<CashCloseCubit>(create: (_) => injector<CashCloseCubit>()),
       ],
@@ -280,7 +296,11 @@ void main() {
   testWidgets('inventory renders', (WidgetTester tester) async {
     await pumpScreen(
       tester,
-      InventoryScreen(onCreateProduct: () {}, onOpenProduct: (_) {}),
+      InventoryScreen(
+        onCreateProduct: () {},
+        onOpenProduct: (_) {},
+        onManageCategories: () {},
+      ),
       providers: <AnyBlocProvider>[
         BlocProvider<CatalogCubit>(create: (_) => injector<CatalogCubit>()),
       ],

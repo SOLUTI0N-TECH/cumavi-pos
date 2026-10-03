@@ -44,6 +44,9 @@ void main() {
           child: ProductDetailScreen(
             onBack: () {},
             onEdit: onEdit ?? () async {},
+            onReceiveStock: () {},
+            onAdjustStock: () {},
+            onOpenMovements: () {},
           ),
         ),
       ),
@@ -122,9 +125,11 @@ void main() {
 
     expect(text('Chamarra de cuero'), findsOneWidget);
     expect(text('S, M, L'), findsOneWidget);
+    // M and L also appear in the movements card (their initial stock).
     for (final String size in <String>['S', 'M', 'L']) {
-      expect(text(size), findsOneWidget);
+      expect(text(size), findsWidgets);
     }
+    expect(text('Movimientos de stock'), findsOneWidget);
     expect(text('Agotado'), findsOneWidget);
     expect(text('Queda 1'), findsNWidgets(2));
     expect(text('Quedan 2'), findsOneWidget);

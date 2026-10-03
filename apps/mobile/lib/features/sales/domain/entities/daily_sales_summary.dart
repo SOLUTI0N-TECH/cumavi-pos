@@ -3,12 +3,18 @@ import 'package:equatable/equatable.dart';
 import '../../../../core/domain/payment_method.dart';
 
 /// Aggregated sales of one day, used by the dashboard and the cash close.
+///
+/// Totals are net: cancelled sales are left out and the refunds made in the
+/// period are subtracted from their method, so the cash total is what the
+/// drawer should hold.
 final class DailySalesSummary extends Equatable {
   const DailySalesSummary({
     required this.date,
     required this.saleCount,
     required this.soldUnits,
     required this.totalsByMethod,
+    this.refundCount = 0,
+    this.refundsByMethod = const <PaymentMethod, double>{},
   });
 
   const DailySalesSummary.empty(DateTime date)
@@ -23,6 +29,15 @@ final class DailySalesSummary extends Equatable {
   final int saleCount;
   final int soldUnits;
   final Map<PaymentMethod, double> totalsByMethod;
+
+  /// Returns made in the period and the money refunded by method.
+  final int refundCount;
+  final Map<PaymentMethod, double> refundsByMethod;
+
+  double get refundTotal => refundsByMethod.values.fold(
+    0,
+    (double sum, double amount) => sum + amount,
+  );
 
   double get total => totalsByMethod.values.fold(
     0,
@@ -59,5 +74,7 @@ final class DailySalesSummary extends Equatable {
     saleCount,
     soldUnits,
     totalsByMethod,
+    refundCount,
+    refundsByMethod,
   ];
 }

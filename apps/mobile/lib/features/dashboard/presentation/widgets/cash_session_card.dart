@@ -15,11 +15,13 @@ class CashSessionCard extends StatelessWidget {
   const CashSessionCard({
     required this.snapshot,
     required this.onStartSale,
+    required this.onOpenHistory,
     super.key,
   });
 
   final DashboardSnapshot snapshot;
   final VoidCallback onStartSale;
+  final VoidCallback onOpenHistory;
 
   @override
   Widget build(BuildContext context) {
@@ -52,11 +54,39 @@ class CashSessionCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.lg),
-          Text(
-            l10n.dashboardCashCardTodaySales,
-            style: AppTextStyles.caption.copyWith(
-              color: AppColors.white.withValues(alpha: 0.72),
-            ),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Text(
+                  l10n.dashboardCashCardTodaySales,
+                  style: AppTextStyles.caption.copyWith(
+                    color: AppColors.white.withValues(alpha: 0.72),
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: onOpenHistory,
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.white,
+                  visualDensity: VisualDensity.compact,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      l10n.dashboardCashCardHistory,
+                      style: AppTextStyles.captionSmallStrong.copyWith(
+                        color: AppColors.white,
+                      ),
+                    ),
+                    const Icon(Icons.chevron_right_rounded, size: 18),
+                  ],
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: AppSpacing.xxs),
           Text.rich(

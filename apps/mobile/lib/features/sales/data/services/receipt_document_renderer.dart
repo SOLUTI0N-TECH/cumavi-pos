@@ -100,6 +100,19 @@ final class _ReceiptLayout {
           if (texts.storeDetails(receipt) case final String details)
             pw.Center(child: pw.Text(details, style: _muted(8))),
           _divider(),
+          if (receipt.markLabel(l10n) case final String mark)
+            pw.Center(
+              child: pw.Text(
+                mark,
+                style: pw.TextStyle(
+                  fontSize: 12,
+                  fontWeight: pw.FontWeight.bold,
+                  color: ReceiptDocumentRenderer._ink,
+                ),
+              ),
+            ),
+          if (receipt.referenceLabel(l10n) case final String reference)
+            pw.Center(child: pw.Text(reference, style: _muted(8))),
           _pair(l10n.receiptNumberLabel, receipt.number),
           _pair(
             l10n.receiptDateLabel,
@@ -149,7 +162,7 @@ final class _ReceiptLayout {
             children: <pw.Widget>[
               pw.Expanded(
                 child: pw.Text(
-                  l10n.receiptTotalLabel,
+                  receipt.totalLabel(l10n),
                   style: _body(11, bold: true),
                 ),
               ),
@@ -168,7 +181,10 @@ final class _ReceiptLayout {
             _pair(l10n.receiptChangeLabel, MoneyFormatter.format(sale.change)),
           _divider(),
           pw.Center(
-            child: pw.Text(l10n.receiptThanks, style: _body(9, bold: true)),
+            child: pw.Text(
+              receipt.closingLine(l10n),
+              style: _body(9, bold: true),
+            ),
           ),
           pw.SizedBox(height: 2),
           pw.Center(child: pw.Text(l10n.receiptMadeWith, style: _muted(7))),

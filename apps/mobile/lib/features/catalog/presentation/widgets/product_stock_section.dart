@@ -13,7 +13,9 @@ import '../../domain/entities/product_variant.dart';
 import '../../domain/services/photo_capturer.dart';
 import '../cubit/product_form_cubit.dart';
 import '../cubit/product_form_state.dart';
+import '../scanner/barcode_camera.dart';
 import 'product_gallery_field.dart';
+import 'variant_codes_sheet.dart';
 import 'variant_image_sheet.dart';
 import 'variant_list_editor.dart';
 import 'variant_options_editor.dart';
@@ -25,13 +27,38 @@ import 'variant_type_sheet.dart';
 /// (talla, color…), every combination of their values gets its own stock
 /// and photo, and the product's stock is their sum.
 class ProductStockSection extends StatelessWidget {
-  const ProductStockSection({required this.state, super.key});
+  const ProductStockSection({
+    required this.state,
+    this.onScanBarcode,
+    super.key,
+  });
 
   /// More types multiply the combinations beyond what a seller can manage
   /// from the phone (3 × 5 × 4 = 60 rows).
   static const int maxVariantTypes = 3;
 
   final ProductFormState state;
+
+  /// Scans a variant's barcode in its codes sheet.
+  final ScanCode? onScanBarcode;
+
+  Future<void> _editCodes(
+    BuildContext context,
+    ProductFormCubit cubit,
+    ProductVariant variant,
+  ) async {
+    final VariantCodes? codes = await VariantCodesSheet.show(
+      context,
+      variant: variant,
+      onScan: onScanBarcode,
+    );
+    if (codes == null) return;
+    cubit.variantCodesChanged(
+      variant.id,
+      sku: codes.sku,
+      barcode: codes.barcode,
+    );
+  }
 
   Future<void> _addType(BuildContext context, ProductFormCubit cubit) async {
     final String? name = await VariantTypeSheet.showAdd(
@@ -115,9 +142,20 @@ class ProductStockSection extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.lg),
+          if (state.isEditing) ...<Widget>[
+            TintedBanner(
+              title: l10n.catalogProductFormStockLockedTitle,
+              subtitle: l10n.catalogProductFormStockLockedCaption,
+              background: AppColors.infoSurface,
+              foreground: AppColors.infoText,
+              icon: Icons.lock_outline_rounded,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+          ],
           if (state.options.isEmpty) ...<Widget>[
             _SimpleStockRow(
               quantity: state.stockQuantity,
+              readOnly: state.isEditing,
               onIncrement: cubit.incrementQuantity,
               onDecrement: cubit.decrementQuantity,
             ),
@@ -156,8 +194,11 @@ class ProductStockSection extends StatelessWidget {
                 imagePathOf: state.imagePathOf,
                 onPickImage: (ProductVariant variant) =>
                     _pickVariantImage(context, cubit, variant),
+                onEditCodes: (ProductVariant variant) =>
+                    _editCodes(context, cubit, variant),
                 onIncrement: cubit.incrementVariantStock,
                 onDecrement: cubit.decrementVariantStock,
+                stockReadOnly: state.isEditing,
               ),
             ],
           ],
@@ -171,11 +212,13 @@ class ProductStockSection extends StatelessWidget {
 class _SimpleStockRow extends StatelessWidget {
   const _SimpleStockRow({
     required this.quantity,
+    required this.readOnly,
     required this.onIncrement,
     required this.onDecrement,
   });
 
   final int quantity;
+  final bool readOnly;
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
 
@@ -200,11 +243,17 @@ class _SimpleStockRow extends StatelessWidget {
             ],
           ),
         ),
-        QuantityStepper(
-          quantity: quantity,
-          onIncrement: onIncrement,
-          onDecrement: onDecrement,
-        ),
+        if (readOnly)
+          Text(
+            l10n.catalogStockBadgeUnits(quantity),
+            style: AppTextStyles.bodyLargeStrong,
+          )
+        else
+          QuantityStepper(
+            quantity: quantity,
+            onIncrement: onIncrement,
+            onDecrement: onDecrement,
+          ),
       ],
     );
   }

@@ -22,6 +22,8 @@ final class ProductVariant extends Equatable {
     required this.optionValues,
     required this.stockQuantity,
     this.imageId,
+    this.sku,
+    this.barcode,
   });
 
   /// Builds a variant whose [id] comes from its values, so the same
@@ -30,11 +32,15 @@ final class ProductVariant extends Equatable {
     required Map<String, String> optionValues,
     required int stockQuantity,
     String? imageId,
+    String? sku,
+    String? barcode,
   }) : this(
          id: idFor(optionValues),
          optionValues: optionValues,
          stockQuantity: stockQuantity,
          imageId: imageId,
+         sku: sku,
+         barcode: barcode,
        );
 
   /// Unique within its product.
@@ -46,6 +52,14 @@ final class ProductVariant extends Equatable {
 
   /// One of the product's images; `null` shows the main photo.
   final String? imageId;
+
+  /// The seller's own code of this variant (`CAL-001-ROJ-40`).
+  final String? sku;
+
+  /// Code on this variant's label; scanning it sells this exact variant.
+  final String? barcode;
+
+  bool get hasCodes => sku != null || barcode != null;
 
   /// `Rojo · 40`
   String get label => optionValues.values.join(' · ');
@@ -66,6 +80,8 @@ final class ProductVariant extends Equatable {
         optionValues: optionValues,
         stockQuantity: stockQuantity ?? this.stockQuantity,
         imageId: imageId ?? this.imageId,
+        sku: sku,
+        barcode: barcode,
       );
 
   /// Same variant without an image (the main photo is shown).
@@ -73,7 +89,20 @@ final class ProductVariant extends Equatable {
     id: id,
     optionValues: optionValues,
     stockQuantity: stockQuantity,
+    sku: sku,
+    barcode: barcode,
   );
+
+  /// Same variant with exactly these codes; `null` removes one.
+  ProductVariant withCodes({required String? sku, required String? barcode}) =>
+      ProductVariant(
+        id: id,
+        optionValues: optionValues,
+        stockQuantity: stockQuantity,
+        imageId: imageId,
+        sku: sku,
+        barcode: barcode,
+      );
 
   @override
   List<Object?> get props => <Object?>[
@@ -81,6 +110,8 @@ final class ProductVariant extends Equatable {
     optionValues,
     stockQuantity,
     imageId,
+    sku,
+    barcode,
   ];
 }
 

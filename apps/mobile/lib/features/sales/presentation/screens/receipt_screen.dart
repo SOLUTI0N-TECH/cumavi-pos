@@ -9,20 +9,23 @@ import '../../../../core/widgets/screen_header.dart';
 import '../../../../core/widgets/secondary_button.dart';
 import '../../../auth/presentation/cubit/session_cubit.dart';
 import '../../domain/entities/receipt.dart';
-import '../../domain/entities/sale.dart';
 import '../widgets/print_receipt_sheet.dart';
 import '../widgets/receipt_paper.dart';
 import '../widgets/share_receipt_sheet.dart';
 
 /// Full receipt of a sale, with the print and share actions.
 class ReceiptScreen extends StatelessWidget {
-  const ReceiptScreen({required this.sale, required this.onBack, super.key});
+  const ReceiptScreen({required this.receipt, required this.onBack, super.key});
 
-  final Sale sale;
+  /// Its business is taken from the session.
+  final Receipt receipt;
   final VoidCallback onBack;
 
   @override
   Widget build(BuildContext context) {
+    final Receipt receipt = this.receipt.withBusiness(
+      context.watch<SessionCubit>().state.business,
+    );
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -35,8 +38,14 @@ class ReceiptScreen extends StatelessWidget {
                 0,
               ),
               child: PushedScreenHeader(
-                title: context.l10n.salesReceiptScreenTitle,
-                subtitle: context.l10n.salesSaleNumber(sale.formattedNumber),
+                title: receipt.isRefund
+                    ? context.l10n.salesRefundReceiptTitle
+                    : context.l10n.salesReceiptScreenTitle,
+                subtitle: receipt.isRefund
+                    ? receipt.referenceLabel(context.l10n)
+                    : context.l10n.salesSaleNumber(
+                        receipt.sale.formattedNumber,
+                      ),
                 onBack: onBack,
               ),
             ),
@@ -48,15 +57,10 @@ class ReceiptScreen extends StatelessWidget {
                   AppSpacing.xxl,
                   AppSpacing.xxxl,
                 ),
-                children: <Widget>[
-                  ReceiptPaper(
-                    sale: sale,
-                    business: context.watch<SessionCubit>().state.business,
-                  ),
-                ],
+                children: <Widget>[ReceiptPaper(receipt: receipt)],
               ),
             ),
-            _ReceiptActions(sale: sale),
+            _ReceiptActions(receipt: receipt),
           ],
         ),
       ),
@@ -65,14 +69,11 @@ class ReceiptScreen extends StatelessWidget {
 }
 
 class _ReceiptActions extends StatelessWidget {
-  const _ReceiptActions({required this.sale});
+  const _ReceiptActions({required this.receipt});
 
-  final Sale sale;
+  final Receipt receipt;
 
-  Receipt _receiptOf(BuildContext context) => Receipt(
-    sale: sale,
-    business: context.read<SessionCubit>().state.business,
-  );
+  Receipt _receiptOf(BuildContext context) => receipt;
 
   @override
   Widget build(BuildContext context) {

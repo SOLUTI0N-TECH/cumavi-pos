@@ -5,15 +5,17 @@ import 'package:cumavi_pos_mobile/features/cash_register/domain/entities/cash_se
 import 'package:cumavi_pos_mobile/features/cash_register/domain/repositories/cash_register_repository.dart';
 import 'package:cumavi_pos_mobile/features/catalog/domain/entities/product.dart';
 import 'package:cumavi_pos_mobile/features/catalog/domain/entities/product_category.dart';
-import 'package:cumavi_pos_mobile/features/catalog/domain/entities/product_draft.dart';
 import 'package:cumavi_pos_mobile/features/catalog/domain/entities/product_image.dart';
 import 'package:cumavi_pos_mobile/features/catalog/domain/entities/product_variant.dart';
-import 'package:cumavi_pos_mobile/features/catalog/domain/repositories/product_repository.dart';
+import 'package:cumavi_pos_mobile/features/inventory/domain/entities/stock_movement.dart';
+import 'package:cumavi_pos_mobile/features/inventory/domain/repositories/inventory_repository.dart';
 import 'package:cumavi_pos_mobile/features/sales/domain/entities/cart.dart';
 import 'package:cumavi_pos_mobile/features/sales/domain/entities/daily_sales_summary.dart';
 import 'package:cumavi_pos_mobile/features/sales/domain/entities/sale.dart';
 import 'package:cumavi_pos_mobile/features/sales/domain/entities/sale_draft.dart';
 import 'package:cumavi_pos_mobile/features/sales/domain/entities/sale_line.dart';
+import 'package:cumavi_pos_mobile/features/sales/domain/entities/sale_query.dart';
+import 'package:cumavi_pos_mobile/features/sales/domain/entities/sale_return.dart';
 import 'package:cumavi_pos_mobile/features/sales/domain/repositories/sales_repository.dart';
 import 'package:cumavi_pos_mobile/features/sales/domain/usecases/register_sale.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -70,44 +72,39 @@ class FakeSalesRepository implements SalesRepository {
       const Failed<Sale>(NotFoundFailure(FailureCode.saleNotFound));
 
   @override
+  Future<Result<List<Sale>>> getSales(SaleQuery query) async =>
+      const Success<List<Sale>>(<Sale>[]);
+
+  @override
+  Future<Result<Sale>> cancelSale(
+    String saleId, {
+    required String reason,
+  }) async => const Failed<Sale>(NotFoundFailure(FailureCode.saleNotFound));
+
+  @override
+  Future<Result<SaleReturn>> registerReturn(SaleReturnDraft draft) async =>
+      const Failed<SaleReturn>(NotFoundFailure(FailureCode.saleNotFound));
+
+  @override
   Future<Result<DailySalesSummary>> getSummarySince(DateTime moment) async =>
       Success<DailySalesSummary>(DailySalesSummary.empty(moment));
 }
 
-class FakeProductRepository implements ProductRepository {
-  List<StockMovement> movements = <StockMovement>[];
+class FakeInventoryRepository implements InventoryRepository {
+  List<StockMovementDraft> drafts = <StockMovementDraft>[];
 
   @override
-  Future<Result<Product>> createProduct(ProductDraft draft) async =>
-      Success<Product>(_product);
-
-  @override
-  Future<Result<List<ProductCategory>>> getCategories() async =>
-      const Success<List<ProductCategory>>(<ProductCategory>[]);
-
-  @override
-  Future<Result<List<Product>>> getLowStockProducts() async =>
-      const Success<List<Product>>(<Product>[]);
-
-  @override
-  Future<Result<Product>> getProductById(String id) async =>
-      Success<Product>(_product);
-
-  @override
-  Future<Result<List<Product>>> getProducts({
-    String query = '',
-    String? categoryId,
-  }) async => Success<List<Product>>(<Product>[_product]);
-
-  @override
-  Future<Result<Product>> updateProduct(String id, ProductDraft draft) async =>
-      Success<Product>(_product);
-
-  @override
-  Future<Result<void>> reduceStock(List<StockMovement> movements) async {
-    this.movements = movements;
-    return const Success<void>(null);
+  Future<Result<List<StockMovement>>> recordMovements(
+    List<StockMovementDraft> drafts,
+  ) async {
+    this.drafts = drafts;
+    return const Success<List<StockMovement>>(<StockMovement>[]);
   }
+
+  @override
+  Future<Result<List<StockMovement>>> getMovements(
+    StockMovementQuery query,
+  ) async => const Success<List<StockMovement>>(<StockMovement>[]);
 }
 
 class FakeCashRegisterRepository implements CashRegisterRepository {
@@ -138,12 +135,12 @@ class FakeCashRegisterRepository implements CashRegisterRepository {
 
 RegisterSale buildUseCase({
   required FakeSalesRepository sales,
-  required FakeProductRepository products,
+  required FakeInventoryRepository inventory,
   required bool isCashRegisterOpen,
 }) {
   return RegisterSale(
     salesRepository: sales,
-    productRepository: products,
+    inventoryRepository: inventory,
     cashRegisterRepository: FakeCashRegisterRepository(
       isOpen: isCashRegisterOpen,
     ),
@@ -154,10 +151,10 @@ void main() {
   group('RegisterSale', () {
     test('registers the sale and discounts the stock', () async {
       final FakeSalesRepository sales = FakeSalesRepository();
-      final FakeProductRepository products = FakeProductRepository();
+      final FakeInventoryRepository inventory = FakeInventoryRepository();
       final RegisterSale useCase = buildUseCase(
         sales: sales,
-        products: products,
+        inventory: inventory,
         isCashRegisterOpen: true,
       );
 
@@ -171,9 +168,9 @@ void main() {
 
       expect(result, isA<Success<Sale>>());
       expect(sales.registerCalls, 1);
-      expect(products.movements, hasLength(1));
-      expect(products.movements.first.productId, _product.id);
-      expect(products.movements.first.quantity, 1);
+      expect(inventory.drafts, hasLength(1));
+      expect(inventory.drafts.first.productId, _product.id);
+      expect(inventory.drafts.first.delta, -1);
       expect(result.valueOrNull!.change, 50);
     });
 
@@ -189,10 +186,10 @@ void main() {
         ],
         variants: <ProductVariant>[blackM],
       );
-      final FakeProductRepository products = FakeProductRepository();
+      final FakeInventoryRepository inventory = FakeInventoryRepository();
       final RegisterSale useCase = buildUseCase(
         sales: FakeSalesRepository(),
-        products: products,
+        inventory: inventory,
         isCashRegisterOpen: true,
       );
 
@@ -208,15 +205,15 @@ void main() {
         ),
       );
 
-      expect(products.movements.single.variantId, blackM.id);
-      expect(products.movements.single.quantity, 2);
+      expect(inventory.drafts.single.variantId, blackM.id);
+      expect(inventory.drafts.single.delta, -2);
     });
 
     test('rejects the sale when the cash drawer is closed', () async {
       final FakeSalesRepository sales = FakeSalesRepository();
       final RegisterSale useCase = buildUseCase(
         sales: sales,
-        products: FakeProductRepository(),
+        inventory: FakeInventoryRepository(),
         isCashRegisterOpen: false,
       );
 
@@ -235,7 +232,7 @@ void main() {
     test('rejects an empty cart', () async {
       final RegisterSale useCase = buildUseCase(
         sales: FakeSalesRepository(),
-        products: FakeProductRepository(),
+        inventory: FakeInventoryRepository(),
         isCashRegisterOpen: true,
       );
 
@@ -253,7 +250,7 @@ void main() {
     test('rejects cash below the total', () async {
       final RegisterSale useCase = buildUseCase(
         sales: FakeSalesRepository(),
-        products: FakeProductRepository(),
+        inventory: FakeInventoryRepository(),
         isCashRegisterOpen: true,
       );
 
