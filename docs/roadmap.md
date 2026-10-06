@@ -3,7 +3,9 @@
 What is new or planned for the POS app (`apps/mobile`), phase by phase.
 Status legend: **Planned** · **In progress** · **Done**.
 
-Last update: 2026-09-25 (Phase 1 and feature 6 done).
+Last update: 2026-10-05 (Phase 5 "Ajustes para el backend" added; backend
+plan in [backend-roadmap.md](backend-roadmap.md), module scope docs listed in
+the [docs index](README.md)).
 
 ## Ground rules
 
@@ -17,6 +19,11 @@ Last update: 2026-09-25 (Phase 1 and feature 6 done).
   every demo flow usable end to end (no dead buttons), and an APK at the end
   of each phase.
 - **Web catalog** (`apps/web`) is unchanged unless a feature says otherwise.
+- **Backend:** the API is specified module by module in `docs/modulos/*.md`
+  (Spanish) and built in phases B0–B11 ([backend-roadmap.md](backend-roadmap.md)).
+  From Phase 5 on, features are built against the API (with the mock kept as
+  a `mock` flavor for demos); the "API contract" lines below are superseded by
+  the module docs where they differ (listed in feature 23).
 
 ## Overview
 
@@ -38,6 +45,35 @@ Last update: 2026-09-25 (Phase 1 and feature 6 done).
 | 4 · Team and insight | 14 | Users and roles | L | Planned |
 | | 15 | Reports | L | Planned |
 | | 16 | Stock alerts and reorder list | S | Planned |
+| 5 · Ajustes para el backend | 17 | API foundation | M | Planned |
+| | 18 | Real sign-in and registration | M | Planned |
+| | 19 | Business, branch and cash register selector | M | Planned |
+| | 20 | Swap mock repositories for the API | L | Planned |
+| | 21 | Configurable payment methods + split payments | M | Planned |
+| | 22 | Several cash registers + cash in/out | M | Planned |
+| | 23 | Contract fixes | S | Planned |
+| | 24 | Stock per branch + transfers | M | Planned |
+| | 25 | Purchases and suppliers | L | Planned |
+| | 26 | Push, realtime and orders inbox | M | Planned |
+
+**Backend phase for each feature** (see [backend-roadmap.md](backend-roadmap.md)):
+
+| Backend phase | Mobile features |
+|---|---|
+| B0–B1 Foundation, identity, business, branches | 1 (connect), 17, 18, 19 |
+| B2 Catalog | 2, 6 (connect), 7, 20, 23 |
+| B3 Inventory | 3 (connect), 20, 24 |
+| B4 Cash register and payment methods | 19, 21, 22 |
+| B5 Sales | 4, 5 (connect), 20, 21, 23 |
+| B6 Customers | 9 |
+| B7 Ecommerce and orders | 11, 12, 26 (13 superseded) |
+| B8 Team and roles | 14 |
+| B9 Purchases | 25 |
+| B10 Reports and alerts | 15, 16 |
+| B11 Later | 8, 10 |
+
+Suggested build order once the backend starts: 17 → 18 → 19 → 20/23 (catalog,
+inventory) → 21/22 → 20/23 (sales) → 24 → 9 → 11/12/26 → 14 → 25 → 15/16.
 
 Gaps in the current app that Phase 1 closes: there is no sales history, a
 sale can't be cancelled or returned, categories are fixed (Ropa, Calzado,
@@ -308,6 +344,12 @@ web catalog later.
 `apps/web/src/features/ordering/domain/order.ts`).
 **Web impact:** feature 13 adds the import link to the WhatsApp message.
 
+**Update (2026-10-05):** these features are built against the API (backend
+phase B7, scope in [modulos/ecommerce.md](modulos/ecommerce.md)): settings
+per business with online branches, orders delivered to the branch's inbox in
+real time, and "Cobrar pedido" creating the sale. **Feature 13 is superseded
+by B7** and only makes sense if the API is delayed.
+
 ## Phase 4 — Team and insight
 
 | # | Feature | What it does | Size |
@@ -319,14 +361,56 @@ web catalog later.
 **Data:** `User` with role and permissions; report queries (good candidates
 to compute on the server).
 
+**Update (2026-10-05):** feature 14 follows [modulos/usuarios.md](modulos/usuarios.md)
+and [modulos/roles.md](modulos/roles.md): one global account per person,
+memberships per business with a role and allowed branches, invitations by
+phone, editable roles from 4 templates. **Permissions are enforced by the
+server**; the app only hides actions using the permissions from
+`/me/memberships`.
+
+---
+
+## Phase 5 — Ajustes para el backend
+
+**Goal:** turn the mocked app into a client of the real API, and close the
+gaps the backend design introduces (branches, several cash registers, split
+payments, purchases). Runs alongside backend phases B0–B9.
+
+| # | Feature | What it does | Size | Backend |
+|---|---|---|---|---|
+| 17 | **API foundation** | HTTP client (dio) with auth interceptor and refresh rotation; `x-business-id` / `x-branch-id` headers; error `code` → `FailureCode` (new codes added); UUID v7 ids and `Idempotency-Key` on every write; `mock` / `api` flavors in `dependency_injection.dart`; retry policy for network errors | M | B0–B1 |
+| 18 | **Real sign-in and registration** | Firebase Auth (SMS OTP, Google) → `POST /auth/firebase`; registration steps 3–4 call `POST /businesses` (payment methods from step 4 are now saved); session restore from secure storage; sign out revokes the session | M | B1 |
+| 19 | **Business / branch / cash register selector** | After sign-in: no membership → register a business; several → pick one; then pick branch and cash register. Branch shown on Inicio; switch from "Más". Every request carries the context headers | M | B1, B4 |
+| 20 | **Swap mock repositories for the API** | One module at a time (categories, products, inventory, cash, sales): `Remote*DataSource` classes; search, filters, summaries and pagination move to the server; product photos are uploaded | L | B2–B5 |
+| 21 | **Configurable payment methods + split payments** | `PaymentMethod` enum → entity loaded from the business (`id`, `name`, `type`, `isCash`); settings screen; checkout with several payments ("Agregar otro pago"), change only in cash; receipts and summaries grouped by method id | M | B4–B5 |
+| 22 | **Several cash registers + cash in/out** | Pick the register when opening; cash in/out with reason, amount and receipt photo; close shows the server's expected amount, or a blind close without `cash.view_expected`; closing history | M | B4 |
+| 23 | **Contract fixes** | `SaleReturnLine.lineIndex` → `saleLineId`; `Sale.cashSessionId`; `SaleLine.unitCost`; variants use the server uuid (`key` like `rojo/40` for display); simple products hide the default variant; removing a variant records a `variant_removed` movement (server side); sale number comes from the server; handle `priceChanged` | S | B2–B5 |
+| 24 | **Stock per branch + transfers** | Stock shown for the active branch; "Otras sucursales" on the product detail; transfers: create, send, receive (with shortages), list in/out | M | B3 |
+| 25 | **Purchases and suppliers** | Más → Compras: suppliers, purchase orders (draft → confirmed → partial / received), receive by line, supplier payments (optionally from the cash drawer), share the order by WhatsApp. "Ingreso de mercadería" stays for quick receipts, with a supplier picker | L | B9 |
+| 26 | **Push, realtime and orders inbox** | FCM token registration, socket connection while the app is open, orders inbox badge on Inicio, notifications screen | M | B7 |
+
+**Rules for this phase**
+- The mock flavor keeps working for demos and widget tests; repository
+  interfaces stay the contract, extended where the backend needs it.
+- Server errors map to `FailureCode` by name; new codes are listed in
+  [arquitectura-backend.md](arquitectura-backend.md) §5.
+- Writes are safe to retry (same UUID + `Idempotency-Key`), which prepares a
+  future offline queue.
+
+**Tests:** repository tests against recorded API responses; flavor switch;
+refresh-token rotation; split-payment totals and change; blind close hides
+the expected amount.
+
 ---
 
 ## Later (needs the backend or external providers)
 
 - Electronic invoicing (SIN).
-- Push notifications for new orders.
-- Sync between several devices of the same store.
+- Push notifications for new orders. → now feature 26 (B7).
+- Sync between several devices of the same store. → solved by the API
+  (features 17–20).
 - Online payments.
+- Offline sales queue (the API is already idempotent for it).
 
 ## Open decisions
 
@@ -336,3 +420,9 @@ to compute on the server).
 | Stock when editing a product | Read-only; changes through "Ingreso" / "Ajustar" | Adopted |
 | Cancel vs return window | Cancel while the cash session is open; return up to 30 days | Adopted |
 | Mockups first? | Straight to code; Design canvas only for complex screens | Proposed |
+| Catalog and stock with branches | One catalog per business; stock per branch and variant; optional price per branch | Adopted |
+| Payments | Configurable methods per business; split payments | Adopted |
+| Cash register | Several registers per branch; one open session per register; no shifts | Adopted |
+| Business/branch context | `x-business-id` / `x-branch-id` headers, not in the token | Adopted |
+
+All backend decisions: [decisiones-y-riesgos.md](decisiones-y-riesgos.md).
