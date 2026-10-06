@@ -7,7 +7,7 @@
 | Fase backend | B1 (superadmin básico), B11 (planes y suscripción) |
 | Features móviles | — (sin app propia en v1) |
 | Depende de | [auth y negocio](auth-y-negocio.md) |
-| Estado | Superadmin básico hecho (2026-10-06); planes en B11 |
+| Estado | Superadmin básico y reset de contraseña hechos (2026-10-06); planes en B11 |
 
 ## 1. Objetivo
 
@@ -21,6 +21,9 @@ activarlos o suspenderlos, y más adelante cobrar planes.
   productos, ventas de los últimos 30 días, último acceso).
 - Suspender (con motivo) y reactivar negocios.
 - Ver usuarios y desactivar una cuenta.
+- **Contraseña temporal** para un usuario que olvidó la suya (no hay
+  recuperación por correo): se muestra una vez, cierra sus sesiones y obliga a
+  cambiarla.
 - Uso por API (Swagger o un panel mínimo posterior); sin pantallas en la app.
 
 ## 3. Fuera de alcance (B11)
@@ -59,6 +62,7 @@ Ver estados del negocio en [auth y negocio](auth-y-negocio.md).
 | POST | `/v1/admin/businesses/{id}/reactivate` | `platform.businesses.manage` |
 | GET | `/v1/admin/users?q` | `platform.users.view` |
 | PATCH | `/v1/admin/users/{id}` | `platform.users.manage` |
+| POST | `/v1/admin/users/{id}/reset-password` | `platform.users.manage` (hecho) |
 
 ## 8. Errores
 
@@ -94,6 +98,8 @@ El link de un negocio suspendido muestra "Tienda no disponible".
 
 ## 15. Criterios de aceptación
 
+- Cuando un superadmin resetea la contraseña de un usuario, entonces sus
+  sesiones dejan de valer y entra con la temporal con `mustChangePassword`.
 - Cuando un superadmin suspende un negocio, entonces sus miembros reciben 403
   `businessSuspended` y la tienda pública responde 404.
 

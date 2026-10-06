@@ -94,29 +94,33 @@ levanta API, Postgres y Redis; `/v1/health` responde; Swagger en `/docs`.
 
 ## B1 · Identidad, negocio, sucursales y equipo base — L
 
-- Firebase Admin `verifyIdToken`; `POST /auth/firebase`, `/auth/refresh`
-  (rotación + detección de reuso), `/auth/sign-out`; `/me`,
+- Correo y contraseña propios (sin terceros): `POST /auth/register`,
+  `/auth/login`, `/auth/refresh` (rotación + detección de reuso),
+  `/auth/sign-out`, `PUT /me/password`; `/me`,
   `/me/memberships`; dispositivos.
 - `POST /businesses` (registro transaccional), `GET/PATCH /business`,
   `business_settings`.
 - Sucursales (CRUD, horarios, principal) y cajas.
 - Catálogo de permisos y 4 plantillas de rol (seeders); membresía del dueño;
   `TenantGuard`, `BranchGuard` y `PermissionGuard` funcionando.
-- Superadmin: listar, suspender y reactivar negocios.
+- Superadmin: listar, suspender y reactivar negocios; contraseña temporal
+  para un usuario.
 - Seeder demo: "Illimani Store" con 2 sucursales, cajas y usuarios de cada rol.
 
 **Docs:** [auth y negocio](modulos/auth-y-negocio.md),
 [sucursales](modulos/sucursales.md), [roles](modulos/roles.md),
 [plataforma](modulos/plataforma.md).
-**Listo cuando:** la app (F18) se registra con SMS real, crea el negocio y
+**Listo cuando:** la app (F18) se registra con correo y contraseña, crea el negocio y
 elige sucursal y caja; un usuario sin permiso recibe 403.
 
 **Tal como se construyó (2026-10-06, commit `2d8fda6`):** backend completo y
 probado (32 pruebas de integración); falta el lado app (F17–F19).
-- `POST /v1/auth/dev {phone}`: login sin Firebase solo con
-  `DEV_AUTH_ENABLED` y fuera de producción, para desarrollar la app y
-  probar antes de tener el proyecto Firebase de Cumavi. Sin credenciales de
-  Firebase, `/auth/firebase` responde 503 `authUnavailable`.
+- **Cambio de auth (2026-10-06, commit `e0097db`):** se reemplazó el login
+  con Firebase por correo + contraseña propios (scrypt), sin terceros. Bloqueo
+  de 15 min tras 5 fallos; recuperación con contraseña temporal del
+  superadmin (`POST /v1/admin/users/{id}/reset-password`) y, en B8, del
+  dueño. Se eliminaron `/auth/firebase`, `/auth/dev` y `auth_identities`;
+  Firebase queda solo para push (B7).
 - `GET /v1/branches/current` (`x-branch-id`): la app lo llama al elegir
   sucursal para validar que esté activa y permitida.
 - `permissions` usa la clave (`sale.cancel`) como PK y `role_permissions`
@@ -125,11 +129,12 @@ probado (32 pruebas de integración); falta el lado app (F17–F19).
 - El registro siempre crea el método **Efectivo** aunque no se elija (PAG-R2).
 - Suspender un negocio invalida el cache de contexto antes de responder (no
   por evento asíncrono).
-- Pendiente para fases siguientes: invitaciones, PIN y CRUD de roles (B8);
+- Pendiente para fases siguientes: alta de empleados, PIN y CRUD de roles (B8);
   validar sesiones de caja abiertas al desactivar sucursal o caja (B4) y
   pedidos pendientes (B7).
 - Demo: `npm run seed:demo` crea Illimani Store con C1 Sopocachi y C2
-  Miraflores y un usuario por rol (celulares 76543210–76543213).
+  Miraflores y un usuario por rol (`duena@`, `encargado@`, `cajero@`,
+  `almacen@illimani.test`, contraseña `Demo1234`).
 
 ## B2 · Catálogo — L
 
@@ -204,8 +209,9 @@ menos de 2 s y se cobra como venta.
 
 ## B8 · Equipo y roles — M
 
-- Invitaciones por celular, aceptar, editar rol y sucursales, suspender,
-  quitar.
+- Alta de empleados por el dueño (correo + contraseña temporal; si el correo
+  ya existe, solo se agrega la membresía), editar rol y sucursales,
+  suspender, quitar, resetear su contraseña.
 - CRUD de roles.
 - PIN de cambio rápido.
 - Auditoría de acciones sensibles.
@@ -248,7 +254,7 @@ Detalle en [roadmap.md](roadmap.md), fase 5.
 | Feature | Qué cambia | Fase backend |
 |---|---|---|
 | F17 | Cliente HTTP (dio), tokens, headers `x-business-id`/`x-branch-id`, `code` → `FailureCode`, UUID + `Idempotency-Key`, flavors mock/api | B0–B1 |
-| F18 | Firebase Auth real; registro contra la API | B1 |
+| F18 | Login y registro con correo y contraseña contra la API (sin SMS ni Google) | B1 |
 | F19 | Selector de negocio, sucursal y caja | B1, B4 |
 | F20 | Repositorios mock → API, módulo por módulo | B2–B5 |
 | F21 | Métodos de pago como entidad; pago dividido | B4–B5 |

@@ -13,10 +13,10 @@ de `lacase-backend`, ver [reutilizacion-lacase.md](reutilizacion-lacase.md)).
 | Migraciones | TypeORM migrations, `synchronize: false` | Una migración inicial nueva; nada de las de LaCase |
 | Validación | `class-validator` + `ValidationPipe` global (`whitelist`, `forbidNonWhitelisted`, `transform`) | |
 | Config | `joi` sobre `process.env` (`src/config/envs.config.ts`) | |
-| Auth | Firebase Admin (verificar ID token) + JWT propio (`@nestjs/jwt`) | Ver §3 |
+| Auth | Correo + contraseña propios (scrypt de `node:crypto`) + JWT propio (`@nestjs/jwt`) | Sin proveedores de identidad de terceros. Ver §3 |
 | Cache / colas | Redis (Bull) | Cache de permisos, rate limit, notificaciones |
 | Tiempo real | socket.io (`@nestjs/websockets`) | Bandeja de pedidos |
-| Push | Firebase Cloud Messaging | |
+| Push | Firebase Cloud Messaging | Único uso de Firebase (B7) |
 | Archivos | Disco local detrás de `StorageProvider` | R2/S3 después |
 | Logs | `nestjs-pino` + correlation id | |
 | Rate limit | `@nestjs/throttler` | Estricto en `/auth` y `/public` |
@@ -33,7 +33,7 @@ src/
                           tenancy/ (TenantContext, guards, decorators), idempotency/,
                           sequences/ (DocumentSequenceService), money/ (helpers en centavos)
   database/               datasource.config.ts, migrations/, seeders/
-  auth/                   Firebase → JWT, refresh, /me
+  auth/                   registro, login, contraseñas, JWT, refresh
   platform/               superadmin
   business/               businesses/, branches/, cash-registers/, settings/
   team/                   memberships/, invitations/, roles/, permissions/
@@ -74,24 +74,32 @@ Convenciones (heredadas de LaCase, con ajustes):
 ```mermaid
 sequenceDiagram
   participant App
-  participant Firebase
   participant API
-  App->>Firebase: SMS OTP o Google
-  Firebase-->>App: Firebase ID token
-  App->>API: POST /v1/auth/firebase {idToken, device}
-  API->>Firebase: verifyIdToken(idToken, checkRevoked)
+  App->>API: POST /v1/auth/register {displayName, email, password, phone?, device}
+  App->>API: POST /v1/auth/login {email, password, device}
   API-->>App: {accessToken (15 min), refreshToken (60 días), user, memberships}
   App->>API: requests con Authorization: Bearer accessToken
   App->>API: POST /v1/auth/refresh {refreshToken}
   API-->>App: nuevo par (el anterior queda usado)
 ```
 
-- El backend **no guarda contraseñas**. Firebase maneja SMS OTP, Google y,
-  opcionalmente, email.
-- `auth_identities` vincula el `uid` de Firebase con `users`. Si llega un uid
-  nuevo con un celular o email que ya existe en `users`, se vincula a ese
-  usuario (evita cuentas duplicadas cuando alguien entra una vez con SMS y otra
-  con Google).
+- **Sin terceros:** el login es con correo y contraseña propios del backend;
+  no hay Firebase Auth, SMS ni Google. Firebase solo se usa para push (B7).
+- El **correo** identifica la cuenta (único, en minúsculas). El celular es un
+  dato de contacto.
+- Contraseñas con **scrypt** de `node:crypto` (`PasswordService`, sin
+  dependencias nativas): `scrypt$N=16384,r=8,p=1$<salt>$<hash>`. Política:
+  8–128 caracteres con letras y números (`passwordTooShort`, `weakPassword`).
+- Correo inexistente y contraseña mala responden igual (`invalidCredentials`)
+  y tardan lo mismo. **5 fallos seguidos bloquean la cuenta 15 minutos**
+  (`accountLocked`, 423, `details.retryAfterSeconds`).
+- **Recuperación sin correos:** el superadmin (al dueño) o el dueño (a su
+  personal, B8) generan una **contraseña temporal**; el usuario entra con ella
+  y la app le pide cambiarla (`user.mustChangePassword`).
+- **Cambiar o resetear la contraseña** revoca todos los refresh tokens del
+  usuario y los access tokens emitidos antes (el guard compara `iat` con
+  `users.password_changed_at`). `PUT /me/password` devuelve una sesión nueva
+  para el dispositivo que hizo el cambio.
 - **Access token**: JWT HS256, 15 minutos, payload `{sub: userId, sid:
   familyId}`. Solo identidad: no lleva negocio ni permisos.
 - **Refresh token**: opaco (32 bytes aleatorios), se guarda solo su sha256 en
@@ -99,8 +107,6 @@ sequenceDiagram
   como usado. **Si llega un token ya usado, se revoca toda la familia** (robo
   probable) y el usuario debe volver a entrar.
 - `POST /auth/sign-out` revoca la familia y desactiva el dispositivo.
-- `POST /auth/dev {phone}`: login por celular sin Firebase, solo con
-  `DEV_AUTH_ENABLED` y nunca en producción (desarrollo y pruebas).
 - Se reutiliza el patrón de LaCase `auth_sso_codes` (hash del token, reloj de la
   BD, consumo atómico con un único `UPDATE … WHERE used_at IS NULL`).
 
@@ -188,7 +194,8 @@ Error (se extiende el `HttpExceptionFilter` de LaCase con `code` y `details`):
 |---|---|---|
 | `validationFailed` | 422 | DTO inválido |
 | `unauthenticated` / `refreshTokenInvalid` / `refreshTokenReused` / `userInactive` | 401 | Sesión |
-| `authUnavailable` | 503 | El servidor no tiene credenciales de Firebase |
+| `invalidCredentials` / `accountLocked` / `currentPasswordInvalid` | 401 / 423 / 422 | Login y cambio de contraseña |
+| `emailTaken` / `weakPassword` | 409 / 422 | Registro (`passwordTooShort` ya existe en la app) |
 | `notFound`, `conflict`, `tooManyRequests` | 404 / 409 / 429 | Genéricos (ruta inexistente, constraint sin código propio, rate limit) |
 | `notAMember`, `businessSuspended`, `branchRequired`, `branchForbidden`, `permissionDenied` | 403 | Tenancy y permisos |
 | `businessNotFound`, `branchNotFound`, `variantNotFound`, `paymentMethodNotFound`, `customerNotFound`, `supplierNotFound`, `purchaseOrderNotFound`, `orderNotFound`, `cashRegisterNotFound` | 404 | |
@@ -294,7 +301,8 @@ archivos nuevos. Detalle en
 ## 12. Entornos y despliegue
 
 - `docker-compose.yml` con API, Postgres y Redis (nombres `cumavi-*`).
-- Variables nuevas: `FIREBASE_CREDENTIALS_PATH` (o JSON en variable),
+- Variables nuevas: `SUPERADMIN_EMAIL`, `SUPERADMIN_PASSWORD` (seeder),
+  `FIREBASE_CREDENTIALS_PATH` (solo push),
   `JWT_ACCESS_TTL`, `JWT_REFRESH_TTL_DAYS`, `STORAGE_DRIVER`,
   `PUBLIC_BASE_URL`, `CORS_ORIGINS`, `DEFAULT_TIMEZONE`.
 - `google-services.json` y credenciales **fuera del repositorio**.

@@ -48,9 +48,9 @@ Módulos de la fase 1:
 
 | Módulo | Qué cubre |
 |---|---|
-| Autenticación y negocio | Cuenta por celular (SMS) o Google; registro del negocio en 4 pasos; perfil del negocio. |
+| Autenticación y negocio | Cuenta con correo y contraseña (sin terceros); registro del negocio en 4 pasos; perfil del negocio. |
 | Sucursales | Varias sucursales por negocio; horarios; cuáles venden en línea; cajas por sucursal. |
-| Usuarios y roles | Invitar empleados, asignar rol y sucursales; permisos aplicados por el servidor. |
+| Usuarios y roles | El dueño crea las cuentas de sus empleados (correo y contraseña temporal), asigna rol y sucursales; permisos aplicados por el servidor. |
 | Categorías | Categorías propias del negocio, ordenables y archivables. |
 | Productos | Catálogo único por negocio con variantes, SKU, código de barras, varias fotos, precio por variante y por sucursal. |
 | Inventario | Stock por sucursal y variante; ingresos, ajustes, transferencias; historial de movimientos. |

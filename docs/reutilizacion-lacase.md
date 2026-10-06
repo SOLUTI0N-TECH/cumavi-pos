@@ -49,14 +49,14 @@ se adaptan.
 
 | Archivo de LaCase | Cambio |
 |---|---|
-| `src/config/envs.config.ts` | Firebase, TTL de tokens, `STORAGE_DRIVER`, `PUBLIC_BASE_URL`, `CORS_ORIGINS` |
+| `src/config/envs.config.ts` | TTL de tokens, superadmin por correo, Firebase (solo push), `STORAGE_DRIVER`, `PUBLIC_BASE_URL`, `CORS_ORIGINS` |
 | `src/main.ts`, `src/app.module.ts` | Prefijo `/v1`, guards globales, Swagger, throttler global |
 | `src/common/http-exception/http-exception.filter.ts` | Agregar `code`, `details` y mapeo de errores de Postgres por constraint |
 | `src/database/datasource.config.ts` | Igual, con migración inicial nueva |
 | `src/database/seeders/permission.seeder.ts`, `role.seeder.ts`, `role-permission.seeder.ts` | Catálogo de [roles](modulos/roles.md) y plantillas |
-| `src/auth/auth.service.ts`, `strategies/jwt.strategy.ts`, `guards/jwt.guard.ts` | Intercambio de token de Firebase, refresh rotativo (patrón de `auth_sso_codes`), guard global con `@Public` |
-| `src/user/entities/user.entity.ts`, `src/user/devices/*` | Sin contraseña; celular; identidades |
-| `src/firebase/firebase.service.ts` | Agregar `verifyIdToken`; credenciales por variable de entorno |
+| `src/auth/auth.service.ts`, `strategies/jwt.strategy.ts`, `guards/jwt.guard.ts` | Se conserva la idea del login con correo y contraseña; bcrypt → scrypt de `node:crypto`, bloqueo por intentos, refresh rotativo (patrón de `auth_sso_codes`), guard global con `@Public` |
+| `src/user/entities/user.entity.ts`, `src/user/devices/*` | Correo único + `password_hash`; celular de contacto |
+| `src/firebase/firebase.service.ts` | Solo push (B7); credenciales por variable de entorno |
 | `src/notification/*`, `src/websocket/*` | Salas `user:` / `business:` / `branch:`; handshake con membresía |
 | `src/files/files.service.ts` | Pasa a `LocalStorageProvider` detrás de `StorageProvider` + tabla `files` |
 | `src/business/entities/business.entity.ts`, `branch.entity.ts`, servicios | slug, estado, tipo, NIT; flags de tienda en línea; horarios |

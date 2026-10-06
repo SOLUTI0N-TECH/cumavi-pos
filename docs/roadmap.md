@@ -363,8 +363,9 @@ to compute on the server).
 
 **Update (2026-10-05):** feature 14 follows [modulos/usuarios.md](modulos/usuarios.md)
 and [modulos/roles.md](modulos/roles.md): one global account per person,
-memberships per business with a role and allowed branches, invitations by
-phone, editable roles from 4 templates. **Permissions are enforced by the
+memberships per business with a role and allowed branches, the owner creates
+staff accounts (email + temporary password; an existing email just gets the
+membership) and resets their passwords, editable roles from 4 templates. **Permissions are enforced by the
 server**; the app only hides actions using the permissions from
 `/me/memberships`.
 
@@ -379,7 +380,7 @@ payments, purchases). Runs alongside backend phases B0–B9.
 | # | Feature | What it does | Size | Backend |
 |---|---|---|---|---|
 | 17 | **API foundation** | HTTP client (dio) with auth interceptor and refresh rotation; `x-business-id` / `x-branch-id` headers; error `code` → `FailureCode` (new codes added); UUID v7 ids and `Idempotency-Key` on every write; `mock` / `api` flavors in `dependency_injection.dart`; retry policy for network errors | M | B0–B1 |
-| 18 | **Real sign-in and registration** | Firebase Auth (SMS OTP, Google) → `POST /auth/firebase`; registration steps 3–4 call `POST /businesses` (payment methods from step 4 are now saved); session restore from secure storage; sign out revokes the session | M | B1 |
+| 18 | **Real sign-in and registration** | Email + password, no third parties: sign-in screen calls `POST /auth/login`; registration step 1 asks name, email, password and optional phone and calls `POST /auth/register`; the SMS code step and the Google button are removed; steps 3–4 call `POST /businesses` (payment methods from step 4 are now saved); forced "change password" screen when `user.mustChangePassword` (`PUT /me/password`); new codes `invalidCredentials`, `accountLocked`, `emailTaken`, `weakPassword`, `currentPasswordInvalid`; session restore from secure storage; sign out revokes the session | M | B1 |
 | 19 | **Business / branch / cash register selector** | After sign-in: no membership → register a business; several → pick one; then pick branch and cash register. Branch shown on Inicio; switch from "Más". Every request carries the context headers | M | B1, B4 |
 | 20 | **Swap mock repositories for the API** | One module at a time (categories, products, inventory, cash, sales): `Remote*DataSource` classes; search, filters, summaries and pagination move to the server; product photos are uploaded | L | B2–B5 |
 | 21 | **Configurable payment methods + split payments** | `PaymentMethod` enum → entity loaded from the business (`id`, `name`, `type`, `isCash`); settings screen; checkout with several payments ("Agregar otro pago"), change only in cash; receipts and summaries grouped by method id | M | B4–B5 |

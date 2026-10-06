@@ -6,7 +6,7 @@
 |---|---|---|---|
 | D1 | Catálogo y stock | Catálogo único por negocio; stock por sucursal y variante; precio opcional por sucursal; transferencias | Un solo SKU por producto; base del marketplace |
 | D2 | Usuarios | Tabla `users` global + `memberships` (rol, sucursales) | La misma cuenta sirve para consumidor y empleado |
-| D3 | Autenticación | Firebase Auth (SMS, Google) → JWT propio + refresh rotativo | No mantener OTP ni contraseñas; ya se usa Firebase para push |
+| D3 | Autenticación | Correo + contraseña propios (scrypt) → JWT propio + refresh rotativo. Sin proveedores de identidad de terceros (2026-10-06) | Pedido del negocio: login básico sin depender de terceros ni pagar SMS. Firebase queda solo para push |
 | D4 | Offline | Online en v1; UUID del cliente + `Idempotency-Key` | Agregar una cola offline después sin cambiar la API |
 | D5 | Pagos | Métodos configurables por negocio + pago dividido | Bolivia usa QR, Tigo Money, transferencias, mezclas |
 | D6 | Compras | Orden de compra completa con recepción parcial y pagos | Pedido del negocio |
@@ -47,13 +47,13 @@
 
 | # | Riesgo | Mitigación |
 |---|---|---|
-| R1 | Credenciales y configuración de LaCase en el nuevo backend (`google-services.json`, secretos `lacase`) | B0: proyecto Firebase nuevo, secretos fuera del repo, `git init` limpio |
+| R1 | Credenciales y configuración de LaCase en el nuevo backend (`google-services.json`, secretos `lacase`) | B0: secretos fuera del repo, `git init` limpio; proyecto Firebase propio solo cuando llegue el push (B7) |
 | R2 | Sobreventa por pedidos web sin reserva | Validar stock al crear y al cobrar; mostrar el stock de la sucursal |
 | R3 | Pedidos falsos (spam) | Rate limit por IP y celular, Turnstile, OTP si hace falta |
 | R4 | Errores de redondeo con dinero | Helpers puros en centavos con tests; el mismo prorrateo que la app |
 | R5 | "Hoy" mal calculado | `timestamptz` y `AT TIME ZONE` del negocio; tests con ventas cerca de medianoche |
-| R6 | Costo de SMS y fricción del login por celular | Ofrecer Google; medir en el piloto |
-| R7 | Cuentas duplicadas (SMS y Google) | Vincular por celular o email (AUT-R1) |
+| R6 | Contraseña olvidada sin recuperación por correo | Contraseña temporal del dueño (personal) o del superadmin (dueño); recuperación por correo con SMTP propio si hace falta |
+| R7 | Adivinar contraseñas por fuerza bruta | Rate limit por IP (10/min en login), bloqueo de 15 min tras 5 fallos, mismo error para correo inexistente |
 | R8 | Permisos cacheados desactualizados | TTL de 60 s + invalidación por evento |
 | R9 | Bloqueo de la secuencia de ventas en horas pico | Secuencia por sucursal; transacciones cortas |
 | R10 | Disco local sin respaldo | Backups diarios de `uploads/` y de Postgres; plan de migración a R2 |

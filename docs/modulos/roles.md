@@ -55,7 +55,7 @@ Alcance: **N** = negocio, **S** = sucursal; * = sensible (va a auditoría).
 |---|---|
 | Negocio | `business.update` N, `business.settings` N |
 | Sucursales | `branch.manage` N, `cash_register.manage` S |
-| Equipo | `member.view` N, `member.invite` N, `member.update` N, `member.remove` N, `role.manage` N |
+| Equipo | `member.view` N, `member.invite` N (alta de empleados), `member.update` N, `member.remove` N, `role.manage` N |
 | Categorías | `category.manage` N |
 | Productos | `product.view` N, `product.create` N, `product.update` N, `product.archive` N, `product.view_cost`* N, `product.branch_price` S |
 | Inventario | `stock.view_all_branches` N, `stock.receive` S, `stock.adjust`* S, `stock.transfer_send` S, `stock.transfer_receive` S, `stock.movements_view` S, `stock.count` S (B10), `stock.count_apply`* S (B10) |

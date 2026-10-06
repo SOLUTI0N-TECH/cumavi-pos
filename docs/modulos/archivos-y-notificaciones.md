@@ -30,8 +30,8 @@ módulos, y avisar a las personas correctas en tiempo real.
 **Notificaciones**
 
 - Registro de dispositivos y tokens FCM.
-- Push para: pedido nuevo, transferencia por recibir, cierre de caja con
-  diferencia, invitación al equipo.
+- Push (FCM; es el único uso de Firebase, el login no lo usa) para: pedido
+  nuevo, transferencia por recibir, cierre de caja con diferencia.
 - Tabla `notifications` (bandeja dentro de la app, marcar como leída).
 - Websocket con salas `user:{id}`, `business:{id}`, `branch:{id}`.
 
