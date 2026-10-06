@@ -42,7 +42,7 @@ erDiagram
 | `auth_identities` | `user_id`, `provider` (`firebase`), `subject` (uid de Firebase), `sign_in_methods text[]` (phone, google.com, password), `phone`, `email`, `last_used_at` | UNIQUE(`provider`, `subject`) |
 | `refresh_tokens` | `user_id`, `family_id`, `token_hash char(64)`, `parent_id`, `device_id` null, `expires_at`, `used_at`, `revoked_at`, `revoked_reason`, `ip`, `user_agent` | UNIQUE(`token_hash`); INDEX(`family_id`) |
 | `user_devices` | `user_id`, `installation_id`, `platform` (android/ios/web), `fcm_token`, `app_version`, `last_seen_at`, `is_active` | UNIQUE(`user_id`, `installation_id`) |
-| `super_admins` | `user_id`, `role_id`, `is_active` | UNIQUE(`user_id`). Tablas `super_admin_roles`, `super_admin_permissions`, `super_admin_role_permissions` como en LaCase. |
+| `super_admins` | `user_id`, `role_id`, `is_active` | UNIQUE(`user_id`). Tablas `super_admin_roles`, `super_admin_permissions` (PK `key`), `super_admin_role_permissions` como en LaCase. |
 | `audit_logs` | `business_id` null, `user_id`, `action` (`sale.cancel`), `entity`, `entity_id`, `data jsonb`, `ip` | INDEX(`business_id`, `created_at`) |
 | `idempotency_keys` | `user_id`, `key`, `method`, `path`, `request_hash`, `status` (in_progress/completed), `response_status`, `response_body jsonb`, `resource_id`, `expires_at` | PK(`user_id`, `key`) |
 
@@ -56,8 +56,8 @@ erDiagram
 | `branch_opening_hours` | `branch_id`, `weekday` (1–7, ISO), `opens time`, `closes time` | UNIQUE(`branch_id`, `weekday`, `opens`); CHECK `closes > opens` |
 | `cash_registers` | `business_id`, `branch_id`, `name` ("Caja 1"), `is_active`, `deleted_at` | UNIQUE(`branch_id`, lower(`name`)) |
 | `roles` | `business_id`, `template_key` null (admin/branch_manager/cashier/stock), `name`, `description`, `is_system` | UNIQUE(`business_id`, lower(`name`)) |
-| `permissions` | `key` (`sale.cancel`), `module`, `scope` (business/branch), `description`, `is_sensitive` | UNIQUE(`key`). Catálogo global sembrado. |
-| `role_permissions` | `role_id`, `permission_id` | PK(`role_id`, `permission_id`) |
+| `permissions` | `key` (`sale.cancel`) PK, `module`, `scope` (business/branch), `description`, `is_sensitive` | Catálogo global; se sincroniza desde `permission-catalog.ts` al arrancar. |
+| `role_permissions` | `role_id`, `permission_key` | PK(`role_id`, `permission_key`) |
 | `memberships` | `business_id`, `user_id`, `role_id`, `is_owner`, `all_branches`, `status` (active/suspended/removed), `pin_hash` null, `joined_at`, `invited_by` | UNIQUE(`business_id`, `user_id`); UNIQUE(`business_id`) WHERE `is_owner` |
 | `membership_branches` | `membership_id`, `branch_id` | PK(ambos). Se ignora si `all_branches`. |
 | `membership_invitations` | `business_id`, `phone_e164`, `role_id`, `all_branches`, `branch_ids uuid[]`, `invited_by`, `expires_at`, `accepted_at`, `revoked_at` | UNIQUE(`business_id`, `phone_e164`) WHERE pendiente |

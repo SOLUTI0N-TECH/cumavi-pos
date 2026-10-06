@@ -99,6 +99,8 @@ sequenceDiagram
   como usado. **Si llega un token ya usado, se revoca toda la familia** (robo
   probable) y el usuario debe volver a entrar.
 - `POST /auth/sign-out` revoca la familia y desactiva el dispositivo.
+- `POST /auth/dev {phone}`: login por celular sin Firebase, solo con
+  `DEV_AUTH_ENABLED` y nunca en producción (desarrollo y pruebas).
 - Se reutiliza el patrón de LaCase `auth_sso_codes` (hash del token, reloj de la
   BD, consumo atómico con un único `UPDATE … WHERE used_at IS NULL`).
 
@@ -185,9 +187,12 @@ Error (se extiende el `HttpExceptionFilter` de LaCase con `code` y `details`):
 | Código | HTTP | Cuándo |
 |---|---|---|
 | `validationFailed` | 422 | DTO inválido |
-| `unauthenticated` / `refreshTokenInvalid` / `refreshTokenReused` | 401 | Sesión |
+| `unauthenticated` / `refreshTokenInvalid` / `refreshTokenReused` / `userInactive` | 401 | Sesión |
+| `authUnavailable` | 503 | El servidor no tiene credenciales de Firebase |
+| `notFound`, `conflict`, `tooManyRequests` | 404 / 409 / 429 | Genéricos (ruta inexistente, constraint sin código propio, rate limit) |
 | `notAMember`, `businessSuspended`, `branchRequired`, `branchForbidden`, `permissionDenied` | 403 | Tenancy y permisos |
 | `businessNotFound`, `branchNotFound`, `variantNotFound`, `paymentMethodNotFound`, `customerNotFound`, `supplierNotFound`, `purchaseOrderNotFound`, `orderNotFound`, `cashRegisterNotFound` | 404 | |
+| `businessAlreadyRegistered`, `branchCodeTaken`, `invalidOpeningHours` | 409 / 409 / 422 | Negocio y sucursales |
 | `slugTaken`, `branchNameTaken`, `cashRegisterNameTaken`, `paymentMethodNameTaken`, `customerPhoneTaken`, `supplierNameTaken` | 409 | Únicos |
 | `idempotencyKeyReused`, `requestInProgress` | 422 / 409 | §6 |
 | `priceChanged` | 409 | El precio enviado por el cliente ya no es el vigente |

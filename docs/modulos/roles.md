@@ -7,7 +7,7 @@
 | Fase backend | B1 (catálogo, plantillas, guards), B8 (CRUD de roles) |
 | Features móviles | F14 |
 | Depende de | [usuarios](usuarios.md) |
-| Estado | Planificado |
+| Estado | Base hecha en backend (2026-10-06: catálogo, plantillas, guards, GET /roles); resto en B8 |
 
 ## 1. Objetivo
 

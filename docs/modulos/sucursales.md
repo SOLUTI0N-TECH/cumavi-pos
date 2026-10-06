@@ -7,7 +7,7 @@
 | Fase backend | B1 (sucursales y cajas), B7 (datos para la tienda en línea) |
 | Features móviles | F19 (selector), F22 (varias cajas) |
 | Depende de | [auth y negocio](auth-y-negocio.md) |
-| Estado | Planificado |
+| Estado | Hecho en backend (2026-10-06); app pendiente (F19, F22) |
 
 ## 1. Objetivo
 
@@ -68,6 +68,7 @@ tuvo movimientos).
 |---|---|---|---|
 | GET | `/v1/branches` | miembro | Sucursales del negocio (las permitidas, o todas con `branch.manage`) |
 | POST | `/v1/branches` | `branch.manage` | Crear (con "Caja 1") |
+| GET | `/v1/branches/current` | miembro (`x-branch-id`) | Sucursal activa: valida que esté activa y permitida |
 | GET | `/v1/branches/{id}` | miembro | Detalle con horario y cajas |
 | PATCH | `/v1/branches/{id}` | `branch.manage` | Editar, activar o desactivar, marcar como principal |
 | PUT | `/v1/branches/{id}/opening-hours` | `branch.manage` | Reemplaza el horario completo |

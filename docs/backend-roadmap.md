@@ -3,7 +3,7 @@
 Plan para construir `cumavi-shop-backend` y conectar la app POS y el catálogo
 web. Estado: **Planificado** · **En curso** · **Hecho**.
 
-Última actualización: 2026-10-05.
+Última actualización: 2026-10-06 (B0 y B1 hechos en el backend).
 
 ## Reglas
 
@@ -19,8 +19,8 @@ web. Estado: **Planificado** · **En curso** · **Hecho**.
 
 | Fase | Contenido | Tamaño | App POS | Web | Features móviles | Estado |
 |---|---|---|---|---|---|---|
-| B0 | Limpieza y fundación | M | — | — | — | Planificado |
-| B1 | Identidad, negocio, sucursales, equipo base | L | F17, F18, F19 | — | F1 | Planificado |
+| B0 | Limpieza y fundación | M | — | — | — | **Hecho** (2026-10-06) |
+| B1 | Identidad, negocio, sucursales, equipo base | L | F17, F18, F19 | — | F1 | **Hecho** en backend (2026-10-06); app pendiente |
 | B2 | Catálogo | L | F20, F23 | — | F2, F6, F7 | Planificado |
 | B3 | Inventario | M/L | F20, F24 | — | F3 | Planificado |
 | B4 | Caja y métodos de pago | M | F21, F22 | — | — | Planificado |
@@ -73,6 +73,25 @@ común.
 **Listo cuando:** `npm run build` y `npm run test` pasan; `docker compose up`
 levanta API, Postgres y Redis; `/v1/health` responde; Swagger en `/docs`.
 
+**Tal como se construyó (2026-10-06, commit `02d0fc1`):**
+- Proyecto rehecho desde cero en la misma carpeta (respaldo del clon viejo en
+  `cumavi-shop/_backup/`); `git init` local, sin remote todavía.
+- Docker: Postgres 16 expone el puerto **5433** en el host (5432 suele estar
+  ocupado por un Postgres local) y crea también `cumavi_shop_test`. La API en
+  contenedor es opcional (`docker compose --profile api up`).
+- Errores con `code` (`AppError`), mapeo de constraints nombradas de
+  Postgres (`common/errors/constraint-codes.ts`), `validationFailed` con
+  `details.fields`.
+- Idempotencia: `IdempotencyService.run` dentro de la misma transacción;
+  numeración con `DocumentSequenceService` (probado con 50 llamadas
+  concurrentes).
+- `StorageProvider` + disco local y `POST /v1/files?purpose=logo|banner|avatar`;
+  las miniaturas quedan para B2.
+- Bull y socket.io **no** se instalaron todavía: llegan con B7 (pedidos en
+  tiempo real). Tampoco passport: el guard JWT usa `@nestjs/jwt` directo.
+- En Jest no se cargan `@fastify/static` ni Swagger (dependen de paquetes
+  solo ESM).
+
 ## B1 · Identidad, negocio, sucursales y equipo base — L
 
 - Firebase Admin `verifyIdToken`; `POST /auth/firebase`, `/auth/refresh`
@@ -91,6 +110,26 @@ levanta API, Postgres y Redis; `/v1/health` responde; Swagger en `/docs`.
 [plataforma](modulos/plataforma.md).
 **Listo cuando:** la app (F18) se registra con SMS real, crea el negocio y
 elige sucursal y caja; un usuario sin permiso recibe 403.
+
+**Tal como se construyó (2026-10-06, commit `2d8fda6`):** backend completo y
+probado (32 pruebas de integración); falta el lado app (F17–F19).
+- `POST /v1/auth/dev {phone}`: login sin Firebase solo con
+  `DEV_AUTH_ENABLED` y fuera de producción, para desarrollar la app y
+  probar antes de tener el proyecto Firebase de Cumavi. Sin credenciales de
+  Firebase, `/auth/firebase` responde 503 `authUnavailable`.
+- `GET /v1/branches/current` (`x-branch-id`): la app lo llama al elegir
+  sucursal para validar que esté activa y permitida.
+- `permissions` usa la clave (`sale.cancel`) como PK y `role_permissions`
+  guarda `permission_key`. El catálogo vive en
+  `src/team/permission-catalog.ts` y se sincroniza al arrancar la API.
+- El registro siempre crea el método **Efectivo** aunque no se elija (PAG-R2).
+- Suspender un negocio invalida el cache de contexto antes de responder (no
+  por evento asíncrono).
+- Pendiente para fases siguientes: invitaciones, PIN y CRUD de roles (B8);
+  validar sesiones de caja abiertas al desactivar sucursal o caja (B4) y
+  pedidos pendientes (B7).
+- Demo: `npm run seed:demo` crea Illimani Store con C1 Sopocachi y C2
+  Miraflores y un usuario por rol (celulares 76543210–76543213).
 
 ## B2 · Catálogo — L
 

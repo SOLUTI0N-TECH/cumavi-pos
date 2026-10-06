@@ -7,7 +7,7 @@
 | Fase backend | B1 (membresía del dueño, guards), B8 (equipo completo) |
 | Features móviles | F14, F19 |
 | Depende de | [auth y negocio](auth-y-negocio.md), [roles](roles.md), [sucursales](sucursales.md) |
-| Estado | Planificado |
+| Estado | Membresías y `/me/memberships` hechos (2026-10-06); invitaciones, PIN y gestión en B8 |
 
 ## 1. Objetivo
 

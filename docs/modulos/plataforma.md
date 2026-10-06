@@ -7,7 +7,7 @@
 | Fase backend | B1 (superadmin básico), B11 (planes y suscripción) |
 | Features móviles | — (sin app propia en v1) |
 | Depende de | [auth y negocio](auth-y-negocio.md) |
-| Estado | Planificado |
+| Estado | Superadmin básico hecho (2026-10-06); planes en B11 |
 
 ## 1. Objetivo
 

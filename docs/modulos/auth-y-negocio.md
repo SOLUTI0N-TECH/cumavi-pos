@@ -7,7 +7,7 @@
 | Fase backend | B1 |
 | Features móviles | F1 (hecha, se conecta), F17, F18 |
 | Depende de | B0 (fundación), [roles](roles.md), [sucursales](sucursales.md) |
-| Estado | Planificado |
+| Estado | Hecho en backend (2026-10-06); app pendiente (F17, F18) |
 
 ## 1. Objetivo
 
@@ -83,6 +83,7 @@ stateDiagram-v2
 | Método | Ruta | Permiso | Idempotente | Descripción |
 |---|---|---|---|---|
 | POST | `/v1/auth/firebase` | público | sí | `{idToken, device{installationId, platform, appVersion, fcmToken?}}` → tokens + `user` + `memberships` |
+| POST | `/v1/auth/dev` | público (solo desarrollo) | — | `{phone, displayName?}` → igual que `/auth/firebase`, sin Firebase |
 | POST | `/v1/auth/refresh` | público | — | `{refreshToken}` → nuevo par |
 | POST | `/v1/auth/sign-out` | sesión | — | Revoca la familia, desactiva el dispositivo |
 | GET | `/v1/me` | sesión | — | Usuario |
