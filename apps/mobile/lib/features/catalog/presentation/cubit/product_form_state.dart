@@ -41,6 +41,7 @@ final class ProductFormState extends Equatable {
     this.variants = const <ProductVariant>[],
     this.sku = '',
     this.barcode = '',
+    this.showOnline = true,
     this.savedProduct,
     this.failure,
   });
@@ -83,6 +84,9 @@ final class ProductFormState extends Equatable {
   /// Codes of the product as typed; each variant keeps its own.
   final String sku;
   final String barcode;
+
+  /// Listed in the online catalog.
+  final bool showOnline;
 
   /// Set once the product is stored.
   final Product? savedProduct;
@@ -180,6 +184,7 @@ final class ProductFormState extends Equatable {
     List<ProductVariant>? variants,
     String? sku,
     String? barcode,
+    bool? showOnline,
     Product? savedProduct,
     Failure? failure,
   }) {
@@ -202,6 +207,7 @@ final class ProductFormState extends Equatable {
       variants: variants ?? this.variants,
       sku: sku ?? this.sku,
       barcode: barcode ?? this.barcode,
+      showOnline: showOnline ?? this.showOnline,
       savedProduct: savedProduct ?? this.savedProduct,
       failure: failure,
     );
@@ -231,6 +237,7 @@ final class ProductFormState extends Equatable {
       variants: variants,
       sku: sku,
       barcode: barcode,
+      showOnline: showOnline,
       savedProduct: savedProduct,
       failure: failure,
     );
@@ -256,6 +263,7 @@ final class ProductFormState extends Equatable {
     variants,
     sku,
     barcode,
+    showOnline,
     savedProduct,
     failure,
   ];

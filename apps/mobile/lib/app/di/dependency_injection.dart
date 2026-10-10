@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 
 import '../../core/l10n/l10n.dart';
+import '../../core/services/external_launcher.dart';
 import '../../features/account/domain/usecases/pick_business_logo.dart';
 import '../../features/account/presentation/cubit/business_settings_cubit.dart';
 import '../../features/account/presentation/cubit/sign_out_cubit.dart';
@@ -69,6 +70,21 @@ import '../../features/inventory/domain/usecases/stock_usecases.dart';
 import '../../features/inventory/presentation/cubit/adjust_stock_cubit.dart';
 import '../../features/inventory/presentation/cubit/receive_stock_cubit.dart';
 import '../../features/inventory/presentation/cubit/stock_movements_cubit.dart';
+import '../../features/online_store/data/store_poster_services.dart';
+import '../../features/online_store/data/store_settings_repository_impl.dart';
+import '../../features/online_store/domain/repositories/store_settings_repository.dart';
+import '../../features/online_store/domain/services/store_poster_service.dart';
+import '../../features/online_store/domain/usecases/store_settings_usecases.dart';
+import '../../features/online_store/presentation/cubit/online_store_cubit.dart';
+import '../../features/orders/data/datasources/in_memory_order_data_source.dart';
+import '../../features/orders/data/repositories/order_repository_impl.dart';
+import '../../features/orders/domain/repositories/order_repository.dart';
+import '../../features/orders/domain/usecases/import_order.dart';
+import '../../features/orders/domain/usecases/order_usecases.dart';
+import '../../features/orders/presentation/cubit/import_order_cubit.dart';
+import '../../features/orders/presentation/cubit/order_detail_cubit.dart';
+import '../../features/orders/presentation/cubit/orders_badge_cubit.dart';
+import '../../features/orders/presentation/cubit/orders_inbox_cubit.dart';
 import '../../features/sales/data/datasources/in_memory_sales_data_source.dart';
 import '../../features/sales/data/datasources/sales_data_source.dart';
 import '../../features/sales/data/repositories/sales_repository_impl.dart';
@@ -154,6 +170,12 @@ void _registerDataSources() {
       ),
     )
     ..registerLazySingleton<SalesDataSource>(InMemorySalesDataSource.new)
+    ..registerLazySingleton<InMemoryOrderDataSource>(
+      InMemoryOrderDataSource.new,
+    )
+    ..registerLazySingleton<OrderDataSource>(
+      () => injector<InMemoryOrderDataSource>(),
+    )
     ..registerLazySingleton<CashRegisterDataSource>(
       InMemoryCashRegisterDataSource.new,
     );
@@ -178,7 +200,11 @@ void _registerDeviceServices(DeviceServices deviceServices) {
             textBuilder: injector<ReceiptTextBuilder>(),
           ),
         )
-        ..registerLazySingleton<BarcodeCamera>(MobileScannerCamera.new);
+        ..registerLazySingleton<BarcodeCamera>(MobileScannerCamera.new)
+        ..registerLazySingleton<ExternalLauncher>(DeviceExternalLauncher.new)
+        ..registerLazySingleton<StorePosterService>(
+          () => PdfStorePosterService(injector<AppLocalizations>()),
+        );
     case DeviceServices.demo:
       injector
         ..registerLazySingleton<PhotoCapturer>(DemoPhotoCapturer.new)
@@ -187,7 +213,9 @@ void _registerDeviceServices(DeviceServices deviceServices) {
         )
         ..registerLazySingleton<ReceiptPrinter>(DemoReceiptPrinter.new)
         ..registerLazySingleton<ReceiptSharer>(DemoReceiptSharer.new)
-        ..registerLazySingleton<BarcodeCamera>(DemoBarcodeCamera.new);
+        ..registerLazySingleton<BarcodeCamera>(DemoBarcodeCamera.new)
+        ..registerLazySingleton<ExternalLauncher>(DemoExternalLauncher.new)
+        ..registerLazySingleton<StorePosterService>(DemoStorePosterService.new);
   }
 }
 
@@ -199,6 +227,20 @@ void _registerRepositories() {
     )
     ..registerLazySingleton<ProductRepository>(
       () => ProductRepositoryImpl(injector<ProductDataSource>()),
+    )
+    ..registerLazySingleton<OrderRepository>(
+      () => OrderRepositoryImpl(
+        dataSource: injector<OrderDataSource>(),
+        sessionRepository: injector<SessionRepository>(),
+      ),
+    )
+    ..registerLazySingleton<DemoOrderSimulator>(
+      () => InMemoryDemoOrderSimulator(injector<InMemoryOrderDataSource>()),
+    )
+    ..registerLazySingleton<StoreSettingsRepository>(
+      () => InMemoryStoreSettingsRepository(
+        sessionRepository: injector<SessionRepository>(),
+      ),
     )
     ..registerLazySingleton<InventoryRepository>(
       () => InventoryRepositoryImpl(
@@ -281,6 +323,54 @@ void _registerUseCases() {
         inventoryRepository: injector<InventoryRepository>(),
         productRepository: injector<ProductRepository>(),
       ),
+    )
+    // Online orders and store.
+    ..registerLazySingleton<GetOrders>(
+      () => GetOrders(injector<OrderRepository>()),
+    )
+    ..registerLazySingleton<GetOrder>(
+      () => GetOrder(injector<OrderRepository>()),
+    )
+    ..registerLazySingleton<WatchOrders>(
+      () => WatchOrders(injector<OrderRepository>()),
+    )
+    ..registerLazySingleton<UpdateOrderStatus>(
+      () => UpdateOrderStatus(injector<OrderRepository>()),
+    )
+    ..registerLazySingleton<EditOrder>(
+      () => EditOrder(injector<OrderRepository>()),
+    )
+    ..registerLazySingleton<PrepareOrderCheckout>(
+      () => PrepareOrderCheckout(
+        orderRepository: injector<OrderRepository>(),
+        productRepository: injector<ProductRepository>(),
+      ),
+    )
+    ..registerFactoryParam<CheckoutOrder, String, void>(
+      (String orderId, _) => CheckoutOrder(
+        orderRepository: injector<OrderRepository>(),
+        registerSale: injector<RegisterSale>(),
+        orderId: orderId,
+      ),
+    )
+    ..registerLazySingleton<SimulateIncomingOrder>(
+      () => SimulateIncomingOrder(
+        simulator: injector<DemoOrderSimulator>(),
+        storeSettingsRepository: injector<StoreSettingsRepository>(),
+      ),
+    )
+    ..registerLazySingleton<ImportOrder>(
+      () => ImportOrder(
+        orderRepository: injector<OrderRepository>(),
+        productRepository: injector<ProductRepository>(),
+        storeSettingsRepository: injector<StoreSettingsRepository>(),
+      ),
+    )
+    ..registerLazySingleton<GetStoreSettings>(
+      () => GetStoreSettings(injector<StoreSettingsRepository>()),
+    )
+    ..registerLazySingleton<SaveStoreSettings>(
+      () => SaveStoreSettings(injector<StoreSettingsRepository>()),
     )
     ..registerLazySingleton<GetStockMovements>(
       () => GetStockMovements(injector<InventoryRepository>()),
@@ -440,6 +530,41 @@ void _registerCubits() {
         captureProductPhoto: injector<CaptureProductPhoto>(),
         removePhotoBackground: injector<RemovePhotoBackground>(),
         suggestSku: injector<SuggestSku>(),
+      ),
+    )
+    ..registerFactory<OrdersBadgeCubit>(
+      () => OrdersBadgeCubit(
+        getOrders: injector<GetOrders>(),
+        watchOrders: injector<WatchOrders>(),
+      ),
+    )
+    ..registerFactory<OrdersInboxCubit>(
+      () => OrdersInboxCubit(
+        getOrders: injector<GetOrders>(),
+        watchOrders: injector<WatchOrders>(),
+        simulateIncomingOrder: injector<SimulateIncomingOrder>(),
+      ),
+    )
+    ..registerFactoryParam<OrderDetailCubit, String, void>(
+      (String orderId, _) => OrderDetailCubit(
+        getOrder: injector<GetOrder>(),
+        watchOrders: injector<WatchOrders>(),
+        updateOrderStatus: injector<UpdateOrderStatus>(),
+        editOrder: injector<EditOrder>(),
+        prepareOrderCheckout: injector<PrepareOrderCheckout>(),
+        launcher: injector<ExternalLauncher>(),
+        orderId: orderId,
+      ),
+    )
+    ..registerFactory<ImportOrderCubit>(
+      () => ImportOrderCubit(injector<ImportOrder>()),
+    )
+    ..registerFactory<OnlineStoreCubit>(
+      () => OnlineStoreCubit(
+        getStoreSettings: injector<GetStoreSettings>(),
+        saveStoreSettings: injector<SaveStoreSettings>(),
+        getProducts: injector<GetProducts>(),
+        launcher: injector<ExternalLauncher>(),
       ),
     )
     ..registerFactory<SalesHistoryCubit>(

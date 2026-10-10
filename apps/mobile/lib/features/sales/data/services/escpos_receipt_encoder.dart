@@ -92,22 +92,32 @@ final class EscPosReceiptEncoder {
     }
 
     bytes.addAll(ticket.hr());
+    if (sale.discount > 0 || sale.deliveryFee > 0) {
+      bytes.addAll(
+        _pair(
+          ticket,
+          _l10n.receiptSubtotalLabel,
+          MoneyFormatter.format(sale.subtotal),
+        ),
+      );
+    }
     if (sale.discount > 0) {
-      bytes
-        ..addAll(
-          _pair(
-            ticket,
-            _l10n.receiptSubtotalLabel,
-            MoneyFormatter.format(sale.subtotal),
-          ),
-        )
-        ..addAll(
-          _pair(
-            ticket,
-            _l10n.receiptDiscountLabel,
-            '- ${MoneyFormatter.format(sale.discount)}',
-          ),
-        );
+      bytes.addAll(
+        _pair(
+          ticket,
+          _l10n.receiptDiscountLabel,
+          '- ${MoneyFormatter.format(sale.discount)}',
+        ),
+      );
+    }
+    if (sale.deliveryFee > 0) {
+      bytes.addAll(
+        _pair(
+          ticket,
+          _l10n.receiptDeliveryLabel,
+          MoneyFormatter.format(sale.deliveryFee),
+        ),
+      );
     }
     bytes
       ..addAll(

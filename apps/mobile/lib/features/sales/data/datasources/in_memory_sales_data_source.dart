@@ -45,9 +45,15 @@ final class InMemorySalesDataSource implements SalesDataSource {
           )
           .toList(),
       discount: draft.cart.discount,
+      deliveryFee: draft.cart.deliveryFee,
       paymentMethod: draft.paymentMethod,
       amountReceived: draft.amountReceived,
       cashierName: cashierName,
+      channel: draft.orderId == null
+          ? SaleChannel.pos
+          : SaleChannel.onlineOrder,
+      orderId: draft.orderId,
+      orderNumber: draft.orderNumber,
     );
     _sales.add(sale);
     return sale;

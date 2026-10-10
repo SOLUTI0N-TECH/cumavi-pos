@@ -36,16 +36,23 @@ final class ReceiptTextBuilder {
     }
 
     buffer.writeln();
+    if (sale.discount > 0 || sale.deliveryFee > 0) {
+      buffer.writeln(
+        '${_l10n.receiptSubtotalLabel}: '
+        '${MoneyFormatter.format(sale.subtotal)}',
+      );
+    }
     if (sale.discount > 0) {
-      buffer
-        ..writeln(
-          '${_l10n.receiptSubtotalLabel}: '
-          '${MoneyFormatter.format(sale.subtotal)}',
-        )
-        ..writeln(
-          '${_l10n.receiptDiscountLabel}: '
-          '− ${MoneyFormatter.format(sale.discount)}',
-        );
+      buffer.writeln(
+        '${_l10n.receiptDiscountLabel}: '
+        '− ${MoneyFormatter.format(sale.discount)}',
+      );
+    }
+    if (sale.deliveryFee > 0) {
+      buffer.writeln(
+        '${_l10n.receiptDeliveryLabel}: '
+        '${MoneyFormatter.format(sale.deliveryFee)}',
+      );
     }
     buffer
       ..writeln(

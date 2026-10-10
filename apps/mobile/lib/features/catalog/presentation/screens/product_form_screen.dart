@@ -285,6 +285,30 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                 ),
               ),
             ),
+            const SizedBox(height: AppSpacing.md),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        l10n.catalogProductFormShowOnline,
+                        style: AppTextStyles.label,
+                      ),
+                      Text(
+                        l10n.catalogProductFormShowOnlineCaption,
+                        style: AppTextStyles.captionSmall,
+                      ),
+                    ],
+                  ),
+                ),
+                Switch(
+                  value: state.showOnline,
+                  onChanged: cubit.showOnlineChanged,
+                ),
+              ],
+            ),
           ],
         ),
         const SizedBox(height: AppSpacing.lg),

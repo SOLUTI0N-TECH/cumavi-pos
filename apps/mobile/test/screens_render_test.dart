@@ -24,6 +24,7 @@ import 'package:cumavi_pos_mobile/features/catalog/presentation/screens/inventor
 import 'package:cumavi_pos_mobile/features/catalog/presentation/screens/product_form_screen.dart';
 import 'package:cumavi_pos_mobile/features/dashboard/presentation/cubit/dashboard_cubit.dart';
 import 'package:cumavi_pos_mobile/features/dashboard/presentation/screens/dashboard_screen.dart';
+import 'package:cumavi_pos_mobile/features/orders/presentation/cubit/orders_badge_cubit.dart';
 import 'package:cumavi_pos_mobile/features/sales/domain/entities/cart.dart';
 import 'package:cumavi_pos_mobile/features/sales/domain/entities/receipt.dart';
 import 'package:cumavi_pos_mobile/features/sales/domain/entities/sale.dart';
@@ -140,13 +141,19 @@ void main() {
         onOpenInventory: () {},
         onOpenMore: () {},
         onOpenSalesHistory: () {},
+        onOpenOrders: () {},
       ),
       providers: <AnyBlocProvider>[
         BlocProvider<DashboardCubit>(create: (_) => injector<DashboardCubit>()),
+        BlocProvider<OrdersBadgeCubit>(
+          lazy: false,
+          create: (_) => injector<OrdersBadgeCubit>()..load(),
+        ),
       ],
     );
 
     expect(find.text('Ventas de hoy'), findsOneWidget);
+    expect(find.text('Pedidos en línea'), findsOneWidget);
     expect(find.text('Métodos de pago'), findsOneWidget);
   });
 

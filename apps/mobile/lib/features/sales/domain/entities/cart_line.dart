@@ -6,11 +6,20 @@ import '../../../catalog/domain/entities/product_variant.dart';
 /// One product (or one variant of it, e.g. `Rojo · 40`) and its quantity
 /// inside the cart.
 final class CartLine extends Equatable {
-  const CartLine({required this.product, required this.quantity, this.variant});
+  const CartLine({
+    required this.product,
+    required this.quantity,
+    this.variant,
+    this.fixedUnitPrice,
+  });
 
   final Product product;
   final ProductVariant? variant;
   final int quantity;
+
+  /// Price agreed elsewhere (an online order keeps the price the customer
+  /// saw); `null` uses the product's current price.
+  final double? fixedUnitPrice;
 
   /// Identifies the line: the same product in two variants makes two lines.
   String get key => keyOf(product.id, variant?.id);
@@ -18,7 +27,7 @@ final class CartLine extends Equatable {
   static String keyOf(String productId, String? variantId) =>
       variantId == null ? productId : '$productId#$variantId';
 
-  double get unitPrice => product.salePrice;
+  double get unitPrice => fixedUnitPrice ?? product.salePrice;
 
   double get lineTotal => unitPrice * quantity;
 
@@ -41,8 +50,14 @@ final class CartLine extends Equatable {
     product: product,
     variant: variant,
     quantity: quantity ?? this.quantity,
+    fixedUnitPrice: fixedUnitPrice,
   );
 
   @override
-  List<Object?> get props => <Object?>[product, variant, quantity];
+  List<Object?> get props => <Object?>[
+    product,
+    variant,
+    quantity,
+    fixedUnitPrice,
+  ];
 }

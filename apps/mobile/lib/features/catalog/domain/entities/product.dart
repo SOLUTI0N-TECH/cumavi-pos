@@ -24,6 +24,7 @@ final class Product extends Equatable {
     this.variants = const <ProductVariant>[],
     this.sku,
     this.barcode,
+    this.showOnline = true,
   }) : _ownStock = stockQuantity;
 
   final String id;
@@ -46,6 +47,9 @@ final class Product extends Equatable {
 
   /// Code on the label (EAN-13, UPC, Code 128…); variants may have theirs.
   final String? barcode;
+
+  /// Listed in the online catalog (`products.show_online`).
+  final bool showOnline;
 
   /// Stock of a product without variants.
   final int _ownStock;
@@ -102,6 +106,7 @@ final class Product extends Equatable {
     List<ProductVariant>? variants,
     String? sku,
     String? barcode,
+    bool? showOnline,
   }) {
     return Product(
       id: id,
@@ -117,6 +122,7 @@ final class Product extends Equatable {
       variants: variants ?? this.variants,
       sku: sku ?? this.sku,
       barcode: barcode ?? this.barcode,
+      showOnline: showOnline ?? this.showOnline,
     );
   }
 
@@ -135,5 +141,6 @@ final class Product extends Equatable {
     variants,
     sku,
     barcode,
+    showOnline,
   ];
 }

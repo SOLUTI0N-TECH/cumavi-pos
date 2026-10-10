@@ -26,6 +26,13 @@ abstract final class AppRoutes {
   static const String moreBusiness = '/more/business';
   static const String categories = '/categories';
   static const String scan = '/scan';
+  static const String orders = '/orders';
+  static const String orderImport = '/orders/import';
+  static const String orderDetail = '/orders/:id';
+  static const String orderCheckout = '/orders/:id/checkout';
+  static const String orderCompleted = '/orders/:id/completed';
+  static const String onlineStore = '/online-store';
+  static const String onlineStorePoster = '/online-store/poster';
   static const String productForm = '/inventory/new';
   static const String productPhoto = '/inventory/new/photo';
   static const String productDetail = '/inventory/product/:id';
@@ -36,6 +43,14 @@ abstract final class AppRoutes {
   static const String stockMovements = '/inventory/movements';
 
   static String saleDetailPath(String saleId) => '/sales/history/$saleId';
+
+  static String orderDetailPath(String orderId) => '/orders/$orderId';
+
+  static String orderCheckoutPath(String orderId) =>
+      '${orderDetailPath(orderId)}/checkout';
+
+  static String orderCompletedPath(String orderId) =>
+      '${orderDetailPath(orderId)}/completed';
 
   static String saleReturnPath(String saleId) =>
       '${saleDetailPath(saleId)}/return';

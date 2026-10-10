@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/domain/payment_method.dart';
+import '../../core/l10n/l10n.dart';
 import '../../features/account/presentation/cubit/business_settings_cubit.dart';
 import '../../features/account/presentation/cubit/sign_out_cubit.dart';
 import '../../features/account/presentation/screens/business_settings_screen.dart';
@@ -41,6 +43,18 @@ import '../../features/inventory/presentation/cubit/stock_movements_cubit.dart';
 import '../../features/inventory/presentation/screens/adjust_stock_screen.dart';
 import '../../features/inventory/presentation/screens/receive_stock_screen.dart';
 import '../../features/inventory/presentation/screens/stock_movements_screen.dart';
+import '../../features/online_store/domain/services/store_poster_service.dart';
+import '../../features/online_store/presentation/cubit/online_store_cubit.dart';
+import '../../features/online_store/presentation/screens/online_store_screen.dart';
+import '../../features/online_store/presentation/screens/store_poster_screen.dart';
+import '../../features/orders/domain/entities/order.dart';
+import '../../features/orders/domain/usecases/order_usecases.dart';
+import '../../features/orders/presentation/cubit/import_order_cubit.dart';
+import '../../features/orders/presentation/cubit/order_detail_cubit.dart';
+import '../../features/orders/presentation/cubit/orders_inbox_cubit.dart';
+import '../../features/orders/presentation/screens/import_order_screen.dart';
+import '../../features/orders/presentation/screens/order_detail_screen.dart';
+import '../../features/orders/presentation/screens/orders_inbox_screen.dart';
 import '../../features/sales/domain/entities/receipt.dart';
 import '../../features/sales/domain/entities/sale.dart';
 import '../../features/sales/presentation/cubit/cart_cubit.dart';
@@ -148,6 +162,7 @@ GoRouter createAppRouter() {
       _productFormFlow(),
       _scannerRoute(),
       ..._stockRoutes(),
+      ..._orderRoutes(),
     ],
   );
 }
@@ -160,6 +175,151 @@ Future<void> _moveStock(BuildContext context, String location) async {
     unawaited(context.read<ProductDetailCubit>().load());
     unawaited(context.read<DashboardCubit>().load());
   }
+}
+
+/// Leaves a screen that may be the first one (opened from a link).
+void _leave(BuildContext context) =>
+    context.canPop() ? context.pop() : context.go(AppRoutes.home);
+
+/// Online orders (inbox, detail, charging, import by link) and the online
+/// store settings with its QR poster.
+List<RouteBase> _orderRoutes() {
+  return <RouteBase>[
+    GoRoute(
+      path: AppRoutes.orders,
+      builder: (BuildContext context, GoRouterState state) {
+        return BlocProvider<OrdersInboxCubit>(
+          create: (_) => injector<OrdersInboxCubit>(),
+          child: OrdersInboxScreen(
+            onBack: () => _leave(context),
+            onOpenOrder: (Order order) =>
+                context.push(AppRoutes.orderDetailPath(order.id)),
+            onImport: () => context.push(AppRoutes.orderImport),
+          ),
+        );
+      },
+    ),
+    // Also the target of `cumavipos://pos/orders/import?d=…`, the link in
+    // the web's WhatsApp message (feature 13).
+    GoRoute(
+      path: AppRoutes.orderImport,
+      builder: (BuildContext context, GoRouterState state) {
+        return BlocProvider<ImportOrderCubit>(
+          create: (_) => injector<ImportOrderCubit>(),
+          child: ImportOrderScreen(
+            initialLink: state.uri.queryParameters['d'],
+            onClose: () => _leave(context),
+            onImported: (Order order) =>
+                context.pushReplacement(AppRoutes.orderDetailPath(order.id)),
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.orderDetail,
+      builder: (BuildContext context, GoRouterState state) {
+        return BlocProvider<OrderDetailCubit>(
+          create: (_) =>
+              injector<OrderDetailCubit>(param1: state.pathParameters['id']),
+          child: OrderDetailScreen(
+            onBack: () => _leave(context),
+            onCheckout: (OrderCheckout checkout) => context.push(
+              AppRoutes.orderCheckoutPath(checkout.order.id),
+              extra: checkout,
+            ),
+            onOpenSale: (String saleId) =>
+                context.push(AppRoutes.saleDetailPath(saleId)),
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.orderCheckout,
+      builder: (BuildContext context, GoRouterState state) {
+        final OrderCheckout checkout = state.extra! as OrderCheckout;
+        final PaymentMethod method = checkout.order.paymentMethod;
+        return BlocProvider<CheckoutCubit>(
+          create: (_) => CheckoutCubit(
+            registerSale: injector<CheckoutOrder>(param1: checkout.order.id),
+            cart: checkout.cart,
+            paymentMethod: method,
+          ),
+          child: CheckoutScreen(
+            saleNumberLabel: context
+                .read<CartCubit>()
+                .state
+                .formattedSaleNumber,
+            onBack: () => context.pop(),
+            onCompleted: (Sale sale) {
+              unawaited(context.read<DashboardCubit>().load());
+              unawaited(context.read<CartCubit>().loadSaleNumber());
+              context.pushReplacement(
+                AppRoutes.orderCompletedPath(checkout.order.id),
+                extra: sale,
+              );
+            },
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.orderCompleted,
+      builder: (BuildContext context, GoRouterState state) {
+        final Sale sale = state.extra! as Sale;
+        return _withReceiptActions(
+          SaleCompletedScreen(
+            sale: sale,
+            primaryLabel: context.l10n.orderCompletedBackToOrder,
+            onNewSale: () => context.pop(),
+            onGoHome: () => context.go(AppRoutes.home),
+            onOpenReceipt: () =>
+                context.push(AppRoutes.salesReceipt, extra: sale),
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.onlineStore,
+      builder: (BuildContext context, GoRouterState state) {
+        return BlocProvider<OnlineStoreCubit>(
+          create: (_) => injector<OnlineStoreCubit>(),
+          child: Builder(
+            builder: (BuildContext innerContext) => OnlineStoreScreen(
+              onBack: () => _leave(innerContext),
+              onOpenPoster: () {
+                final OnlineStoreCubit cubit = innerContext
+                    .read<OnlineStoreCubit>();
+                innerContext.push(
+                  AppRoutes.onlineStorePoster,
+                  extra: StorePoster(
+                    businessName:
+                        innerContext
+                            .read<SessionCubit>()
+                            .state
+                            .business
+                            ?.name ??
+                        innerContext.l10n.commonDefaultBusinessName,
+                    url: cubit.storeUrl ?? '',
+                    tagline: cubit.state.saved?.tagline ?? '',
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.onlineStorePoster,
+      builder: (BuildContext context, GoRouterState state) {
+        return StorePosterScreen(
+          poster: state.extra! as StorePoster,
+          service: injector<StorePosterService>(),
+          onBack: () => context.pop(),
+        );
+      },
+    ),
+  ];
 }
 
 /// Goods receipt, stock adjustment and the movements history.
@@ -316,7 +476,11 @@ StatefulShellRoute _mainShell() {
           GoRouterState state,
           StatefulNavigationShell navigationShell,
         ) {
-          return MainShellScreen(navigationShell: navigationShell);
+          return MainShellScreen(
+            navigationShell: navigationShell,
+            onOpenOrder: (String orderId) =>
+                context.push(AppRoutes.orderDetailPath(orderId)),
+          );
         },
     branches: <StatefulShellBranch>[
       StatefulShellBranch(
@@ -329,6 +493,7 @@ StatefulShellRoute _mainShell() {
                 onOpenInventory: () => context.go(AppRoutes.inventory),
                 onOpenMore: () => context.push(AppRoutes.more),
                 onOpenSalesHistory: () => context.push(AppRoutes.salesHistory),
+                onOpenOrders: () => context.push(AppRoutes.orders),
               );
             },
           ),
@@ -579,6 +744,8 @@ List<RouteBase> _accountRoutes() {
             onOpenSalesHistory: () => context.push(AppRoutes.salesHistory),
             onOpenStockMovements: () =>
                 context.push(AppRoutes.stockMovementsPath()),
+            onOpenOrders: () => context.push(AppRoutes.orders),
+            onOpenOnlineStore: () => context.push(AppRoutes.onlineStore),
             onSignedOut: () async {
               context.read<CartCubit>().clear();
               await context.read<SessionCubit>().refresh();

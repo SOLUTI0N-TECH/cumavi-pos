@@ -123,6 +123,7 @@ class ProductFormCubit extends Cubit<ProductFormState> {
       variants: product.variants,
       sku: product.sku ?? '',
       barcode: product.barcode ?? '',
+      showOnline: product.showOnline,
     );
   }
 
@@ -158,6 +159,9 @@ class ProductFormCubit extends Cubit<ProductFormState> {
   void skuChanged(String sku) => emit(state.copyWith(sku: sku));
 
   void barcodeChanged(String barcode) => emit(state.copyWith(barcode: barcode));
+
+  void showOnlineChanged(bool showOnline) =>
+      emit(state.copyWith(showOnline: showOnline));
 
   /// Proposes the next free SKU of the category (`CAL-004`) and gives each
   /// variant without one its own (`CAL-004-ROJ-38`). Returns the product's
@@ -590,6 +594,7 @@ class ProductFormCubit extends Cubit<ProductFormState> {
       variants: state.variants,
       sku: ProductCodeRules.normalizeOrNull(state.sku),
       barcode: ProductCodeRules.normalizeOrNull(state.barcode),
+      showOnline: state.showOnline,
     );
     final String? productId = state.productId;
     final Result<Product> result = productId == null

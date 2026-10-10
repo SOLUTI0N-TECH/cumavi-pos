@@ -148,16 +148,21 @@ final class _ReceiptLayout {
             pw.SizedBox(height: 5),
           ],
           _divider(),
-          if (sale.discount > 0) ...<pw.Widget>[
+          if (sale.discount > 0 || sale.deliveryFee > 0)
             _pair(
               l10n.receiptSubtotalLabel,
               MoneyFormatter.format(sale.subtotal),
             ),
+          if (sale.discount > 0)
             _pair(
               l10n.receiptDiscountLabel,
               '− ${MoneyFormatter.format(sale.discount)}',
             ),
-          ],
+          if (sale.deliveryFee > 0)
+            _pair(
+              l10n.receiptDeliveryLabel,
+              MoneyFormatter.format(sale.deliveryFee),
+            ),
           pw.Row(
             children: <pw.Widget>[
               pw.Expanded(

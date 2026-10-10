@@ -13,6 +13,8 @@ export interface WhatsAppTexts {
   total: (values: { total: string }) => string;
   note: (values: { note: string }) => string;
   paymentMethod: (method: Order['customer']['paymentMethod']) => string;
+  /** Line with the link that opens the order in the store's POS app. */
+  posLink?: (values: { url: string }) => string;
 }
 
 function lineText(line: OrderLine): string {
@@ -24,9 +26,15 @@ function lineText(line: OrderLine): string {
 
 /**
  * The order as a WhatsApp message for the store, in the same format as the
- * POS receipts (`*text*` renders bold).
+ * POS receipts (`*text*` renders bold). With [importUrl] it ends with the
+ * link that loads the order into the store's POS app.
  */
-export function buildWhatsAppMessage(order: Order, store: Store, texts: WhatsAppTexts): string {
+export function buildWhatsAppMessage(
+  order: Order,
+  store: Store,
+  texts: WhatsAppTexts,
+  importUrl?: string,
+): string {
   const { customer } = order;
   const lines = [
     `*${texts.title({ number: order.number, store: store.name })}*`,
@@ -44,6 +52,7 @@ export function buildWhatsAppMessage(order: Order, store: Store, texts: WhatsApp
     `*${texts.total({ total: formatMoney(order.total) })}*`,
   ];
   if (customer.note) lines.push(texts.note({ note: customer.note }));
+  if (importUrl && texts.posLink) lines.push('', texts.posLink({ url: importUrl }));
   return lines.join('\n');
 }
 

@@ -27,6 +27,8 @@ class MoreScreen extends StatelessWidget {
     required this.onOpenCategories,
     required this.onOpenSalesHistory,
     required this.onOpenStockMovements,
+    required this.onOpenOrders,
+    required this.onOpenOnlineStore,
     required this.onSignedOut,
     super.key,
   });
@@ -36,6 +38,8 @@ class MoreScreen extends StatelessWidget {
   final VoidCallback onOpenCategories;
   final VoidCallback onOpenSalesHistory;
   final VoidCallback onOpenStockMovements;
+  final VoidCallback onOpenOrders;
+  final VoidCallback onOpenOnlineStore;
 
   /// Called once the session is closed, to go back to the sign in.
   final VoidCallback onSignedOut;
@@ -105,8 +109,20 @@ class MoreScreen extends StatelessWidget {
               _SectionTitle(l10n.accountSectionBusiness),
               if (session.business case final BusinessProfile business)
                 _BusinessTile(business: business, onTap: onEditBusiness),
+              _MenuTile(
+                icon: Icons.storefront_outlined,
+                title: l10n.onlineStoreTitle,
+                subtitle: l10n.accountOnlineStoreHint,
+                onTap: onOpenOnlineStore,
+              ),
               const SizedBox(height: AppSpacing.xl),
               _SectionTitle(l10n.accountSectionOperation),
+              _MenuTile(
+                icon: Icons.shopping_bag_outlined,
+                title: l10n.ordersTitle,
+                subtitle: l10n.accountOrdersHint,
+                onTap: onOpenOrders,
+              ),
               _MenuTile(
                 icon: Icons.receipt_long_outlined,
                 title: l10n.salesHistoryTitle,

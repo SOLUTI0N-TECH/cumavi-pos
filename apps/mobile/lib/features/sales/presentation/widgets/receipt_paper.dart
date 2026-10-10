@@ -281,15 +281,24 @@ class _ReceiptTotals extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        if (sale.discount > 0) ...<Widget>[
+        if (sale.discount > 0 || sale.deliveryFee > 0) ...<Widget>[
           KeyValueRow(
             label: l10n.receiptSubtotalLabel,
             value: MoneyFormatter.format(sale.subtotal),
           ),
           const SizedBox(height: 6),
+        ],
+        if (sale.discount > 0) ...<Widget>[
           KeyValueRow(
             label: l10n.receiptDiscountLabel,
             value: '− ${MoneyFormatter.format(sale.discount)}',
+          ),
+          const SizedBox(height: 6),
+        ],
+        if (sale.deliveryFee > 0) ...<Widget>[
+          KeyValueRow(
+            label: l10n.receiptDeliveryLabel,
+            value: MoneyFormatter.format(sale.deliveryFee),
           ),
           const SizedBox(height: 6),
         ],

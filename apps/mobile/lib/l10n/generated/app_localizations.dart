@@ -3967,6 +3967,845 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'¡Gracias por tu visita!'**
   String get receiptRefundClosing;
+
+  /// No description provided for @accountOnlineStoreHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu link, el póster QR, horarios y cómo recibes pedidos'**
+  String get accountOnlineStoreHint;
+
+  /// No description provided for @accountOrdersHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Pedidos de tu catálogo en línea'**
+  String get accountOrdersHint;
+
+  /// No description provided for @catalogProductFormShowOnline.
+  ///
+  /// In es, this message translates to:
+  /// **'Mostrar en la tienda en línea'**
+  String get catalogProductFormShowOnline;
+
+  /// No description provided for @catalogProductFormShowOnlineCaption.
+  ///
+  /// In es, this message translates to:
+  /// **'Los clientes lo ven en tu catálogo y pueden pedirlo.'**
+  String get catalogProductFormShowOnlineCaption;
+
+  /// No description provided for @failureOrderNotFound.
+  ///
+  /// In es, this message translates to:
+  /// **'No encontramos ese pedido.'**
+  String get failureOrderNotFound;
+
+  /// No description provided for @failureInvalidOrderTransition.
+  ///
+  /// In es, this message translates to:
+  /// **'El pedido ya no está en un estado que permita esto. Actualiza la pantalla.'**
+  String get failureInvalidOrderTransition;
+
+  /// No description provided for @failureOrderNotEditable.
+  ///
+  /// In es, this message translates to:
+  /// **'Solo puedes editar pedidos nuevos o confirmados.'**
+  String get failureOrderNotEditable;
+
+  /// No description provided for @failureOrderEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'El pedido debe tener al menos un producto.'**
+  String get failureOrderEmpty;
+
+  /// No description provided for @failureInvalidDeliveryFee.
+  ///
+  /// In es, this message translates to:
+  /// **'El costo de envío no puede ser negativo.'**
+  String get failureInvalidDeliveryFee;
+
+  /// No description provided for @failureInvalidOrderLink.
+  ///
+  /// In es, this message translates to:
+  /// **'No encontramos un pedido en ese texto. Pega el mensaje o el link completo.'**
+  String get failureInvalidOrderLink;
+
+  /// No description provided for @failureOrderFromAnotherStore.
+  ///
+  /// In es, this message translates to:
+  /// **'Ese pedido es de otra tienda.'**
+  String get failureOrderFromAnotherStore;
+
+  /// No description provided for @failureStoreDisabled.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu tienda en línea está desactivada. Actívala en Más → Tienda en línea.'**
+  String get failureStoreDisabled;
+
+  /// No description provided for @failureInvalidOpeningHours.
+  ///
+  /// In es, this message translates to:
+  /// **'Revisa el horario: cada tramo debe cerrar después de abrir y no pueden superponerse.'**
+  String get failureInvalidOpeningHours;
+
+  /// No description provided for @failureOnlineFulfillmentRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Activa al menos el recojo en tienda o el envío.'**
+  String get failureOnlineFulfillmentRequired;
+
+  /// No description provided for @failureOnlinePaymentMethodRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige al menos un método de pago para los pedidos en línea.'**
+  String get failureOnlinePaymentMethodRequired;
+
+  /// No description provided for @failurePhoneAppUnavailable.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos abrir la app de llamadas.'**
+  String get failurePhoneAppUnavailable;
+
+  /// No description provided for @failureLinkUnavailable.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos abrir el link.'**
+  String get failureLinkUnavailable;
+
+  /// No description provided for @onlineStoreTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Tienda en línea'**
+  String get onlineStoreTitle;
+
+  /// No description provided for @onlineStoreSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu catálogo para recibir pedidos'**
+  String get onlineStoreSubtitle;
+
+  /// No description provided for @onlineStoreEnabled.
+  ///
+  /// In es, this message translates to:
+  /// **'Tienda activa'**
+  String get onlineStoreEnabled;
+
+  /// No description provided for @onlineStoreEnabledOn.
+  ///
+  /// In es, this message translates to:
+  /// **'Tus clientes ven tu catálogo y pueden pedir.'**
+  String get onlineStoreEnabledOn;
+
+  /// No description provided for @onlineStoreEnabledOff.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu link muestra que la tienda no recibe pedidos.'**
+  String get onlineStoreEnabledOff;
+
+  /// No description provided for @onlineStoreOpenNow.
+  ///
+  /// In es, this message translates to:
+  /// **'Abierta ahora'**
+  String get onlineStoreOpenNow;
+
+  /// No description provided for @onlineStoreClosedNow.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrada ahora'**
+  String get onlineStoreClosedNow;
+
+  /// No description provided for @onlineStoreCopyLink.
+  ///
+  /// In es, this message translates to:
+  /// **'Copiar'**
+  String get onlineStoreCopyLink;
+
+  /// No description provided for @onlineStoreShareLink.
+  ///
+  /// In es, this message translates to:
+  /// **'Compartir'**
+  String get onlineStoreShareLink;
+
+  /// No description provided for @onlineStoreOpenLink.
+  ///
+  /// In es, this message translates to:
+  /// **'Abrir'**
+  String get onlineStoreOpenLink;
+
+  /// No description provided for @onlineStoreLinkCopied.
+  ///
+  /// In es, this message translates to:
+  /// **'Link copiado'**
+  String get onlineStoreLinkCopied;
+
+  /// No description provided for @onlineStoreShareMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Haz tu pedido en {business}: {url}'**
+  String onlineStoreShareMessage(String business, String url);
+
+  /// No description provided for @onlineStorePosterAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Póster QR'**
+  String get onlineStorePosterAction;
+
+  /// No description provided for @onlineStorePosterScreenSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Imprímelo y pégalo en tu mostrador o puerta'**
+  String get onlineStorePosterScreenSubtitle;
+
+  /// No description provided for @onlineStorePosterTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Escanea y pide'**
+  String get onlineStorePosterTitle;
+
+  /// No description provided for @onlineStorePosterSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Mira nuestros productos y haz tu pedido desde el celular.'**
+  String get onlineStorePosterSubtitle;
+
+  /// No description provided for @onlineStorePosterFileName.
+  ///
+  /// In es, this message translates to:
+  /// **'poster-tienda'**
+  String get onlineStorePosterFileName;
+
+  /// No description provided for @onlineStorePublicTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos públicos'**
+  String get onlineStorePublicTitle;
+
+  /// No description provided for @onlineStoreTaglineLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Frase de tu tienda'**
+  String get onlineStoreTaglineLabel;
+
+  /// No description provided for @onlineStoreTaglineHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej.: Ropa, calzado y accesorios'**
+  String get onlineStoreTaglineHint;
+
+  /// No description provided for @onlineStoreWhatsAppLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'WhatsApp para pedidos'**
+  String get onlineStoreWhatsAppLabel;
+
+  /// No description provided for @onlineStoreFulfillmentTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Entrega'**
+  String get onlineStoreFulfillmentTitle;
+
+  /// No description provided for @onlineStorePickupCaption.
+  ///
+  /// In es, this message translates to:
+  /// **'El cliente recoge en tu tienda.'**
+  String get onlineStorePickupCaption;
+
+  /// No description provided for @onlineStoreDeliveryCaption.
+  ///
+  /// In es, this message translates to:
+  /// **'Lo llevas a su dirección; el costo lo pones al confirmar.'**
+  String get onlineStoreDeliveryCaption;
+
+  /// No description provided for @onlineStoreDeliveryNoteLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Nota de envío'**
+  String get onlineStoreDeliveryNoteLabel;
+
+  /// No description provided for @onlineStoreDeliveryNoteHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej.: Envíos en el día dentro de la ciudad'**
+  String get onlineStoreDeliveryNoteHint;
+
+  /// No description provided for @onlineStoreHoursTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Horario'**
+  String get onlineStoreHoursTitle;
+
+  /// No description provided for @onlineStoreHoursSheetSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Puedes poner varios tramos, como mañana y tarde.'**
+  String get onlineStoreHoursSheetSubtitle;
+
+  /// No description provided for @onlineStoreClosedDay.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrado'**
+  String get onlineStoreClosedDay;
+
+  /// No description provided for @onlineStoreAddRange.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar horario'**
+  String get onlineStoreAddRange;
+
+  /// No description provided for @onlineStoreRemoveRange.
+  ///
+  /// In es, this message translates to:
+  /// **'Quitar horario'**
+  String get onlineStoreRemoveRange;
+
+  /// No description provided for @onlineStoreOutsideHours.
+  ///
+  /// In es, this message translates to:
+  /// **'Recibir pedidos fuera de horario'**
+  String get onlineStoreOutsideHours;
+
+  /// No description provided for @onlineStoreOutsideHoursCaption.
+  ///
+  /// In es, this message translates to:
+  /// **'La web avisa al cliente cuándo abres.'**
+  String get onlineStoreOutsideHoursCaption;
+
+  /// No description provided for @onlineStoreCatalogTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Catálogo'**
+  String get onlineStoreCatalogTitle;
+
+  /// No description provided for @onlineStoreProductsOnline.
+  ///
+  /// In es, this message translates to:
+  /// **'{online} de {total} productos se muestran en línea'**
+  String onlineStoreProductsOnline(int online, int total);
+
+  /// No description provided for @onlineStoreProductsOnlineCaption.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige cuáles al crear o editar cada producto.'**
+  String get onlineStoreProductsOnlineCaption;
+
+  /// No description provided for @onlineStoreShowOutOfStock.
+  ///
+  /// In es, this message translates to:
+  /// **'Mostrar productos agotados'**
+  String get onlineStoreShowOutOfStock;
+
+  /// No description provided for @onlineStoreShowOutOfStockCaption.
+  ///
+  /// In es, this message translates to:
+  /// **'Se ven como agotados y no se pueden pedir.'**
+  String get onlineStoreShowOutOfStockCaption;
+
+  /// No description provided for @onlineStorePaymentsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Pagos en línea'**
+  String get onlineStorePaymentsTitle;
+
+  /// No description provided for @onlineStoreSaved.
+  ///
+  /// In es, this message translates to:
+  /// **'Tienda en línea guardada'**
+  String get onlineStoreSaved;
+
+  /// No description provided for @ordersTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Pedidos en línea'**
+  String get ordersTitle;
+
+  /// No description provided for @ordersSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Los pedidos de tu catálogo web'**
+  String get ordersSubtitle;
+
+  /// No description provided for @ordersImportTooltip.
+  ///
+  /// In es, this message translates to:
+  /// **'Importar pedido de WhatsApp'**
+  String get ordersImportTooltip;
+
+  /// No description provided for @ordersFilterNew.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevos'**
+  String get ordersFilterNew;
+
+  /// No description provided for @ordersFilterInProgress.
+  ///
+  /// In es, this message translates to:
+  /// **'En curso'**
+  String get ordersFilterInProgress;
+
+  /// No description provided for @ordersFilterDelivered.
+  ///
+  /// In es, this message translates to:
+  /// **'Entregados'**
+  String get ordersFilterDelivered;
+
+  /// No description provided for @ordersFilterCancelled.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelados'**
+  String get ordersFilterCancelled;
+
+  /// No description provided for @ordersDemoTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Modo demo'**
+  String get ordersDemoTitle;
+
+  /// No description provided for @ordersDemoMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Los pedidos de la web llegarán aquí al conectar el servidor.'**
+  String get ordersDemoMessage;
+
+  /// No description provided for @ordersDemoSimulate.
+  ///
+  /// In es, this message translates to:
+  /// **'Simular pedido'**
+  String get ordersDemoSimulate;
+
+  /// No description provided for @ordersEmptyNewTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay pedidos nuevos'**
+  String get ordersEmptyNewTitle;
+
+  /// No description provided for @ordersEmptyNewMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuando un cliente pida desde tu catálogo, aparecerá aquí.'**
+  String get ordersEmptyNewMessage;
+
+  /// No description provided for @ordersEmptyTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay pedidos aquí'**
+  String get ordersEmptyTitle;
+
+  /// No description provided for @ordersEmptyMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Prueba con otra pestaña.'**
+  String get ordersEmptyMessage;
+
+  /// No description provided for @ordersCardNew.
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =1{1 nuevo} other{{count} nuevos}}'**
+  String ordersCardNew(int count);
+
+  /// No description provided for @ordersCardInProgress.
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =1{1 en curso} other{{count} en curso}}'**
+  String ordersCardInProgress(int count);
+
+  /// No description provided for @ordersCardEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin pedidos pendientes'**
+  String get ordersCardEmpty;
+
+  /// No description provided for @orderStatusNew.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo'**
+  String get orderStatusNew;
+
+  /// No description provided for @orderStatusConfirmed.
+  ///
+  /// In es, this message translates to:
+  /// **'Confirmado'**
+  String get orderStatusConfirmed;
+
+  /// No description provided for @orderStatusReady.
+  ///
+  /// In es, this message translates to:
+  /// **'Listo'**
+  String get orderStatusReady;
+
+  /// No description provided for @orderStatusDelivered.
+  ///
+  /// In es, this message translates to:
+  /// **'Entregado'**
+  String get orderStatusDelivered;
+
+  /// No description provided for @orderStatusCancelled.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelado'**
+  String get orderStatusCancelled;
+
+  /// No description provided for @orderFulfillmentPickup.
+  ///
+  /// In es, this message translates to:
+  /// **'Recojo en tienda'**
+  String get orderFulfillmentPickup;
+
+  /// No description provided for @orderFulfillmentDelivery.
+  ///
+  /// In es, this message translates to:
+  /// **'Envío a domicilio'**
+  String get orderFulfillmentDelivery;
+
+  /// No description provided for @orderPlacedMinutesAgo.
+  ///
+  /// In es, this message translates to:
+  /// **'{minutes, plural, =0{Ahora} =1{Hace 1 min} other{Hace {minutes} min}}'**
+  String orderPlacedMinutesAgo(int minutes);
+
+  /// No description provided for @orderPlacedToday.
+  ///
+  /// In es, this message translates to:
+  /// **'Hoy · {time}'**
+  String orderPlacedToday(String time);
+
+  /// No description provided for @orderPlacedYesterday.
+  ///
+  /// In es, this message translates to:
+  /// **'Ayer · {time}'**
+  String orderPlacedYesterday(String time);
+
+  /// No description provided for @orderDetailTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Pedido {number}'**
+  String orderDetailTitle(String number);
+
+  /// No description provided for @orderDetailTitleLoading.
+  ///
+  /// In es, this message translates to:
+  /// **'Pedido'**
+  String get orderDetailTitleLoading;
+
+  /// No description provided for @orderDetailLoadError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos abrir este pedido'**
+  String get orderDetailLoadError;
+
+  /// No description provided for @orderImportedNote.
+  ///
+  /// In es, this message translates to:
+  /// **'Llegó por el link de WhatsApp.'**
+  String get orderImportedNote;
+
+  /// No description provided for @orderCancelReason.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelado: {reason}'**
+  String orderCancelReason(String reason);
+
+  /// No description provided for @orderCustomerTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Cliente'**
+  String get orderCustomerTitle;
+
+  /// No description provided for @orderCall.
+  ///
+  /// In es, this message translates to:
+  /// **'Llamar'**
+  String get orderCall;
+
+  /// No description provided for @orderWhatsApp.
+  ///
+  /// In es, this message translates to:
+  /// **'WhatsApp'**
+  String get orderWhatsApp;
+
+  /// No description provided for @orderDeliveryFeePending.
+  ///
+  /// In es, this message translates to:
+  /// **'Por definir'**
+  String get orderDeliveryFeePending;
+
+  /// No description provided for @orderPaymentMethod.
+  ///
+  /// In es, this message translates to:
+  /// **'Pagará con'**
+  String get orderPaymentMethod;
+
+  /// No description provided for @orderHistoryTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Historial'**
+  String get orderHistoryTitle;
+
+  /// No description provided for @orderHistoryPlaced.
+  ///
+  /// In es, this message translates to:
+  /// **'Pedido recibido'**
+  String get orderHistoryPlaced;
+
+  /// No description provided for @orderHistoryEdited.
+  ///
+  /// In es, this message translates to:
+  /// **'Pedido editado'**
+  String get orderHistoryEdited;
+
+  /// No description provided for @orderActionConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'Confirmar pedido'**
+  String get orderActionConfirm;
+
+  /// No description provided for @orderActionReady.
+  ///
+  /// In es, this message translates to:
+  /// **'Marcar como listo'**
+  String get orderActionReady;
+
+  /// No description provided for @orderActionCheckout.
+  ///
+  /// In es, this message translates to:
+  /// **'Cobrar pedido'**
+  String get orderActionCheckout;
+
+  /// No description provided for @orderActionViewSale.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver venta'**
+  String get orderActionViewSale;
+
+  /// No description provided for @orderActionEdit.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar'**
+  String get orderActionEdit;
+
+  /// No description provided for @orderActionCancel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar pedido'**
+  String get orderActionCancel;
+
+  /// No description provided for @orderNotifyAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Avisar'**
+  String get orderNotifyAction;
+
+  /// No description provided for @orderConfirmedToast.
+  ///
+  /// In es, this message translates to:
+  /// **'Pedido confirmado'**
+  String get orderConfirmedToast;
+
+  /// No description provided for @orderReadyToast.
+  ///
+  /// In es, this message translates to:
+  /// **'Pedido listo'**
+  String get orderReadyToast;
+
+  /// No description provided for @orderCancelledToast.
+  ///
+  /// In es, this message translates to:
+  /// **'Pedido cancelado'**
+  String get orderCancelledToast;
+
+  /// No description provided for @orderEditedToast.
+  ///
+  /// In es, this message translates to:
+  /// **'Pedido actualizado'**
+  String get orderEditedToast;
+
+  /// No description provided for @orderDeliveryFeeTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Costo de envío'**
+  String get orderDeliveryFeeTitle;
+
+  /// No description provided for @orderDeliveryFeeSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Se suma al total del pedido. Déjalo vacío si el envío es gratis.'**
+  String get orderDeliveryFeeSubtitle;
+
+  /// No description provided for @orderCancelTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cancelar el pedido {number}?'**
+  String orderCancelTitle(String number);
+
+  /// No description provided for @orderCancelMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'El cliente verá que fue cancelado. Elige o escribe el motivo.'**
+  String get orderCancelMessage;
+
+  /// No description provided for @orderCancelReasonNoStock.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin stock'**
+  String get orderCancelReasonNoStock;
+
+  /// No description provided for @orderCancelReasonNoAnswer.
+  ///
+  /// In es, this message translates to:
+  /// **'El cliente no respondió'**
+  String get orderCancelReasonNoAnswer;
+
+  /// No description provided for @orderCancelReasonCustomer.
+  ///
+  /// In es, this message translates to:
+  /// **'El cliente canceló'**
+  String get orderCancelReasonCustomer;
+
+  /// No description provided for @orderEditTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar pedido {number}'**
+  String orderEditTitle(String number);
+
+  /// No description provided for @orderEditSave.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar · {total}'**
+  String orderEditSave(String total);
+
+  /// No description provided for @orderCompletedBackToOrder.
+  ///
+  /// In es, this message translates to:
+  /// **'Volver al pedido'**
+  String get orderCompletedBackToOrder;
+
+  /// No description provided for @orderArrivedToast.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo pedido {number} · {total}'**
+  String orderArrivedToast(String number, String total);
+
+  /// No description provided for @orderArrivedView.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver'**
+  String get orderArrivedView;
+
+  /// No description provided for @orderImportTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Importar pedido'**
+  String get orderImportTitle;
+
+  /// No description provided for @orderImportSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'De un mensaje de WhatsApp de tu catálogo'**
+  String get orderImportSubtitle;
+
+  /// No description provided for @orderImportFieldLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Mensaje o link del pedido'**
+  String get orderImportFieldLabel;
+
+  /// No description provided for @orderImportFieldHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Pega aquí el mensaje que te llegó por WhatsApp'**
+  String get orderImportFieldHint;
+
+  /// No description provided for @orderImportPaste.
+  ///
+  /// In es, this message translates to:
+  /// **'Pegar'**
+  String get orderImportPaste;
+
+  /// No description provided for @orderImportAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Importar pedido'**
+  String get orderImportAction;
+
+  /// No description provided for @orderImportHowTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cómo funciona?'**
+  String get orderImportHowTitle;
+
+  /// No description provided for @orderImportHowMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Cada pedido de tu catálogo web llega por WhatsApp con un link. Tócalo en este celular para abrirlo aquí, o copia el mensaje y pégalo arriba.'**
+  String get orderImportHowMessage;
+
+  /// No description provided for @orderImportedToast.
+  ///
+  /// In es, this message translates to:
+  /// **'Pedido {number} en tu bandeja'**
+  String orderImportedToast(String number);
+
+  /// No description provided for @orderMessageNew.
+  ///
+  /// In es, this message translates to:
+  /// **'Hola {name}, te escribimos de {store} por tu pedido {number}.'**
+  String orderMessageNew(String name, String number, String store);
+
+  /// No description provided for @orderMessageConfirmed.
+  ///
+  /// In es, this message translates to:
+  /// **'Hola {name}, confirmamos tu pedido {number}. Total: {total}. ¡Ya lo estamos preparando!'**
+  String orderMessageConfirmed(String name, String number, String total);
+
+  /// No description provided for @orderMessageConfirmedDelivery.
+  ///
+  /// In es, this message translates to:
+  /// **'Hola {name}, confirmamos tu pedido {number}. Envío: {fee}. Total: {total}. ¡Ya lo estamos preparando!'**
+  String orderMessageConfirmedDelivery(
+    String name,
+    String number,
+    String fee,
+    String total,
+  );
+
+  /// No description provided for @orderMessageReadyPickup.
+  ///
+  /// In es, this message translates to:
+  /// **'Hola {name}, tu pedido {number} está listo. Puedes recogerlo en {store}.'**
+  String orderMessageReadyPickup(String name, String number, String store);
+
+  /// No description provided for @orderMessageReadyDelivery.
+  ///
+  /// In es, this message translates to:
+  /// **'Hola {name}, tu pedido {number} está listo y va en camino.'**
+  String orderMessageReadyDelivery(String name, String number);
+
+  /// No description provided for @orderMessageDelivered.
+  ///
+  /// In es, this message translates to:
+  /// **'Hola {name}, ¡gracias por tu compra! Tu pedido {number} fue entregado.'**
+  String orderMessageDelivered(String name, String number);
+
+  /// No description provided for @orderMessageCancelled.
+  ///
+  /// In es, this message translates to:
+  /// **'Hola {name}, lamentamos avisarte que tu pedido {number} fue cancelado: {reason}.'**
+  String orderMessageCancelled(String name, String number, String reason);
+
+  /// No description provided for @receiptDeliveryLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Envío'**
+  String get receiptDeliveryLabel;
+
+  /// No description provided for @saleDetailChannel.
+  ///
+  /// In es, this message translates to:
+  /// **'Origen'**
+  String get saleDetailChannel;
+
+  /// No description provided for @saleDetailOnlineOrder.
+  ///
+  /// In es, this message translates to:
+  /// **'Pedido en línea {number}'**
+  String saleDetailOnlineOrder(String number);
 }
 
 class _AppLocalizationsDelegate

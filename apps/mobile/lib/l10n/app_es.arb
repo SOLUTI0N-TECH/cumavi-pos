@@ -1799,5 +1799,346 @@
     }
   },
   "receiptRefundTotalLabel": "TOTAL DEVUELTO",
-  "receiptRefundClosing": "¡Gracias por tu visita!"
+  "receiptRefundClosing": "¡Gracias por tu visita!",
+  "accountOnlineStoreHint": "Tu link, el póster QR, horarios y cómo recibes pedidos",
+  "accountOrdersHint": "Pedidos de tu catálogo en línea",
+  "catalogProductFormShowOnline": "Mostrar en la tienda en línea",
+  "catalogProductFormShowOnlineCaption": "Los clientes lo ven en tu catálogo y pueden pedirlo.",
+  "failureOrderNotFound": "No encontramos ese pedido.",
+  "failureInvalidOrderTransition": "El pedido ya no está en un estado que permita esto. Actualiza la pantalla.",
+  "failureOrderNotEditable": "Solo puedes editar pedidos nuevos o confirmados.",
+  "failureOrderEmpty": "El pedido debe tener al menos un producto.",
+  "failureInvalidDeliveryFee": "El costo de envío no puede ser negativo.",
+  "failureInvalidOrderLink": "No encontramos un pedido en ese texto. Pega el mensaje o el link completo.",
+  "failureOrderFromAnotherStore": "Ese pedido es de otra tienda.",
+  "failureStoreDisabled": "Tu tienda en línea está desactivada. Actívala en Más → Tienda en línea.",
+  "failureInvalidOpeningHours": "Revisa el horario: cada tramo debe cerrar después de abrir y no pueden superponerse.",
+  "failureOnlineFulfillmentRequired": "Activa al menos el recojo en tienda o el envío.",
+  "failureOnlinePaymentMethodRequired": "Elige al menos un método de pago para los pedidos en línea.",
+  "failurePhoneAppUnavailable": "No pudimos abrir la app de llamadas.",
+  "failureLinkUnavailable": "No pudimos abrir el link.",
+  "onlineStoreTitle": "Tienda en línea",
+  "onlineStoreSubtitle": "Tu catálogo para recibir pedidos",
+  "onlineStoreEnabled": "Tienda activa",
+  "onlineStoreEnabledOn": "Tus clientes ven tu catálogo y pueden pedir.",
+  "onlineStoreEnabledOff": "Tu link muestra que la tienda no recibe pedidos.",
+  "onlineStoreOpenNow": "Abierta ahora",
+  "onlineStoreClosedNow": "Cerrada ahora",
+  "onlineStoreCopyLink": "Copiar",
+  "onlineStoreShareLink": "Compartir",
+  "onlineStoreOpenLink": "Abrir",
+  "onlineStoreLinkCopied": "Link copiado",
+  "onlineStoreShareMessage": "Haz tu pedido en {business}: {url}",
+  "@onlineStoreShareMessage": {
+    "placeholders": {
+      "business": {
+        "type": "String"
+      },
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "onlineStorePosterAction": "Póster QR",
+  "onlineStorePosterScreenSubtitle": "Imprímelo y pégalo en tu mostrador o puerta",
+  "onlineStorePosterTitle": "Escanea y pide",
+  "onlineStorePosterSubtitle": "Mira nuestros productos y haz tu pedido desde el celular.",
+  "onlineStorePosterFileName": "poster-tienda",
+  "onlineStorePublicTitle": "Datos públicos",
+  "onlineStoreTaglineLabel": "Frase de tu tienda",
+  "onlineStoreTaglineHint": "Ej.: Ropa, calzado y accesorios",
+  "onlineStoreWhatsAppLabel": "WhatsApp para pedidos",
+  "onlineStoreFulfillmentTitle": "Entrega",
+  "onlineStorePickupCaption": "El cliente recoge en tu tienda.",
+  "onlineStoreDeliveryCaption": "Lo llevas a su dirección; el costo lo pones al confirmar.",
+  "onlineStoreDeliveryNoteLabel": "Nota de envío",
+  "onlineStoreDeliveryNoteHint": "Ej.: Envíos en el día dentro de la ciudad",
+  "onlineStoreHoursTitle": "Horario",
+  "onlineStoreHoursSheetSubtitle": "Puedes poner varios tramos, como mañana y tarde.",
+  "onlineStoreClosedDay": "Cerrado",
+  "onlineStoreAddRange": "Agregar horario",
+  "onlineStoreRemoveRange": "Quitar horario",
+  "onlineStoreOutsideHours": "Recibir pedidos fuera de horario",
+  "onlineStoreOutsideHoursCaption": "La web avisa al cliente cuándo abres.",
+  "onlineStoreCatalogTitle": "Catálogo",
+  "onlineStoreProductsOnline": "{online} de {total} productos se muestran en línea",
+  "@onlineStoreProductsOnline": {
+    "placeholders": {
+      "online": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "onlineStoreProductsOnlineCaption": "Elige cuáles al crear o editar cada producto.",
+  "onlineStoreShowOutOfStock": "Mostrar productos agotados",
+  "onlineStoreShowOutOfStockCaption": "Se ven como agotados y no se pueden pedir.",
+  "onlineStorePaymentsTitle": "Pagos en línea",
+  "onlineStoreSaved": "Tienda en línea guardada",
+  "ordersTitle": "Pedidos en línea",
+  "ordersSubtitle": "Los pedidos de tu catálogo web",
+  "ordersImportTooltip": "Importar pedido de WhatsApp",
+  "ordersFilterNew": "Nuevos",
+  "ordersFilterInProgress": "En curso",
+  "ordersFilterDelivered": "Entregados",
+  "ordersFilterCancelled": "Cancelados",
+  "ordersDemoTitle": "Modo demo",
+  "ordersDemoMessage": "Los pedidos de la web llegarán aquí al conectar el servidor.",
+  "ordersDemoSimulate": "Simular pedido",
+  "ordersEmptyNewTitle": "No hay pedidos nuevos",
+  "ordersEmptyNewMessage": "Cuando un cliente pida desde tu catálogo, aparecerá aquí.",
+  "ordersEmptyTitle": "No hay pedidos aquí",
+  "ordersEmptyMessage": "Prueba con otra pestaña.",
+  "ordersCardNew": "{count, plural, =1{1 nuevo} other{{count} nuevos}}",
+  "@ordersCardNew": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ordersCardInProgress": "{count, plural, =1{1 en curso} other{{count} en curso}}",
+  "@ordersCardInProgress": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ordersCardEmpty": "Sin pedidos pendientes",
+  "orderStatusNew": "Nuevo",
+  "orderStatusConfirmed": "Confirmado",
+  "orderStatusReady": "Listo",
+  "orderStatusDelivered": "Entregado",
+  "orderStatusCancelled": "Cancelado",
+  "orderFulfillmentPickup": "Recojo en tienda",
+  "orderFulfillmentDelivery": "Envío a domicilio",
+  "orderPlacedMinutesAgo": "{minutes, plural, =0{Ahora} =1{Hace 1 min} other{Hace {minutes} min}}",
+  "@orderPlacedMinutesAgo": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "orderPlacedToday": "Hoy · {time}",
+  "@orderPlacedToday": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "orderPlacedYesterday": "Ayer · {time}",
+  "@orderPlacedYesterday": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "orderDetailTitle": "Pedido {number}",
+  "@orderDetailTitle": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "orderDetailTitleLoading": "Pedido",
+  "orderDetailLoadError": "No pudimos abrir este pedido",
+  "orderImportedNote": "Llegó por el link de WhatsApp.",
+  "orderCancelReason": "Cancelado: {reason}",
+  "@orderCancelReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "orderCustomerTitle": "Cliente",
+  "orderCall": "Llamar",
+  "orderWhatsApp": "WhatsApp",
+  "orderDeliveryFeePending": "Por definir",
+  "orderPaymentMethod": "Pagará con",
+  "orderHistoryTitle": "Historial",
+  "orderHistoryPlaced": "Pedido recibido",
+  "orderHistoryEdited": "Pedido editado",
+  "orderActionConfirm": "Confirmar pedido",
+  "orderActionReady": "Marcar como listo",
+  "orderActionCheckout": "Cobrar pedido",
+  "orderActionViewSale": "Ver venta",
+  "orderActionEdit": "Editar",
+  "orderActionCancel": "Cancelar pedido",
+  "orderNotifyAction": "Avisar",
+  "orderConfirmedToast": "Pedido confirmado",
+  "orderReadyToast": "Pedido listo",
+  "orderCancelledToast": "Pedido cancelado",
+  "orderEditedToast": "Pedido actualizado",
+  "orderDeliveryFeeTitle": "Costo de envío",
+  "orderDeliveryFeeSubtitle": "Se suma al total del pedido. Déjalo vacío si el envío es gratis.",
+  "orderCancelTitle": "¿Cancelar el pedido {number}?",
+  "@orderCancelTitle": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "orderCancelMessage": "El cliente verá que fue cancelado. Elige o escribe el motivo.",
+  "orderCancelReasonNoStock": "Sin stock",
+  "orderCancelReasonNoAnswer": "El cliente no respondió",
+  "orderCancelReasonCustomer": "El cliente canceló",
+  "orderEditTitle": "Editar pedido {number}",
+  "@orderEditTitle": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "orderEditSave": "Guardar · {total}",
+  "@orderEditSave": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "orderCompletedBackToOrder": "Volver al pedido",
+  "orderArrivedToast": "Nuevo pedido {number} · {total}",
+  "@orderArrivedToast": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "orderArrivedView": "Ver",
+  "orderImportTitle": "Importar pedido",
+  "orderImportSubtitle": "De un mensaje de WhatsApp de tu catálogo",
+  "orderImportFieldLabel": "Mensaje o link del pedido",
+  "orderImportFieldHint": "Pega aquí el mensaje que te llegó por WhatsApp",
+  "orderImportPaste": "Pegar",
+  "orderImportAction": "Importar pedido",
+  "orderImportHowTitle": "¿Cómo funciona?",
+  "orderImportHowMessage": "Cada pedido de tu catálogo web llega por WhatsApp con un link. Tócalo en este celular para abrirlo aquí, o copia el mensaje y pégalo arriba.",
+  "orderImportedToast": "Pedido {number} en tu bandeja",
+  "@orderImportedToast": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "orderMessageNew": "Hola {name}, te escribimos de {store} por tu pedido {number}.",
+  "@orderMessageNew": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "number": {
+        "type": "String"
+      },
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "orderMessageConfirmed": "Hola {name}, confirmamos tu pedido {number}. Total: {total}. ¡Ya lo estamos preparando!",
+  "@orderMessageConfirmed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "number": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "orderMessageConfirmedDelivery": "Hola {name}, confirmamos tu pedido {number}. Envío: {fee}. Total: {total}. ¡Ya lo estamos preparando!",
+  "@orderMessageConfirmedDelivery": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "number": {
+        "type": "String"
+      },
+      "fee": {
+        "type": "String"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "orderMessageReadyPickup": "Hola {name}, tu pedido {number} está listo. Puedes recogerlo en {store}.",
+  "@orderMessageReadyPickup": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "number": {
+        "type": "String"
+      },
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "orderMessageReadyDelivery": "Hola {name}, tu pedido {number} está listo y va en camino.",
+  "@orderMessageReadyDelivery": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "orderMessageDelivered": "Hola {name}, ¡gracias por tu compra! Tu pedido {number} fue entregado.",
+  "@orderMessageDelivered": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "orderMessageCancelled": "Hola {name}, lamentamos avisarte que tu pedido {number} fue cancelado: {reason}.",
+  "@orderMessageCancelled": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "number": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptDeliveryLabel": "Envío",
+  "saleDetailChannel": "Origen",
+  "saleDetailOnlineOrder": "Pedido en línea {number}",
+  "@saleDetailOnlineOrder": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  }
 }

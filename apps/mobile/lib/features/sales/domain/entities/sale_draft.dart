@@ -9,6 +9,8 @@ final class SaleDraft extends Equatable {
     required this.cart,
     required this.paymentMethod,
     required this.amountReceived,
+    this.orderId,
+    this.orderNumber,
   });
 
   final Cart cart;
@@ -17,6 +19,26 @@ final class SaleDraft extends Equatable {
   /// For non-cash methods the checkout passes the exact total.
   final double amountReceived;
 
+  /// Set when the sale charges an online order.
+  final String? orderId;
+  final int? orderNumber;
+
+  /// Same draft, charging online order [orderId].
+  SaleDraft forOrder({required String orderId, required int orderNumber}) =>
+      SaleDraft(
+        cart: cart,
+        paymentMethod: paymentMethod,
+        amountReceived: amountReceived,
+        orderId: orderId,
+        orderNumber: orderNumber,
+      );
+
   @override
-  List<Object?> get props => <Object?>[cart, paymentMethod, amountReceived];
+  List<Object?> get props => <Object?>[
+    cart,
+    paymentMethod,
+    amountReceived,
+    orderId,
+    orderNumber,
+  ];
 }
