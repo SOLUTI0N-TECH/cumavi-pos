@@ -2421,4 +2421,516 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get receiptRefundClosing => '¡Gracias por tu visita!';
+
+  @override
+  String get accountOnlineStoreHint =>
+      'Tu link, el póster QR, horarios y cómo recibes pedidos';
+
+  @override
+  String get accountOrdersHint => 'Pedidos de tu catálogo en línea';
+
+  @override
+  String get catalogProductFormShowOnline => 'Mostrar en la tienda en línea';
+
+  @override
+  String get catalogProductFormShowOnlineCaption =>
+      'Los clientes lo ven en tu catálogo y pueden pedirlo.';
+
+  @override
+  String get failureOrderNotFound => 'No encontramos ese pedido.';
+
+  @override
+  String get failureInvalidOrderTransition =>
+      'El pedido ya no está en un estado que permita esto. Actualiza la pantalla.';
+
+  @override
+  String get failureOrderNotEditable =>
+      'Solo puedes editar pedidos nuevos o confirmados.';
+
+  @override
+  String get failureOrderEmpty => 'El pedido debe tener al menos un producto.';
+
+  @override
+  String get failureInvalidDeliveryFee =>
+      'El costo de envío no puede ser negativo.';
+
+  @override
+  String get failureInvalidOrderLink =>
+      'No encontramos un pedido en ese texto. Pega el mensaje o el link completo.';
+
+  @override
+  String get failureOrderFromAnotherStore => 'Ese pedido es de otra tienda.';
+
+  @override
+  String get failureStoreDisabled =>
+      'Tu tienda en línea está desactivada. Actívala en Más → Tienda en línea.';
+
+  @override
+  String get failureInvalidOpeningHours =>
+      'Revisa el horario: cada tramo debe cerrar después de abrir y no pueden superponerse.';
+
+  @override
+  String get failureOnlineFulfillmentRequired =>
+      'Activa al menos el recojo en tienda o el envío.';
+
+  @override
+  String get failureOnlinePaymentMethodRequired =>
+      'Elige al menos un método de pago para los pedidos en línea.';
+
+  @override
+  String get failurePhoneAppUnavailable =>
+      'No pudimos abrir la app de llamadas.';
+
+  @override
+  String get failureLinkUnavailable => 'No pudimos abrir el link.';
+
+  @override
+  String get onlineStoreTitle => 'Tienda en línea';
+
+  @override
+  String get onlineStoreSubtitle => 'Tu catálogo para recibir pedidos';
+
+  @override
+  String get onlineStoreEnabled => 'Tienda activa';
+
+  @override
+  String get onlineStoreEnabledOn =>
+      'Tus clientes ven tu catálogo y pueden pedir.';
+
+  @override
+  String get onlineStoreEnabledOff =>
+      'Tu link muestra que la tienda no recibe pedidos.';
+
+  @override
+  String get onlineStoreOpenNow => 'Abierta ahora';
+
+  @override
+  String get onlineStoreClosedNow => 'Cerrada ahora';
+
+  @override
+  String get onlineStoreCopyLink => 'Copiar';
+
+  @override
+  String get onlineStoreShareLink => 'Compartir';
+
+  @override
+  String get onlineStoreOpenLink => 'Abrir';
+
+  @override
+  String get onlineStoreLinkCopied => 'Link copiado';
+
+  @override
+  String onlineStoreShareMessage(String business, String url) {
+    return 'Haz tu pedido en $business: $url';
+  }
+
+  @override
+  String get onlineStorePosterAction => 'Póster QR';
+
+  @override
+  String get onlineStorePosterScreenSubtitle =>
+      'Imprímelo y pégalo en tu mostrador o puerta';
+
+  @override
+  String get onlineStorePosterTitle => 'Escanea y pide';
+
+  @override
+  String get onlineStorePosterSubtitle =>
+      'Mira nuestros productos y haz tu pedido desde el celular.';
+
+  @override
+  String get onlineStorePosterFileName => 'poster-tienda';
+
+  @override
+  String get onlineStorePublicTitle => 'Datos públicos';
+
+  @override
+  String get onlineStoreTaglineLabel => 'Frase de tu tienda';
+
+  @override
+  String get onlineStoreTaglineHint => 'Ej.: Ropa, calzado y accesorios';
+
+  @override
+  String get onlineStoreWhatsAppLabel => 'WhatsApp para pedidos';
+
+  @override
+  String get onlineStoreFulfillmentTitle => 'Entrega';
+
+  @override
+  String get onlineStorePickupCaption => 'El cliente recoge en tu tienda.';
+
+  @override
+  String get onlineStoreDeliveryCaption =>
+      'Lo llevas a su dirección; el costo lo pones al confirmar.';
+
+  @override
+  String get onlineStoreDeliveryNoteLabel => 'Nota de envío';
+
+  @override
+  String get onlineStoreDeliveryNoteHint =>
+      'Ej.: Envíos en el día dentro de la ciudad';
+
+  @override
+  String get onlineStoreHoursTitle => 'Horario';
+
+  @override
+  String get onlineStoreHoursSheetSubtitle =>
+      'Puedes poner varios tramos, como mañana y tarde.';
+
+  @override
+  String get onlineStoreClosedDay => 'Cerrado';
+
+  @override
+  String get onlineStoreAddRange => 'Agregar horario';
+
+  @override
+  String get onlineStoreRemoveRange => 'Quitar horario';
+
+  @override
+  String get onlineStoreOutsideHours => 'Recibir pedidos fuera de horario';
+
+  @override
+  String get onlineStoreOutsideHoursCaption =>
+      'La web avisa al cliente cuándo abres.';
+
+  @override
+  String get onlineStoreCatalogTitle => 'Catálogo';
+
+  @override
+  String onlineStoreProductsOnline(int online, int total) {
+    return '$online de $total productos se muestran en línea';
+  }
+
+  @override
+  String get onlineStoreProductsOnlineCaption =>
+      'Elige cuáles al crear o editar cada producto.';
+
+  @override
+  String get onlineStoreShowOutOfStock => 'Mostrar productos agotados';
+
+  @override
+  String get onlineStoreShowOutOfStockCaption =>
+      'Se ven como agotados y no se pueden pedir.';
+
+  @override
+  String get onlineStorePaymentsTitle => 'Pagos en línea';
+
+  @override
+  String get onlineStoreSaved => 'Tienda en línea guardada';
+
+  @override
+  String get ordersTitle => 'Pedidos en línea';
+
+  @override
+  String get ordersSubtitle => 'Los pedidos de tu catálogo web';
+
+  @override
+  String get ordersImportTooltip => 'Importar pedido de WhatsApp';
+
+  @override
+  String get ordersFilterNew => 'Nuevos';
+
+  @override
+  String get ordersFilterInProgress => 'En curso';
+
+  @override
+  String get ordersFilterDelivered => 'Entregados';
+
+  @override
+  String get ordersFilterCancelled => 'Cancelados';
+
+  @override
+  String get ordersDemoTitle => 'Modo demo';
+
+  @override
+  String get ordersDemoMessage =>
+      'Los pedidos de la web llegarán aquí al conectar el servidor.';
+
+  @override
+  String get ordersDemoSimulate => 'Simular pedido';
+
+  @override
+  String get ordersEmptyNewTitle => 'No hay pedidos nuevos';
+
+  @override
+  String get ordersEmptyNewMessage =>
+      'Cuando un cliente pida desde tu catálogo, aparecerá aquí.';
+
+  @override
+  String get ordersEmptyTitle => 'No hay pedidos aquí';
+
+  @override
+  String get ordersEmptyMessage => 'Prueba con otra pestaña.';
+
+  @override
+  String ordersCardNew(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nuevos',
+      one: '1 nuevo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String ordersCardInProgress(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count en curso',
+      one: '1 en curso',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ordersCardEmpty => 'Sin pedidos pendientes';
+
+  @override
+  String get orderStatusNew => 'Nuevo';
+
+  @override
+  String get orderStatusConfirmed => 'Confirmado';
+
+  @override
+  String get orderStatusReady => 'Listo';
+
+  @override
+  String get orderStatusDelivered => 'Entregado';
+
+  @override
+  String get orderStatusCancelled => 'Cancelado';
+
+  @override
+  String get orderFulfillmentPickup => 'Recojo en tienda';
+
+  @override
+  String get orderFulfillmentDelivery => 'Envío a domicilio';
+
+  @override
+  String orderPlacedMinutesAgo(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: 'Hace $minutes min',
+      one: 'Hace 1 min',
+      zero: 'Ahora',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String orderPlacedToday(String time) {
+    return 'Hoy · $time';
+  }
+
+  @override
+  String orderPlacedYesterday(String time) {
+    return 'Ayer · $time';
+  }
+
+  @override
+  String orderDetailTitle(String number) {
+    return 'Pedido $number';
+  }
+
+  @override
+  String get orderDetailTitleLoading => 'Pedido';
+
+  @override
+  String get orderDetailLoadError => 'No pudimos abrir este pedido';
+
+  @override
+  String get orderImportedNote => 'Llegó por el link de WhatsApp.';
+
+  @override
+  String orderCancelReason(String reason) {
+    return 'Cancelado: $reason';
+  }
+
+  @override
+  String get orderCustomerTitle => 'Cliente';
+
+  @override
+  String get orderCall => 'Llamar';
+
+  @override
+  String get orderWhatsApp => 'WhatsApp';
+
+  @override
+  String get orderDeliveryFeePending => 'Por definir';
+
+  @override
+  String get orderPaymentMethod => 'Pagará con';
+
+  @override
+  String get orderHistoryTitle => 'Historial';
+
+  @override
+  String get orderHistoryPlaced => 'Pedido recibido';
+
+  @override
+  String get orderHistoryEdited => 'Pedido editado';
+
+  @override
+  String get orderActionConfirm => 'Confirmar pedido';
+
+  @override
+  String get orderActionReady => 'Marcar como listo';
+
+  @override
+  String get orderActionCheckout => 'Cobrar pedido';
+
+  @override
+  String get orderActionViewSale => 'Ver venta';
+
+  @override
+  String get orderActionEdit => 'Editar';
+
+  @override
+  String get orderActionCancel => 'Cancelar pedido';
+
+  @override
+  String get orderNotifyAction => 'Avisar';
+
+  @override
+  String get orderConfirmedToast => 'Pedido confirmado';
+
+  @override
+  String get orderReadyToast => 'Pedido listo';
+
+  @override
+  String get orderCancelledToast => 'Pedido cancelado';
+
+  @override
+  String get orderEditedToast => 'Pedido actualizado';
+
+  @override
+  String get orderDeliveryFeeTitle => 'Costo de envío';
+
+  @override
+  String get orderDeliveryFeeSubtitle =>
+      'Se suma al total del pedido. Déjalo vacío si el envío es gratis.';
+
+  @override
+  String orderCancelTitle(String number) {
+    return '¿Cancelar el pedido $number?';
+  }
+
+  @override
+  String get orderCancelMessage =>
+      'El cliente verá que fue cancelado. Elige o escribe el motivo.';
+
+  @override
+  String get orderCancelReasonNoStock => 'Sin stock';
+
+  @override
+  String get orderCancelReasonNoAnswer => 'El cliente no respondió';
+
+  @override
+  String get orderCancelReasonCustomer => 'El cliente canceló';
+
+  @override
+  String orderEditTitle(String number) {
+    return 'Editar pedido $number';
+  }
+
+  @override
+  String orderEditSave(String total) {
+    return 'Guardar · $total';
+  }
+
+  @override
+  String get orderCompletedBackToOrder => 'Volver al pedido';
+
+  @override
+  String orderArrivedToast(String number, String total) {
+    return 'Nuevo pedido $number · $total';
+  }
+
+  @override
+  String get orderArrivedView => 'Ver';
+
+  @override
+  String get orderImportTitle => 'Importar pedido';
+
+  @override
+  String get orderImportSubtitle => 'De un mensaje de WhatsApp de tu catálogo';
+
+  @override
+  String get orderImportFieldLabel => 'Mensaje o link del pedido';
+
+  @override
+  String get orderImportFieldHint =>
+      'Pega aquí el mensaje que te llegó por WhatsApp';
+
+  @override
+  String get orderImportPaste => 'Pegar';
+
+  @override
+  String get orderImportAction => 'Importar pedido';
+
+  @override
+  String get orderImportHowTitle => '¿Cómo funciona?';
+
+  @override
+  String get orderImportHowMessage =>
+      'Cada pedido de tu catálogo web llega por WhatsApp con un link. Tócalo en este celular para abrirlo aquí, o copia el mensaje y pégalo arriba.';
+
+  @override
+  String orderImportedToast(String number) {
+    return 'Pedido $number en tu bandeja';
+  }
+
+  @override
+  String orderMessageNew(String name, String number, String store) {
+    return 'Hola $name, te escribimos de $store por tu pedido $number.';
+  }
+
+  @override
+  String orderMessageConfirmed(String name, String number, String total) {
+    return 'Hola $name, confirmamos tu pedido $number. Total: $total. ¡Ya lo estamos preparando!';
+  }
+
+  @override
+  String orderMessageConfirmedDelivery(
+    String name,
+    String number,
+    String fee,
+    String total,
+  ) {
+    return 'Hola $name, confirmamos tu pedido $number. Envío: $fee. Total: $total. ¡Ya lo estamos preparando!';
+  }
+
+  @override
+  String orderMessageReadyPickup(String name, String number, String store) {
+    return 'Hola $name, tu pedido $number está listo. Puedes recogerlo en $store.';
+  }
+
+  @override
+  String orderMessageReadyDelivery(String name, String number) {
+    return 'Hola $name, tu pedido $number está listo y va en camino.';
+  }
+
+  @override
+  String orderMessageDelivered(String name, String number) {
+    return 'Hola $name, ¡gracias por tu compra! Tu pedido $number fue entregado.';
+  }
+
+  @override
+  String orderMessageCancelled(String name, String number, String reason) {
+    return 'Hola $name, lamentamos avisarte que tu pedido $number fue cancelado: $reason.';
+  }
+
+  @override
+  String get receiptDeliveryLabel => 'Envío';
+
+  @override
+  String get saleDetailChannel => 'Origen';
+
+  @override
+  String saleDetailOnlineOrder(String number) {
+    return 'Pedido en línea $number';
+  }
 }

@@ -4,6 +4,9 @@ import '../../../../core/domain/payment_method.dart';
 import 'sale_line.dart';
 import 'sale_return.dart';
 
+/// Where the sale was made (`sales.channel`).
+enum SaleChannel { pos, onlineOrder }
+
 /// Where a sale stands after it was made.
 enum SaleStatus { completed, cancelled, partiallyReturned, returned }
 
@@ -20,6 +23,10 @@ final class Sale extends Equatable {
     required this.cashierName,
     this.cancellation,
     this.returns = const <SaleReturn>[],
+    this.deliveryFee = 0,
+    this.channel = SaleChannel.pos,
+    this.orderId,
+    this.orderNumber,
   });
 
   final String id;
@@ -41,13 +48,22 @@ final class Sale extends Equatable {
   /// Returns of some of its units, oldest first.
   final List<SaleReturn> returns;
 
+  /// Delivery charged with an online order; never refunded by a return.
+  final double deliveryFee;
+  final SaleChannel channel;
+
+  /// The online order this sale charged, and its number for display.
+  final String? orderId;
+  final int? orderNumber;
+
   int get itemCount =>
       lines.fold(0, (int total, SaleLine line) => total + line.quantity);
 
   double get subtotal =>
       lines.fold(0, (double total, SaleLine line) => total + line.total);
 
-  double get total => (subtotal - discount).clamp(0, double.infinity);
+  double get total =>
+      (subtotal - discount).clamp(0, double.infinity) + deliveryFee;
 
   /// Change to give back, never negative.
   double get change => (amountReceived - total).clamp(0, double.infinity);
@@ -122,6 +138,10 @@ final class Sale extends Equatable {
         cashierName: cashierName,
         cancellation: cancellation ?? this.cancellation,
         returns: returns ?? this.returns,
+        deliveryFee: deliveryFee,
+        channel: channel,
+        orderId: orderId,
+        orderNumber: orderNumber,
       );
 
   @override
@@ -136,5 +156,9 @@ final class Sale extends Equatable {
     cashierName,
     cancellation,
     returns,
+    deliveryFee,
+    channel,
+    orderId,
+    orderNumber,
   ];
 }

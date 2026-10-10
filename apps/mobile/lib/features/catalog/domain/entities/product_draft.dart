@@ -17,6 +17,7 @@ final class ProductDraft extends Equatable {
     this.variants = const <ProductVariant>[],
     this.sku,
     this.barcode,
+    this.showOnline = true,
   });
 
   final String name;
@@ -37,6 +38,9 @@ final class ProductDraft extends Equatable {
   final String? sku;
   final String? barcode;
 
+  /// Listed in the online catalog.
+  final bool showOnline;
+
   bool get hasVariants => variants.isNotEmpty;
 
   /// Same draft with no units: a new product gets its stock as
@@ -55,6 +59,7 @@ final class ProductDraft extends Equatable {
     ],
     sku: sku,
     barcode: barcode,
+    showOnline: showOnline,
   );
 
   @override
@@ -70,5 +75,6 @@ final class ProductDraft extends Equatable {
     variants,
     sku,
     barcode,
+    showOnline,
   ];
 }

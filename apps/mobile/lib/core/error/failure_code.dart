@@ -65,6 +65,21 @@ enum FailureCode {
   insufficientPayment,
   cashSessionRequired,
 
+  // Online orders and store
+  orderNotFound,
+  invalidOrderTransition,
+  orderNotEditable,
+  orderEmpty,
+  invalidDeliveryFee,
+  invalidOrderLink,
+  orderFromAnotherStore,
+  storeDisabled,
+  invalidOpeningHours,
+  onlineFulfillmentRequired,
+  onlinePaymentMethodRequired,
+  phoneAppUnavailable,
+  linkUnavailable,
+
   // Receipts
   invalidCopies,
   printersUnavailable,

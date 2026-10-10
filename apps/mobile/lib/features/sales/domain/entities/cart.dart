@@ -10,7 +10,11 @@ import 'cart_line.dart';
 /// Lines are addressed by [CartLine.key]: a product sold in two variants
 /// (`Rojo · M`, `Negro · L`) takes two lines.
 final class Cart extends Equatable {
-  const Cart({this.lines = const <CartLine>[], this.discount = 0});
+  const Cart({
+    this.lines = const <CartLine>[],
+    this.discount = 0,
+    this.deliveryFee = 0,
+  });
 
   const Cart.empty() : this();
 
@@ -18,6 +22,9 @@ final class Cart extends Equatable {
 
   /// Discount in bolivianos applied to the whole sale.
   final double discount;
+
+  /// Delivery charged with an online order; 0 for counter sales.
+  final double deliveryFee;
 
   bool get isEmpty => lines.isEmpty;
 
@@ -30,7 +37,8 @@ final class Cart extends Equatable {
   double get subtotal =>
       lines.fold(0, (double total, CartLine line) => total + line.lineTotal);
 
-  double get total => (subtotal - discount).clamp(0, double.infinity);
+  double get total =>
+      (subtotal - discount).clamp(0, double.infinity) + deliveryFee;
 
   /// Units of a product in the cart, all its variants together.
   int quantityOf(String productId) => lines
@@ -109,9 +117,12 @@ final class Cart extends Equatable {
     return copyWith(lines: updated);
   }
 
-  Cart copyWith({List<CartLine>? lines, double? discount}) =>
-      Cart(lines: lines ?? this.lines, discount: discount ?? this.discount);
+  Cart copyWith({List<CartLine>? lines, double? discount}) => Cart(
+    lines: lines ?? this.lines,
+    discount: discount ?? this.discount,
+    deliveryFee: deliveryFee,
+  );
 
   @override
-  List<Object?> get props => <Object?>[lines, discount];
+  List<Object?> get props => <Object?>[lines, discount, deliveryFee];
 }

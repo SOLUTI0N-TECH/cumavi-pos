@@ -210,6 +210,13 @@ class _SaleDetails extends StatelessWidget {
                 value: '− ${MoneyFormatter.format(sale.discount)}',
               ),
             ],
+            if (sale.deliveryFee > 0) ...<Widget>[
+              const SizedBox(height: AppSpacing.sm),
+              KeyValueRow(
+                label: l10n.receiptDeliveryLabel,
+                value: MoneyFormatter.format(sale.deliveryFee),
+              ),
+            ],
             const SizedBox(height: AppSpacing.sm),
             KeyValueRow(
               label: l10n.saleDetailTotal,
@@ -247,6 +254,13 @@ class _SaleDetails extends StatelessWidget {
             ],
             const SizedBox(height: AppSpacing.sm),
             KeyValueRow(label: l10n.saleDetailCashier, value: sale.cashierName),
+            if (sale.orderNumber case final int number) ...<Widget>[
+              const SizedBox(height: AppSpacing.sm),
+              KeyValueRow(
+                label: l10n.saleDetailChannel,
+                value: l10n.saleDetailOnlineOrder('#$number'),
+              ),
+            ],
           ],
         ),
         if (sale.returns.isNotEmpty) ...<Widget>[

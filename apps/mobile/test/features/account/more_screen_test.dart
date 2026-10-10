@@ -81,6 +81,8 @@ void main() {
         onOpenCategories: () {},
         onOpenSalesHistory: () {},
         onOpenStockMovements: () {},
+        onOpenOrders: () {},
+        onOpenOnlineStore: () {},
         onSignedOut: () {},
       ),
       providers: <AnyBlocProvider>[
@@ -94,6 +96,13 @@ void main() {
     expect(find.text('Ingresaste con teléfono'), findsOneWidget);
     expect(find.text('Illimani Store'), findsOneWidget);
     expect(find.text('NIT 1020304050'), findsOneWidget);
+    expect(find.text('Tienda en línea'), findsOneWidget);
+    expect(find.text('Pedidos en línea'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Cumavi POS · versión 0.1.0 (1)'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('Cumavi POS · versión 0.1.0 (1)'), findsOneWidget);
   });
 
@@ -108,6 +117,8 @@ void main() {
         onOpenCategories: () {},
         onOpenSalesHistory: () {},
         onOpenStockMovements: () {},
+        onOpenOrders: () {},
+        onOpenOnlineStore: () {},
         onSignedOut: () => signedOut = true,
       ),
       providers: <AnyBlocProvider>[
@@ -115,6 +126,8 @@ void main() {
       ],
     );
 
+    await tester.ensureVisible(find.text('Cerrar sesión'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Cerrar sesión'));
     await tester.pump(const Duration(seconds: 2));
     await tester.pumpAndSettle();

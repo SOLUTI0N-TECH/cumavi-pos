@@ -269,6 +269,7 @@ final class InMemoryProductDataSource implements ProductDataSource {
       ],
       sku: ProductCodeRules.normalizeOrNull(draft.sku),
       barcode: ProductCodeRules.normalizeOrNull(draft.barcode),
+      showOnline: draft.showOnline,
     );
   }
 

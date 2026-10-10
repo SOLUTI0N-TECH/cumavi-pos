@@ -10,6 +10,7 @@ import '../../../../core/theme/floating_nav_insets.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/widgets/brand_mark.dart';
 import '../../../../core/widgets/tinted_banner.dart';
+import '../../../orders/presentation/widgets/online_orders_card.dart';
 import '../../domain/entities/dashboard_snapshot.dart';
 import '../cubit/dashboard_cubit.dart';
 import '../cubit/dashboard_state.dart';
@@ -23,6 +24,7 @@ class DashboardScreen extends StatefulWidget {
     required this.onOpenInventory,
     required this.onOpenMore,
     required this.onOpenSalesHistory,
+    required this.onOpenOrders,
     super.key,
   });
 
@@ -34,6 +36,9 @@ class DashboardScreen extends StatefulWidget {
 
   /// "Ver historial" on the today's sales card.
   final VoidCallback onOpenSalesHistory;
+
+  /// The online orders inbox.
+  final VoidCallback onOpenOrders;
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -103,6 +108,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       onStartSale: widget.onStartSale,
                       onOpenHistory: widget.onOpenSalesHistory,
                     ),
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.pageHorizontal,
+                    ),
+                    child: OnlineOrdersCard(onOpen: widget.onOpenOrders),
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   Padding(

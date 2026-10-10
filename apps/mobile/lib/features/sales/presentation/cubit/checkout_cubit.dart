@@ -1,20 +1,24 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/domain/payment_method.dart';
+import '../../../../core/usecases/use_case.dart';
 import '../../../../core/utils/result.dart';
 import '../../domain/entities/cart.dart';
 import '../../domain/entities/sale.dart';
 import '../../domain/entities/sale_draft.dart';
-import '../../domain/usecases/register_sale.dart';
 import 'checkout_state.dart';
 
-/// Payment step: method, cash received and confirmation.
+/// Payment step: method, cash received and confirmation. [registerSale]
+/// stores a counter sale, or charges an online order.
 class CheckoutCubit extends Cubit<CheckoutState> {
-  CheckoutCubit({required RegisterSale registerSale, required Cart cart})
-    : _registerSale = registerSale,
-      super(CheckoutState(cart: cart));
+  CheckoutCubit({
+    required UseCase<Sale, SaleDraft> registerSale,
+    required Cart cart,
+    PaymentMethod paymentMethod = PaymentMethod.cash,
+  }) : _registerSale = registerSale,
+       super(CheckoutState(cart: cart, paymentMethod: paymentMethod));
 
-  final RegisterSale _registerSale;
+  final UseCase<Sale, SaleDraft> _registerSale;
 
   void paymentMethodSelected(PaymentMethod method) {
     emit(

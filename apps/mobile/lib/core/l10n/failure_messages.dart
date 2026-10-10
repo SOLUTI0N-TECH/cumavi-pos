@@ -91,6 +91,21 @@ extension FailureMessages on Failure {
       FailureCode.printFailed => l10n.failurePrintFailed,
       FailureCode.shareFailed => l10n.failureShareFailed,
       FailureCode.whatsAppUnavailable => l10n.failureWhatsAppUnavailable,
+      FailureCode.orderNotFound => l10n.failureOrderNotFound,
+      FailureCode.invalidOrderTransition => l10n.failureInvalidOrderTransition,
+      FailureCode.orderNotEditable => l10n.failureOrderNotEditable,
+      FailureCode.orderEmpty => l10n.failureOrderEmpty,
+      FailureCode.invalidDeliveryFee => l10n.failureInvalidDeliveryFee,
+      FailureCode.invalidOrderLink => l10n.failureInvalidOrderLink,
+      FailureCode.orderFromAnotherStore => l10n.failureOrderFromAnotherStore,
+      FailureCode.storeDisabled => l10n.failureStoreDisabled,
+      FailureCode.invalidOpeningHours => l10n.failureInvalidOpeningHours,
+      FailureCode.onlineFulfillmentRequired =>
+        l10n.failureOnlineFulfillmentRequired,
+      FailureCode.onlinePaymentMethodRequired =>
+        l10n.failureOnlinePaymentMethodRequired,
+      FailureCode.phoneAppUnavailable => l10n.failurePhoneAppUnavailable,
+      FailureCode.linkUnavailable => l10n.failureLinkUnavailable,
       FailureCode.emailAppUnavailable => l10n.failureEmailAppUnavailable,
       FailureCode.photoLibraryPermissionDenied =>
         l10n.failurePhotoLibraryPermissionDenied,

@@ -28,11 +28,15 @@ class SaleCompletedScreen extends StatelessWidget {
     required this.onNewSale,
     required this.onGoHome,
     required this.onOpenReceipt,
+    this.primaryLabel,
     super.key,
   });
 
   final Sale sale;
+
+  /// The main button; "Nueva venta" unless [primaryLabel] says otherwise.
   final VoidCallback onNewSale;
+  final String? primaryLabel;
   final VoidCallback onGoHome;
   final VoidCallback onOpenReceipt;
 
@@ -89,8 +93,10 @@ class SaleCompletedScreen extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   PrimaryButton(
-                    label: l10n.salesCompletedNewSaleButton,
-                    icon: Icons.add_rounded,
+                    label: primaryLabel ?? l10n.salesCompletedNewSaleButton,
+                    icon: primaryLabel == null
+                        ? Icons.add_rounded
+                        : Icons.arrow_forward_rounded,
                     onPressed: onNewSale,
                   ),
                   const SizedBox(height: 6),

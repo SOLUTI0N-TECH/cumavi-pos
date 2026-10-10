@@ -7,6 +7,7 @@ import '../core/theme/app_theme.dart';
 import '../features/auth/presentation/cubit/session_cubit.dart';
 import '../features/cash_register/presentation/cubit/cash_register_cubit.dart';
 import '../features/dashboard/presentation/cubit/dashboard_cubit.dart';
+import '../features/orders/presentation/cubit/orders_badge_cubit.dart';
 import '../features/sales/presentation/cubit/cart_cubit.dart';
 import 'di/dependency_injection.dart';
 import 'router/app_router.dart';
@@ -34,6 +35,9 @@ class _CumaviPosAppState extends State<CumaviPosApp> {
           create: (_) => injector<CashRegisterCubit>(),
         ),
         BlocProvider<DashboardCubit>(create: (_) => injector<DashboardCubit>()),
+        BlocProvider<OrdersBadgeCubit>(
+          create: (_) => injector<OrdersBadgeCubit>()..load(),
+        ),
       ],
       child: MaterialApp.router(
         onGenerateTitle: (BuildContext context) => context.l10n.appTitle,
