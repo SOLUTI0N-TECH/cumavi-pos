@@ -12,6 +12,7 @@ import { buttonClasses } from '@/shared/ui/button';
 import { EmptyState } from '@/shared/ui/empty-state';
 import { orderRepository } from '../data/local-order-repository';
 import type { Order } from '../domain/order';
+import { orderImportUrl } from '../domain/order-link';
 import { buildWhatsAppMessage, whatsAppLink } from '../domain/whatsapp-message';
 
 /**
@@ -64,16 +65,23 @@ export function OrderConfirmation() {
     );
   }
 
-  const message = buildWhatsAppMessage(order, store, {
-    title: (values) => whatsapp('title', values),
-    customer: (values) => whatsapp('customer', values),
-    pickup: whatsapp('pickup'),
-    delivery: (values) => whatsapp('delivery', values),
-    payment: (values) => whatsapp('payment', values),
-    total: (values) => whatsapp('total', values),
-    note: (values) => whatsapp('note', values),
-    paymentMethod: (method) => payment(method),
-  });
+  const message = buildWhatsAppMessage(
+    order,
+    store,
+    {
+      title: (values) => whatsapp('title', values),
+      customer: (values) => whatsapp('customer', values),
+      pickup: whatsapp('pickup'),
+      delivery: (values) => whatsapp('delivery', values),
+      payment: (values) => whatsapp('payment', values),
+      total: (values) => whatsapp('total', values),
+      note: (values) => whatsapp('note', values),
+      paymentMethod: (method) => payment(method),
+      posLink: (values) => whatsapp('posLink', values),
+    },
+    // Orders saved before links existed have no id: they go without it.
+    order.id ? orderImportUrl(window.location.origin, order) : undefined,
+  );
 
   const rows: [string, string][] = [
     [t('number'), `#${order.number}`],

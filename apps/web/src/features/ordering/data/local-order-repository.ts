@@ -22,6 +22,7 @@ export class LocalOrderRepository implements OrderRepository {
       .map((order) => order.number);
     const order: Order = {
       ...newOrder,
+      id: crypto.randomUUID(),
       number: numbers.length === 0 ? FIRST_NUMBER : Math.max(...numbers) + 1,
       createdAt: new Date().toISOString(),
       total: newOrder.lines.reduce(

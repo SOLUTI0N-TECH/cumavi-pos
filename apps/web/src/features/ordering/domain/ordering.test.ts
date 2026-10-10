@@ -66,6 +66,7 @@ describe('checkoutSchema', () => {
 describe('WhatsApp message', () => {
   const store = { name: 'Illimani Store', whatsapp: '59176543210' } as Store;
   const order: Order = {
+    id: 'order-1',
     number: 1001,
     storeSlug: 'illimani-store',
     createdAt: '2026-09-24T12:00:00Z',

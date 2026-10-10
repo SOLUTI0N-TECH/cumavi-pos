@@ -156,11 +156,27 @@
     "delivery": "Entrega: envío a {address}",
     "payment": "Pago: {method}",
     "total": "Total: {total}",
-    "note": "Nota: {note}"
+    "note": "Nota: {note}",
+    "posLink": "Ábrelo en Cumavi POS: {url}"
   },
   "notFound": {
     "title": "No encontramos esta página",
     "message": "Puede que la tienda o el producto ya no estén disponibles.",
     "action": "Ver tiendas"
+  },
+  "orderImport": {
+    "title": "Pedido para Cumavi POS",
+    "message": "Toca el botón en el celular donde usas Cumavi POS para recibir este pedido en tu bandeja.",
+    "open": "Abrir en Cumavi POS",
+    "copy": "Copiar link",
+    "copied": "Link copiado. Pégalo en Cumavi POS → Pedidos en línea → Importar.",
+    "invalidTitle": "Este link no tiene un pedido",
+    "invalidMessage": "Pídele al cliente que vuelva a enviar el mensaje de WhatsApp.",
+    "number": "Pedido web",
+    "customer": "Cliente",
+    "fulfillment": "Entrega",
+    "pickup": "Recojo en tienda",
+    "delivery": "Envío a domicilio",
+    "total": "Total"
   }
 }

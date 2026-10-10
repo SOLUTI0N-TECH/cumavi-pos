@@ -26,6 +26,11 @@ export interface OrderLine {
 }
 
 export interface Order {
+  /**
+   * Generated here (UUID), so a retried order is never stored twice: the
+   * backend and the POS import use it as the order id.
+   */
+  id: string;
   /** Per store: 1001, 1002… */
   number: number;
   storeSlug: string;
