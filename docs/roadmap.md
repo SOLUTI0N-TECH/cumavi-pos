@@ -3,9 +3,9 @@
 What is new or planned for the POS app (`apps/mobile`), phase by phase.
 Status legend: **Planned** · **In progress** · **Done**.
 
-Last update: 2026-10-05 (Phase 5 "Ajustes para el backend" added; backend
-plan in [backend-roadmap.md](backend-roadmap.md), module scope docs listed in
-the [docs index](README.md)).
+Last update: 2026-10-10 (Phase 3 online orders done against B7-shaped mocks;
+backend plan in [backend-roadmap.md](backend-roadmap.md), module scope docs
+listed in the [docs index](README.md)).
 
 ## Ground rules
 
@@ -39,9 +39,9 @@ the [docs index](README.md)).
 | | 8 | Promotions | M | Planned |
 | | 9 | Customers | M | Planned |
 | | 10 | Fiado (credit sales) | L | Planned |
-| 3 · Online orders | 11 | Online store settings + QR poster | M | Planned |
-| | 12 | Orders inbox | L | Planned |
-| | 13 | Order import by link (WhatsApp → POS) | M | Planned |
+| 3 · Online orders | 11 | Online store settings + QR poster | M | **Done** (mock) |
+| | 12 | Orders inbox | L | **Done** (mock) |
+| | 13 | Order import by link (WhatsApp → POS) | M | **Done** (lite) |
 | 4 · Team and insight | 14 | Users and roles | L | Planned |
 | | 15 | Reports | L | Planned |
 | | 16 | Stock alerts and reorder list | S | Planned |
@@ -54,7 +54,7 @@ the [docs index](README.md)).
 | | 23 | Contract fixes | S | Planned |
 | | 24 | Stock per branch + transfers | M | Planned |
 | | 25 | Purchases and suppliers | L | Planned |
-| | 26 | Push, realtime and orders inbox | M | Planned |
+| | 26 | Push, realtime and orders inbox | M | In progress (inbox + in-app events; FCM pending) |
 
 **Backend phase for each feature** (see [backend-roadmap.md](backend-roadmap.md)):
 
@@ -349,6 +349,80 @@ phase B7, scope in [modulos/ecommerce.md](modulos/ecommerce.md)): settings
 per business with online branches, orders delivered to the branch's inbox in
 real time, and "Cobrar pedido" creating the sale. **Feature 13 is superseded
 by B7** and only makes sense if the API is delayed.
+
+**Build (2026-10-10):** the backend only has B0–B1, so 11 and 12 are built
+against in-memory mocks shaped like B7 (entities, states, rules ECO-R8..R10
+and error codes as in [modulos/ecommerce.md](modulos/ecommerce.md)). A
+light version of 13 is built too, so web orders reach the POS before the API
+exists. No design existed: screens follow the app's current style.
+
+### 12. Orders inbox — L · Done (2026-10-10, mock)
+
+**What the seller gets**
+- **Pedidos en línea** from a card on Inicio (badge with new orders) and from
+  Más → Operación. Tabs **Nuevos / En curso / Entregados / Cancelados**.
+- A new order shows a snackbar anywhere in the app ("Nuevo pedido #1006 ·
+  Bs …" → Ver). In demo mode a banner offers **"Simular pedido"**.
+- **Order detail:** status, customer (Llamar / WhatsApp), lines and totals
+  with delivery fee, history with who did each step.
+- **Actions by state:** new → *Confirmar* (a delivery asks the fee) or
+  *Cancelar*; confirmed → *Marcar como listo*; ready → **Cobrar pedido**.
+  *Editar* (quantities, remove lines, fee) while new or confirmed; cancelling
+  asks a reason (quick reasons offered). After each step, **"Avisar"** opens
+  WhatsApp with a message for that state.
+- **Cobrar pedido** opens the normal checkout with the order's cart (order
+  prices, fee included); paying creates the sale (`channel: onlineOrder`,
+  `orderNumber`), discounts stock with movements and marks the order
+  delivered. Receipts and sale detail show "Envío" and "Pedido en línea #N".
+
+**Rules:** transitions new → confirmed | cancelled, confirmed → ready |
+cancelled, ready → cancelled; *delivered* only through Cobrar pedido (ECO-R8,
+R9). Edits only while new/confirmed and leave a history entry (ECO-R10).
+Fee ≥ 0. Stock is checked when charging, not when the order arrives. New
+failure codes: `orderNotFound`, `invalidOrderTransition`, `orderNotEditable`,
+`orderEmpty`, `invalidDeliveryFee`, `storeDisabled`, `phoneAppUnavailable`,
+`linkUnavailable`.
+
+**Contract (mock → B7):** `OrderRepository` with `getOrders`, `getOrder`,
+`watch()` (event stream, the socket later), `changeStatus`, `editOrder`,
+`markDelivered`, `importOrder`. `Sale` gains `deliveryFee`, `channel`,
+`orderId`, `orderNumber` — **to confirm with the backend** (B5/B7 docs don't
+list `deliveryFee`/`orderNumber` on the sale yet).
+
+**Simplifications until the API:** one branch; no customer record (CLI-R2
+comes with feature 9); payment methods are the enum and one payment per
+order (feature 21); no FCM push (feature 26).
+
+### 11. Online store settings + QR poster — M · Done (2026-10-10, mock)
+
+- Más → Negocio → **Tienda en línea**: store on/off, link (Copiar /
+  Compartir / Abrir) and "Abierta ahora / Cerrada ahora", tagline, WhatsApp
+  for orders, pickup and delivery (with a note), opening hours per day with
+  several ranges, "recibir pedidos fuera de horario", show out-of-stock
+  products, online payment methods. Save in the bottom bar, only with
+  changes.
+- **Póster QR** "Escanea y pide": on screen, printed (A5 PDF) or shared.
+- Per-product **"Mostrar en la tienda en línea"** switch in the product form;
+  the settings show how many products are online.
+- **Rules:** valid Bolivian mobile for WhatsApp, at least one fulfillment
+  and one payment method, ranges close after they open and don't overlap
+  (SUC-R5). Codes `invalidOpeningHours`, `onlineFulfillmentRequired`,
+  `onlinePaymentMethodRequired`. A disabled store receives no orders.
+- The web catalog still reads its own demo data; it reads these settings
+  when B7 exists.
+
+### 13. Order import by link — M · Done (2026-10-10, lite)
+
+- The web's WhatsApp message now ends with "Ábrelo en Cumavi POS: <link>".
+  The link (`/<store>/pedido/importar/?d=…`) carries the order as compact
+  base64url JSON (v1) and opens a page with a summary and **"Abrir en Cumavi
+  POS"** (Android intent `cumavipos://pos/orders/import`).
+- In the POS: the link opens **Importar pedido**, or the seller pastes the
+  whole message (Pedidos → import button). The order joins the inbox as new.
+- Importing twice doesn't duplicate; orders of another store, unknown
+  products and broken links are refused (`invalidOrderLink`,
+  `orderFromAnotherStore`, `productNotFound`).
+- Goes away with B7, when orders arrive through the API.
 
 ## Phase 4 — Team and insight
 
