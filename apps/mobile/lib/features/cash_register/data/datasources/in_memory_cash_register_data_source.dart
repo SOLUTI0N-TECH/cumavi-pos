@@ -66,9 +66,14 @@ final class InMemoryCashRegisterDataSource implements CashRegisterDataSource {
   Future<void> _simulateLatency() => Future<void>.delayed(_latency);
 
   static CashSession _seedSession(DateTime now) {
+    final DateTime usualOpening = DateTime(now.year, now.month, now.day, 8, 30);
     return CashSession(
       id: 'cash-1',
-      openedAt: DateTime(now.year, now.month, now.day, 8, 30),
+      // Before 08:30 the demo drawer opened a moment ago: an opening in the
+      // future would leave what is sold or refunded now out of the close.
+      openedAt: now.isAfter(usualOpening)
+          ? usualOpening
+          : now.subtract(const Duration(minutes: 5)),
       openingAmount: 200,
       cashierName: 'Carla Mamani',
     );
